@@ -89,6 +89,14 @@
   .fxrow:last-child{border-bottom:0}
   .fxrow .fxdate{width:64px;flex:none;text-align:center;line-height:1.25}
   .fxrow .fxdate b{display:block;font-size:13px;text-transform:capitalize}
+  .teambtn{margin-top:6px}
+  .teamchip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:800;color:#0b1220}
+  .teamchip.sm{padding:2px 8px;font-size:11px}
+  .teamsum{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+  .teamsdetail{margin-top:6px;display:flex;flex-direction:column;gap:4px}
+  .teamline{display:flex;align-items:center;gap:8px}
+  .tmrow{display:flex;align-items:center;gap:10px;width:100%;padding:11px 8px;border-bottom:1px solid var(--line);background:transparent;text-align:left}
+  .tmrow .tmdot{width:18px;height:18px;border-radius:50%;flex:none}
   nav button[aria-current="true"]{color:var(--text);background:var(--surface);box-shadow:inset 0 2px 0 var(--club)}
   nav button[aria-current="true"] .ic{color:var(--club-2)}
 
@@ -1103,7 +1111,8 @@ function shortPos(p){ return (p||"").replace("Portera","PT").replace("Pívot","P
 /* ---- flujos con hoja modal ---- */
 function goalFlow(){
   const m=S.live;
-  const order=[...m.onCourt, ...S.roster.map(p=>p.id).filter(id=>!m.onCourt.includes(id))];
+  const order = m.onCourt.slice();   // solo las que están en pista en este momento
+  if(!order.length){ toast("No hay jugadoras en pista"); return; }
   pickPlayer("¿Quién marca?", order, (scorerId)=>{
     const others=order.filter(id=>id!==scorerId);
     pickPlayer("Asistencia (opcional)", others, (assistId)=>{
@@ -1961,6 +1970,54 @@ function totbarHTML(s){
   return `<span>${sessionCount(s)} ejercicios</span><span>${right}</span>`;
 }
 
+var TEAM_COLORS=[{key:"Rojos",hex:"#ef4444"},{key:"Azules",hex:"#3b82f6"},{key:"Amarillos",hex:"#eab308"},{key:"Verdes",hex:"#22c55e"}];
+function teamMaker(s, item, body){
+  const present = S.roster.filter(p=>(s.absent||[]).indexOf(p.id)<0);
+  if(!present.length){ toast("Marca primero quién viene (asistencia)"); return; }
+  let count = (item.teams && item.teams.length>=2) ? item.teams.length : 2;
+  let assign = {};
+  if(item.teams && item.teams.length){ item.teams.forEach((t,i)=>(t.ids||[]).forEach(id=>{ assign[id]=i; })); }
+  function ensureAssign(){ present.forEach(p=>{ if(assign[p.id]===undefined || assign[p.id]>=count || assign[p.id]<0) assign[p.id]=-1; }); }
+  function shuffle(){
+    const ids=present.map(p=>p.id);
+    for(let i=ids.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=ids[i];ids[i]=ids[j];ids[j]=t; }
+    ids.forEach((id,i)=>{ assign[id]=i%count; });
+  }
+  ensureAssign();
+  function draw(){
+    const counts=[]; for(let i=0;i<count;i++) counts.push(present.filter(p=>assign[p.id]===i).length);
+    const countSel=`<div class="row" style="gap:6px;justify-content:center;margin-bottom:10px">${[2,3,4].map(n=>`<button class="btn sm ${n===count?'primary':'ghost'}" data-count="${n}">${n}</button>`).join("")}<span class="muted small" style="align-self:center;margin-left:4px">equipos</span></div>`;
+    const resumen=`<div class="row" style="gap:8px;justify-content:center;flex-wrap:wrap;margin:6px 0 10px">${TEAM_COLORS.slice(0,count).map((c,i)=>`<span class="teamchip" style="background:${c.hex}">${c.key} · ${counts[i]}</span>`).join("")}</div>`;
+    const list=present.map(p=>{ const ti=assign[p.id]; const c=ti>=0?TEAM_COLORS[ti]:null;
+      return `<button class="tmrow" data-tm="${p.id}"><span class="tmdot" style="background:${c?c.hex:'transparent'};${c?'':'border:1px dashed var(--muted-2)'}"></span><span class="grow" style="text-align:left">#${esc(p.number)} ${esc(p.name)}</span><span class="muted small">${c?c.key:"toca para asignar"}</span></button>`;
+    }).join("");
+    modal(`<h3>Equipos del ejercicio</h3>
+      ${countSel}
+      <button class="btn ghost block" id="tmShuffle">🎲 Repartir al azar</button>
+      ${resumen}
+      <div class="muted small" style="margin-bottom:6px">Toca a una jugadora para cambiarla de equipo.</div>
+      <div style="max-height:42vh;overflow:auto;margin:0 -4px">${list}</div>
+      <div class="foot"><button class="btn ghost grow" id="tmClear">Quitar</button><button class="btn primary grow" id="tmSave">Guardar</button></div>`);
+    document.querySelectorAll("[data-count]").forEach(b=>b.onclick=()=>{ count=+b.dataset.count; ensureAssign(); draw(); });
+    document.getElementById("tmShuffle").onclick=()=>{ shuffle(); draw(); };
+    document.querySelectorAll("[data-tm]").forEach(b=>b.onclick=()=>{ const id=b.dataset.tm; const cur=assign[id]; assign[id] = cur<0?0:((cur+1)%count); draw(); });
+    document.getElementById("tmClear").onclick=()=>{ item.teams=null; save(); closeModal(); renderSessionEditor(body); };
+    document.getElementById("tmSave").onclick=()=>{
+      const teams=[]; for(let i=0;i<count;i++) teams.push({color:TEAM_COLORS[i].key, hex:TEAM_COLORS[i].hex, ids:present.filter(p=>assign[p.id]===i).map(p=>p.id)});
+      item.teams=teams.filter(t=>t.ids.length); save(); closeModal(); renderSessionEditor(body);
+    };
+  }
+  draw();
+}
+function teamsSummaryHTML(item){
+  if(!item.teams || !item.teams.length) return "";
+  return `<div class="teamsum">${item.teams.map(t=>`<span class="teamchip sm" style="background:${t.hex}">${esc(t.color)} ${t.ids.length}</span>`).join("")}</div>`;
+}
+function teamsDetailHTML(item){
+  if(!item.teams || !item.teams.length) return "";
+  return `<div class="teamsdetail">${item.teams.map(t=>`<div class="teamline"><span class="teamchip sm" style="background:${t.hex}">${esc(t.color)}</span> <span class="muted small">${t.ids.map(id=>{const p=playerById(id);return p?("#"+p.number):"";}).filter(Boolean).join(" · ")}</span></div>`).join("")}</div>`;
+}
+
 function renderSessionEditor(body){
   const s=S.sessions.find(x=>x.id===openSessionId);
   if(!s){ openSessionId=null; return renderSessions(); }
@@ -2070,7 +2127,9 @@ function renderSessionEditor(body){
       ${bl.items.map(it=>{ const ex=S.exercises.find(e=>e.id===it.exerciseId);
         return `<div class="item">
           <div class="inm"><div class="row" style="gap:6px"><b>${esc(ex?ex.name:"(ejercicio borrado)")}</b>${ex&&ex.category?`<span class="muted small">· ${esc(ex.category)}</span>`:""}${ex?fitBadge(ex.players):""}</div>
-            <input class="inote" value="${esc(it.note||'')}" data-note="${it.id}" placeholder="ajuste / nota (opcional)"></div>
+            <input class="inote" value="${esc(it.note||'')}" data-note="${it.id}" placeholder="ajuste / nota (opcional)">
+            <button class="btn sm ghost teambtn" data-teams="${bl.id}|${it.id}">🎽 ${it.teams&&it.teams.length?"Equipos":"Hacer equipos"}</button>
+            ${teamsSummaryHTML(it)}</div>
           <div class="min"><input inputmode="numeric" value="${esc(it.minutes||"")}" data-min="${it.id}" placeholder="min"></div>
           <button class="btn sm danger" data-idel="${bl.id}|${it.id}">✕</button>
         </div>`; }).join("")}`;
@@ -2089,6 +2148,10 @@ function renderSessionEditor(body){
   wrap.querySelectorAll("[data-idel]").forEach(b=>b.onclick=()=>{
     const [bid,iid]=b.dataset.idel.split("|"); const bl=s.blocks.find(x=>x.id===bid);
     bl.items=bl.items.filter(i=>i.id!==iid); save(); renderSessionEditor(body);
+  });
+  wrap.querySelectorAll("[data-teams]").forEach(b=>b.onclick=()=>{
+    const [bid,iid]=b.dataset.teams.split("|"); const bl=s.blocks.find(x=>x.id===bid);
+    const it=bl&&bl.items.find(i=>i.id===iid); if(it) teamMaker(s, it, body);
   });
 }
 function pickExercise(blockId, s, body){
@@ -2129,6 +2192,7 @@ function sessionView(s){
             ${ex.material?`<div class="muted small" style="margin-top:4px">🎒 ${esc(ex.material)}</div>`:""}
             ${(ex.boardId && S.plays.find(pl=>pl.id===ex.boardId))?`<button class="btn sm ghost" data-play="${ex.boardId}" style="margin-top:6px">🎬 Ver jugada</button>`:""}
             ${it.note?`<div class="small" style="margin-top:4px;color:var(--brand)">✎ ${esc(it.note)}</div>`:""}
+            ${teamsDetailHTML(it)}
           </div>`;}).join("")}
       </div>`).join("") : `<div class="empty">Esta sesión no tiene ejercicios todavía.</div>`}
     ${s.notes?`<div class="card" style="background:var(--surface-2)"><div class="eyebrow" style="margin-bottom:4px">Notas</div><div class="small" style="white-space:pre-wrap">${esc(s.notes)}</div></div>`:""}
@@ -2155,6 +2219,7 @@ function printSession(s){
           ${ex.desc?`<div class="pd">${esc(ex.desc)}</div>`:""}
           ${ex.material?`<div class="pextra"><b>Material:</b> ${esc(ex.material)}</div>`:""}
           ${it.note?`<div class="pextra"><b>Nota:</b> ${esc(it.note)}</div>`:""}
+          ${it.teams&&it.teams.length?`<div class="pextra"><b>Equipos:</b> ${it.teams.map(t=>esc(t.color)+" ("+t.ids.map(id=>{const p=playerById(id);return p?("#"+p.number):"";}).filter(Boolean).join(", ")+")").join(" · ")}</div>`:""}
         </div>`;}).join("")}
     </div>`).join("")}
     ${s.notes?`<div class="pblock"><h2>Notas</h2><div class="pd">${esc(s.notes)}</div></div>`:""}`;
