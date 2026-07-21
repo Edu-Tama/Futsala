@@ -1,9 +1,10 @@
 {
+  "id": "/Futsala/agosto/",
   "name": "Agosto FutSala Villaverde",
   "short_name": "Agosto FSV",
   "description": "Trabajo previo individual · Agosto 2026",
-  "start_url": ".",
-  "scope": ".",
+  "start_url": "/Futsala/agosto/",
+  "scope": "/Futsala/agosto/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0B1220",
