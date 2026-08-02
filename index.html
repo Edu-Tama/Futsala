@@ -97,6 +97,9 @@
   .syncdot.offline{background:var(--muted-2)}
   .syncdot.error{background:var(--red)}
   .syncdot.local{background:var(--muted-2)}
+  .ckrow{padding:10px 0;border-bottom:1px solid var(--line)}
+  .ckrow:last-child{border-bottom:0}
+  .ckrow.ck-warn{border-left:3px solid var(--foul);padding-left:9px}
   .teambtn{margin-top:6px}
   .teamchip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:800;color:#0b1220}
   .teamchip.sm{padding:2px 8px;font-size:11px}
@@ -1548,7 +1551,77 @@ function bindDataCard(el){
 
 /* ---------- PLANTILLA ---------- */
 /* ---- helpers de jugadora ---- */
-function ensurePlayer(p){ if(!p.status)p.status="ok"; if(!p.goals)p.goals=[]; if(!p.notes)p.notes=[]; if(!p.injuries)p.injuries=[]; }
+function ensurePlayer(p){ if(!p.status)p.status="ok"; if(!p.goals)p.goals=[]; if(!p.notes)p.notes=[]; if(!p.injuries)p.injuries=[]; if(!p.checkins)p.checkins=[]; }
+
+/* ---- Check-ins de pretemporada (puente con la app de agosto) ---- */
+function parseCheckin(text){
+  const m = String(text||"").match(/\[FSV26\|([^\]]*)\]/i);
+  if(!m) return {error:"No encuentro el código del check-in (la línea entre corchetes [FSV26|…]). Pega el mensaje completo que te envió la jugadora."};
+  const f = m[1].split("|");   // semana | nombre | sensación | molestias | dónde | sesiones | preventivos
+  const name=(f[1]||"").trim();
+  if(!name) return {error:"El código no trae el nombre de la jugadora."};
+  const prevLine = String(text).match(/Preventivos:\s*(.+)/i);
+  const preventivos = prevLine ? prevLine[1].trim() : (f[6]||"").trim();
+  const week=parseInt(f[0]);
+  return { name, check:{
+    week: isNaN(week)?null:week,
+    sensacion: parseInt(f[2])||null,
+    molestias: /^s[ií]/i.test((f[3]||"").trim()),
+    donde: (f[4]||"").trim(),
+    sesiones: parseInt(f[5])||0,
+    preventivos: preventivos,
+    imported: ymd(new Date())
+  }};
+}
+function saveCheckin(player, check){
+  if(!player.checkins) player.checkins=[];
+  const i=player.checkins.findIndex(c=>c.week===check.week);
+  if(i>=0) player.checkins[i]=check; else player.checkins.push(check);
+  player.checkins.sort((a,b)=>(a.week||0)-(b.week||0));
+  save();
+}
+function pasteCheckin(forcePlayer, onDone){
+  modal(`<h3>Pegar check-in</h3>
+    <p class="muted small" style="margin:0 0 8px">Pega el mensaje completo que te ha enviado la jugadora (con el código entre corchetes).</p>
+    <textarea id="ckText" style="min-height:150px" placeholder="✅ CHECK-IN AGOSTO · …&#10;…&#10;[FSV26|…]"></textarea>
+    <div id="ckMsg" class="small" style="min-height:18px;margin:6px 0"></div>
+    <div class="foot"><button class="btn ghost grow" id="ckCancel">Cancelar</button><button class="btn primary grow" id="ckImport">Importar</button></div>`);
+  document.getElementById("ckCancel").onclick=closeModal;
+  document.getElementById("ckImport").onclick=()=>{
+    const text=document.getElementById("ckText").value;
+    const msg=document.getElementById("ckMsg");
+    const r=parseCheckin(text);
+    if(r.error){ msg.style.color="var(--red)"; msg.textContent=r.error; return; }
+    let player;
+    if(forcePlayer){
+      player=forcePlayer;
+      if((player.name||"").trim().toLowerCase()!==r.name.toLowerCase()){
+        msg.style.color="var(--foul)";
+        msg.innerHTML=`Este check-in es de <b>${esc(r.name)}</b>, pero estás en la ficha de <b>${esc(player.name)}</b>. <button class="btn sm ghost" id="ckAnyway" style="margin-top:6px">Guardarlo aquí igualmente</button>`;
+        const a=document.getElementById("ckAnyway"); if(a) a.onclick=()=>{ saveCheckin(player,r.check); closeModal(); if(onDone)onDone(); toast("Check-in guardado"); };
+        return;
+      }
+    } else {
+      player=S.roster.find(p=>(p.name||"").trim().toLowerCase()===r.name.toLowerCase());
+      if(!player){ msg.style.color="var(--red)"; msg.textContent=`No encuentro a "${r.name}" en la plantilla. Revisa que el nombre coincida exactamente.`; return; }
+    }
+    saveCheckin(player, r.check);
+    closeModal(); if(onDone)onDone();
+    toast("Check-in de "+player.name+" · semana "+(r.check.week||"?")+" guardado");
+  };
+}
+function checkinRowHTML(c){
+  const sens = c.sensacion? c.sensacion+"/5":"—";
+  return `<div class="ckrow ${c.molestias?'ck-warn':''}">
+    <div class="row"><b>Semana ${c.week||"?"}</b><div class="grow"></div><span class="muted small">${c.sesiones} ses.</span></div>
+    <div class="row" style="gap:14px;margin-top:4px;flex-wrap:wrap">
+      <span class="small">Sensación: <b>${sens}</b></span>
+      <span class="small">Molestias: <b style="color:${c.molestias?'var(--foul)':'inherit'}">${c.molestias?('sí'+(c.donde?' · '+esc(c.donde):'')):'no'}</b></span>
+    </div>
+    ${c.preventivos?`<div class="muted small" style="margin-top:3px">Preventivos: ${esc(c.preventivos)}</div>`:""}
+    ${c.molestias?`<button class="btn sm ghost" data-ck2inj="${c.week}" style="margin-top:7px">Registrar como lesión →</button>`:""}
+  </div>`;
+}
 function statusLabel(s){ return {ok:"Disponible",tocada:"Tocada",lesionada:"Lesionada",baja:"Baja"}[s]||"Disponible"; }
 function injuryActive(p){ return (p.injuries||[]).some(i=>i.active); }
 function playerSeasonStats(pid){
@@ -1626,7 +1699,8 @@ function renderRoster(){
     <div class="row" style="margin-bottom:10px">
       <div class="eyebrow">Plantilla · ${S.roster.length}</div>
       <div class="grow"></div>
-      <button class="btn sm ghost" id="rEdit">Editar lista</button>
+      <button class="btn sm ghost" id="rCheckin">Pegar check-in</button>
+      <button class="btn sm ghost" id="rEdit" style="margin-left:6px">Editar lista</button>
     </div>
     ${dups.length?`<div class="warnrow">⚠ Dorsal repetido: ${dups.join(", ")}. Edita la lista para corregirlo.</div>`:""}
     <div class="card" style="padding:4px 14px">
@@ -1644,6 +1718,7 @@ function renderRoster(){
       <span><i style="background:var(--muted-2)"></i>baja</span>
     </div>`;
   el.querySelector("#rEdit").onclick=()=>{ rosterEdit=true; renderRoster(); };
+  el.querySelector("#rCheckin").onclick=()=>pasteCheckin(null, ()=>renderRoster());
   el.querySelectorAll("[data-pl]").forEach(r=>r.onclick=()=>{ openPlayerId=r.dataset.pl; renderRoster(); });
 }
 
@@ -1745,6 +1820,12 @@ function renderPlayerCard(el){
     </div>
 
     <div class="card">
+      <h2>Check-ins de pretemporada</h2>
+      <div id="pcChecks">${p.checkins.length? p.checkins.slice().sort((a,b)=>(b.week||0)-(a.week||0)).map(c=>checkinRowHTML(c)).join("") : '<div class="muted small">Sin check-ins todavía. Pega el mensaje que te envíe la jugadora.</div>'}</div>
+      <button class="btn ghost block" id="pcCkAdd" style="margin-top:10px">Pegar check-in</button>
+    </div>
+
+    <div class="card">
       <h2>Lesiones</h2>
       <div id="pcInj">${p.injuries.length?p.injuries.slice().sort((a,b)=>(b.since||"").localeCompare(a.since||"")).map(j=>`<div class="injr ${j.active?'active':''}">
         <div class="row"><b class="grow">${esc(j.what||"Lesión")}</b>${j.active?'<button class="btn sm ghost" data-ialta="'+j.id+'">Dar de alta</button>':'<span class="muted small">resuelta</span>'}<button class="btn sm danger" data-idel="${j.id}" style="margin-left:6px">✕</button></div>
@@ -1775,11 +1856,18 @@ function renderPlayerCard(el){
     save(); renderPlayerCard(el);
   });
   el.querySelectorAll("[data-idel]").forEach(b=>b.onclick=()=>{ p.injuries=p.injuries.filter(x=>x.id!==b.dataset.idel); if(!injuryActive(p)&&p.status==="lesionada")p.status="ok"; save(); renderPlayerCard(el); });
+
+  // check-ins de pretemporada
+  el.querySelector("#pcCkAdd").onclick=()=>pasteCheckin(p, ()=>renderPlayerCard(el));
+  el.querySelectorAll("[data-ck2inj]").forEach(b=>b.onclick=()=>{
+    const c=p.checkins.find(x=>String(x.week)===b.dataset.ck2inj);
+    injuryForm(p, el, c && c.donde ? ("Molestias en "+c.donde) : "");
+  });
 }
 
-function injuryForm(p, el){
+function injuryForm(p, el, prefWhat){
   modal(`<h3>Registrar lesión</h3>
-    <label class="fld"><span>Qué</span><input id="ijWhat" placeholder="Ej. esguince de tobillo"></label>
+    <label class="fld"><span>Qué</span><input id="ijWhat" placeholder="Ej. esguince de tobillo" value="${esc(prefWhat||"")}"></label>
     <div class="row" style="gap:8px">
       <label class="fld grow"><span>Desde</span><input id="ijSince" type="date" value="${ymd(new Date())}"></label>
       <label class="fld grow"><span>Alta prevista (opcional)</span><input id="ijUntil" type="date"></label>
