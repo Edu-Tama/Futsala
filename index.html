@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Futsala">
@@ -870,7 +870,7 @@ function renderHome(){
   </div>` : "";
 
   el.innerHTML=`
-    <div class="home-hero"><div class="hi">${saludo}</div><div class="sub">${esc(fecha)}</div></div>
+    <div class="home-hero"><div class="row" style="align-items:flex-start"><div class="grow"><div class="hi">${saludo}</div><div class="sub">${esc(fecha)}</div></div>${authToken?`<button class="btn sm ghost" id="hLogout" style="opacity:.65;font-size:12px">Salir</button>`:""}</div></div>
     ${nextMatchHTML}
     ${nextHTML}
     ${shortcuts}
@@ -880,6 +880,7 @@ function renderHome(){
     ${balance}`;
 
   const pm=el.querySelector("#hPrepMatch"); if(pm) pm.onclick=()=>{ tab="match"; renderTabs(); prepareFixture(nm.id); };
+  const hlo=el.querySelector("#hLogout"); if(hlo) hlo.onclick=()=>{ if(confirm("¿Cerrar sesión en este dispositivo? Los datos siguen en la nube; para volver a sincronizar tendrás que iniciar sesión de nuevo.")){ cloudLogout(); } };
 
   const cfg=el.querySelector("#hCfg"); if(cfg) cfg.onclick=()=>{ openSessionId=null; trainTab="sessions"; tab="train"; renderTabs(); renderTrain(); calConfig(); };
   const prep=el.querySelector("#hPrep"); if(prep) prep.onclick=()=>homeOpenSession(nd);
@@ -1053,11 +1054,6 @@ function matchHomeHTML(){
       <button class="btn sm ghost" id="mhImport">⬆ Importar / acumular</button>
     </div>
     <div class="muted small" style="margin-top:8px">Guarda o junta datos entre tus dispositivos.</div>
-    <div class="hr"></div>
-    <div class="row" style="align-items:center;gap:8px">
-      <div class="grow"><b class="small">Nube</b><div class="muted small">${authToken?"Sesión iniciada · sincronizando":"Sin conexión con la nube"}</div></div>
-      ${authToken?`<button class="btn sm ghost" id="mhLogout">Cerrar sesión</button>`:`<button class="btn sm primary" id="mhLoginBtn">Iniciar sesión</button>`}
-    </div>
   </div>`;
 
   return nextCard + listCard + looseCard + dataCardHTML;
@@ -1071,8 +1067,6 @@ function bindMatchHome(){
   const resume=el.querySelector("#mhResume"); if(resume) resume.onclick=(e)=>{ e.preventDefault(); matchView="call"; renderMatch(); };
   el.querySelector("#mhExport").onclick=exportData;
   el.querySelector("#mhImport").onclick=importData;
-  const lo=el.querySelector("#mhLogout"); if(lo) lo.onclick=()=>{ if(confirm("¿Cerrar sesión en este dispositivo? Los datos seguirán en la nube; para volver a sincronizar tendrás que iniciar sesión otra vez.")){ cloudLogout(); } };
-  const li=el.querySelector("#mhLoginBtn"); if(li) li.onclick=()=>showLogin();
 }
 function prepareFixture(id){
   const fx=S.matches.find(x=>x.id===id); if(!fx) return;
