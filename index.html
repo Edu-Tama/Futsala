@@ -384,8 +384,8 @@
 <nav>
   <button data-tab="home" aria-current="true"><span class="ic">🪑</span><span class="lb">Banquillo</span></button>
   <button data-tab="match"><span class="ic">⏱️</span><span class="lb">Partido</span></button>
-  <button data-tab="train"><span class="ic">📋</span><span class="lb">Entrenar</span></button>
-  <button data-tab="board"><span class="ic">🎬</span><span class="lb">Pizarra</span></button>
+  <button data-tab="train"><span class="ic">📅</span><span class="lb">Entrenar</span></button>
+  <button data-tab="board"><span class="ic">📋</span><span class="lb">Pizarra</span></button>
   <button data-tab="season"><span class="ic">📊</span><span class="lb">Temporada</span></button>
   <button data-tab="roster"><span class="ic">👥</span><span class="lb">Plantilla</span></button>
 </nav>
@@ -1050,6 +1050,11 @@ function matchHomeHTML(){
       <button class="btn sm ghost" id="mhImport">⬆ Importar / acumular</button>
     </div>
     <div class="muted small" style="margin-top:8px">Guarda o junta datos entre tus dispositivos.</div>
+    <div class="hr"></div>
+    <div class="row" style="align-items:center;gap:8px">
+      <div class="grow"><b class="small">Nube</b><div class="muted small">${authToken?"Sesión iniciada · sincronizando":"Sin conexión con la nube"}</div></div>
+      ${authToken?`<button class="btn sm ghost" id="mhLogout">Cerrar sesión</button>`:`<button class="btn sm primary" id="mhLoginBtn">Iniciar sesión</button>`}
+    </div>
   </div>`;
 
   return nextCard + listCard + looseCard + dataCardHTML;
@@ -1063,6 +1068,8 @@ function bindMatchHome(){
   const resume=el.querySelector("#mhResume"); if(resume) resume.onclick=(e)=>{ e.preventDefault(); matchView="call"; renderMatch(); };
   el.querySelector("#mhExport").onclick=exportData;
   el.querySelector("#mhImport").onclick=importData;
+  const lo=el.querySelector("#mhLogout"); if(lo) lo.onclick=()=>{ if(confirm("¿Cerrar sesión en este dispositivo? Los datos seguirán en la nube; para volver a sincronizar tendrás que iniciar sesión otra vez.")){ cloudLogout(); } };
+  const li=el.querySelector("#mhLoginBtn"); if(li) li.onclick=()=>showLogin();
 }
 function prepareFixture(id){
   const fx=S.matches.find(x=>x.id===id); if(!fx) return;
