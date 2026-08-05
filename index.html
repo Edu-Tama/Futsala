@@ -100,6 +100,9 @@
   .ckrow{padding:10px 0;border-bottom:1px solid var(--line)}
   .ckrow:last-child{border-bottom:0}
   .ckrow.ck-warn{border-left:3px solid var(--foul);padding-left:9px}
+  .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+  .chips button{flex:none;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:13px;cursor:pointer;white-space:nowrap}
+  .chips button[aria-current="true"]{background:var(--club);border-color:var(--club);color:#04140a;font-weight:700}
   .teambtn{margin-top:6px}
   .teamchip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:800;color:#0b1220}
   .teamchip.sm{padding:2px 8px;font-size:11px}
@@ -460,6 +463,7 @@ if(!S.exercises) S.exercises=[];
 if(!S.sessions) S.sessions=[];
 if(S.trainTodayCount===undefined) S.trainTodayCount=null;
 if(!S.plays) S.plays=[];
+if(!S.videoCats) S.videoCats={};
 if(S.trainSchedule===undefined) S.trainSchedule=null;
 if(!S.calOverrides) S.calOverrides={};
 if(S.cardLimit===undefined) S.cardLimit=5;
@@ -548,11 +552,11 @@ function stateToDocs(s){
   (s.sessions||[]).forEach(x=>{ const k=docId("session",x.id); d[k]={id:k,tipo:"session",datos:x}; });
   (s.exercises||[]).forEach(x=>{ const k=docId("exercise",x.id); d[k]={id:k,tipo:"exercise",datos:x}; });
   (s.plays||[]).forEach(x=>{ const k=docId("play",x.id); d[k]={id:k,tipo:"play",datos:x}; });
-  d["ajustes"]={id:"ajustes",tipo:"ajustes",datos:{season:s.season,live:s.live,trainTodayCount:s.trainTodayCount,trainSchedule:s.trainSchedule,calOverrides:s.calOverrides,cardLimit:s.cardLimit,draftCall:s.draftCall}};
+  d["ajustes"]={id:"ajustes",tipo:"ajustes",datos:{season:s.season,live:s.live,trainTodayCount:s.trainTodayCount,trainSchedule:s.trainSchedule,calOverrides:s.calOverrides,cardLimit:s.cardLimit,draftCall:s.draftCall,videoCats:s.videoCats||{}}};
   return d;
 }
 function docsToState(map){
-  const st={season:"Temporada 2025–2026 · 1ª Autonómica",roster:[],matches:[],live:null,exercises:[],sessions:[],trainTodayCount:null,plays:[],trainSchedule:null,calOverrides:{},cardLimit:5,draftCall:null};
+  const st={season:"Temporada 2025–2026 · 1ª Autonómica",roster:[],matches:[],live:null,exercises:[],sessions:[],trainTodayCount:null,plays:[],trainSchedule:null,calOverrides:{},cardLimit:5,draftCall:null,videoCats:{}};
   Object.keys(map).forEach(k=>{ const doc=map[k]; if(!doc) return; const t=doc.tipo, dt=doc.datos;
     if(t==="player")st.roster.push(dt); else if(t==="match")st.matches.push(dt); else if(t==="session")st.sessions.push(dt);
     else if(t==="exercise")st.exercises.push(dt); else if(t==="play")st.plays.push(dt); else if(t==="ajustes")Object.assign(st,dt); });
@@ -606,6 +610,76 @@ async function syncNow(){
   syncBusy=false;
 }
 function schedulePush(){ if(!authToken) return; clearTimeout(pushTimer); pushTimer=setTimeout(function(){ syncNow(); }, 2500); }
+
+/* ---- Almacén de vídeos de jugadas (Supabase Storage, bucket 'jugadas') ---- */
+async function storageFetch(path, opts, retry){
+  opts=opts||{}; opts.headers=Object.assign({}, authHeaders(), opts.headers||{});
+  const r=await fetch(SUPA_URL+"/storage/v1/"+path, opts);
+  if(r.status===401 && !retry){ const ok=await cloudRefresh(); if(ok) return storageFetch(path,opts,true); throw new Error("auth"); }
+  return r;
+}
+async function storageList(){
+  const r=await storageFetch("object/list/jugadas",{method:"POST",body:JSON.stringify({prefix:"",limit:500,sortBy:{column:"name",order:"asc"}})});
+  if(!r.ok) throw new Error("list");
+  const arr=await r.json();
+  return (arr||[]).filter(o=>o && o.name && o.id);
+}
+async function storageSignedUrl(path){
+  const enc=path.split("/").map(encodeURIComponent).join("/");
+  const r=await storageFetch("object/sign/jugadas/"+enc,{method:"POST",body:JSON.stringify({expiresIn:3600})});
+  if(!r.ok) throw new Error("sign");
+  const d=await r.json();
+  return SUPA_URL+"/storage/v1"+d.signedURL;
+}
+function playVideoBoxHTML(p){
+  if(p.videoPath){
+    return `<div class="muted small" style="margin-bottom:8px">🎬 ${esc(p.videoPath)}</div>
+      <div id="pbVideoPlayer"></div>
+      <div class="row" style="gap:8px">
+        <button class="btn sm primary grow" id="pbVideoPlay">▶ Ver vídeo</button>
+        <button class="btn sm ghost" id="pbVideoChange">Cambiar</button>
+        <button class="btn sm ghost" id="pbVideoRemove">Quitar</button>
+      </div>`;
+  }
+  return `<div class="muted small" style="margin-bottom:8px">Ninguno asociado.</div>
+    <button class="btn ghost block" id="pbVideoAdd">Asociar vídeo del almacén</button>`;
+}
+function bindPlayVideo(el, p){
+  const refresh=()=>{ const box=el.querySelector("#pbVideoBox"); if(box){ box.innerHTML=playVideoBoxHTML(p); bindPlayVideo(el,p); } };
+  const add=el.querySelector("#pbVideoAdd"); if(add) add.onclick=()=>pickPlayVideo(p, el);
+  const chg=el.querySelector("#pbVideoChange"); if(chg) chg.onclick=()=>pickPlayVideo(p, el);
+  const rm=el.querySelector("#pbVideoRemove"); if(rm) rm.onclick=()=>{ p.videoPath=null; save(); refresh(); };
+  const pl=el.querySelector("#pbVideoPlay"); if(pl) pl.onclick=async ()=>{
+    const host=el.querySelector("#pbVideoPlayer");
+    pl.disabled=true; pl.textContent="Cargando…";
+    try{
+      const url=await storageSignedUrl(p.videoPath);
+      host.innerHTML=`<video src="${url}" controls autoplay playsinline style="width:100%;border-radius:10px;margin-bottom:8px;background:#000"></video>`;
+    }catch(e){
+      host.innerHTML=`<div class="small" style="color:var(--red);margin-bottom:8px">No se pudo cargar el vídeo. Comprueba que tienes conexión y la sesión iniciada.</div>`;
+    }
+    pl.textContent="▶ Ver vídeo"; pl.disabled=false;
+  };
+}
+async function pickPlayVideo(p, el){
+  modal(`<h3>Asociar vídeo</h3><div id="pvList" class="muted small">Cargando vídeos del almacén…</div>`);
+  try{
+    const files=await storageList();
+    const box=document.getElementById("pvList");
+    if(!box) return;
+    if(!files.length){ box.innerHTML="No hay vídeos en el almacén todavía. Súbelos en Supabase → Storage → jugadas."; return; }
+    box.className="";
+    box.innerHTML=`<div class="muted small" style="margin-bottom:8px">Toca el vídeo que quieres asociar a esta jugada:</div>`+files.map(f=>`<button class="btn ghost block" style="margin-bottom:6px;text-align:left" data-vf="${esc(f.name)}">🎬 ${esc(f.name)}</button>`).join("");
+    box.querySelectorAll("[data-vf]").forEach(b=>b.onclick=()=>{
+      p.videoPath=b.dataset.vf; save(); closeModal();
+      const vb=el.querySelector("#pbVideoBox"); if(vb){ vb.innerHTML=playVideoBoxHTML(p); bindPlayVideo(el,p); }
+      toast("Vídeo asociado a la jugada");
+    });
+  }catch(e){
+    const box=document.getElementById("pvList");
+    if(box) box.innerHTML=`<span style="color:var(--red)">No se pudo leer el almacén. Comprueba que tienes la sesión iniciada y conexión.</span>`;
+  }
+}
 
 function showLogin(){ const o=document.getElementById("loginOverlay"); if(o) o.style.display="flex"; }
 function hideLogin(){ const o=document.getElementById("loginOverlay"); if(o) o.style.display="none"; }
@@ -2500,6 +2574,8 @@ function printSession(s){
    PIZARRA TÁCTICA: jugadas con animación por pasos (canvas)
    ========================================================= */
 let openPlayId=null, pbStep=0, pbPlaying=false, pbRAF=null;
+let boardTab="biblio", boardCat="todas";
+const PLAY_CATS=[{id:"banda",label:"Saque de banda"},{id:"corner",label:"Córner"},{id:"falta",label:"Falta"},{id:"presion",label:"Salida de presión"},{id:"otras",label:"Otras"}];
 let pbCanvas=null, pbCtx=null, pbDrag=null;
 const PB_SPEEDS={Lento:1500, Normal:900, Rápido:500};
 const PB_R=0.022;              // radio de ficha (normalizado al ancho)
@@ -2512,23 +2588,87 @@ function renderBoard(){
   const el=document.getElementById("view-board");
   if(openPlayId){ renderPlayEditor(el); return; }
   pbStop();
-  const list=S.plays.slice().sort((a,b)=>(a.name||"").localeCompare(b.name||""));
   el.innerHTML=`
+    <div class="seg" id="boardSeg" style="margin-bottom:12px">
+      <button data-bt="biblio" aria-current="${boardTab!=='crear'}">Biblioteca</button>
+      <button data-bt="crear" aria-current="${boardTab==='crear'}">Crear</button>
+    </div>
+    <div id="boardBody"></div>`;
+  el.querySelectorAll("#boardSeg [data-bt]").forEach(b=>b.onclick=()=>{ boardTab=b.dataset.bt; renderBoard(); });
+  const body=el.querySelector("#boardBody");
+  if(boardTab==="crear") renderBoardCreate(body); else renderBoardLibrary(body);
+}
+function renderBoardCreate(body){
+  const list=S.plays.slice().sort((a,b)=>(a.name||"").localeCompare(b.name||""));
+  body.innerHTML=`
     <div class="search"><div class="grow"></div><button class="btn primary" id="pbNew">+ Nueva jugada</button></div>
     <div class="card" style="padding:4px 14px">
       ${list.length? list.map(p=>`<div class="sess">
           <div class="grow"><b>${esc(p.name||"Jugada sin nombre")}</b><div class="muted small">${esc(p.type||"Jugada")} · ${p.steps.length} paso${p.steps.length>1?"s":""} · ${p.tokens.length} fichas</div></div>
           <button class="btn sm ghost" data-dup="${p.id}" title="Duplicar">⧉</button>
           <button class="btn sm ghost" data-open="${p.id}">Abrir</button>
-        </div>`).join("") : `<div class="empty">Aún no hay jugadas.<br>Crea una para ensayar balón parado o movimientos.</div>`}
+        </div>`).join("") : `<div class="empty">Aún no hay jugadas dibujadas.<br>Crea una para ensayar balón parado o movimientos.</div>`}
     </div>
     <div class="pb-hint">Se ve mejor en horizontal o en tablet.</div>`;
-  el.querySelector("#pbNew").onclick=()=>{ const p=newPlay(); S.plays.push(p); save(); openPlayId=p.id; pbStep=0; renderBoard(); };
-  el.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ openPlayId=b.dataset.open; pbStep=0; renderBoard(); });
-  el.querySelectorAll("[data-dup]").forEach(b=>b.onclick=()=>{
+  body.querySelector("#pbNew").onclick=()=>{ const p=newPlay(); S.plays.push(p); save(); openPlayId=p.id; pbStep=0; renderBoard(); };
+  body.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ openPlayId=b.dataset.open; pbStep=0; renderBoard(); });
+  body.querySelectorAll("[data-dup]").forEach(b=>b.onclick=()=>{
     const s=S.plays.find(x=>x.id===b.dataset.dup); const c=JSON.parse(JSON.stringify(s));
     c.id=uid(); c.name=(s.name||"Jugada")+" (copia)"; S.plays.push(c); save(); openPlayId=c.id; pbStep=0; renderBoard(); toast("Jugada duplicada");
   });
+}
+async function renderBoardLibrary(body){
+  if(!authToken){ body.innerHTML=`<div class="empty">Inicia sesión para ver la biblioteca de vídeos.</div>`; return; }
+  body.innerHTML=`
+    <div class="chips" id="catChips">
+      <button data-cat="todas" aria-current="${boardCat==='todas'}">Todas</button>
+      ${PLAY_CATS.map(c=>`<button data-cat="${c.id}" aria-current="${boardCat===c.id}">${c.label}</button>`).join("")}
+      <button data-cat="sinclas" aria-current="${boardCat==='sinclas'}">Sin clasificar</button>
+    </div>
+    <div id="libList" class="muted small" style="margin-top:12px">Cargando vídeos del almacén…</div>`;
+  body.querySelectorAll("#catChips [data-cat]").forEach(b=>b.onclick=()=>{ boardCat=b.dataset.cat; renderBoardLibrary(body); });
+  let files;
+  try{ files=await storageList(); }
+  catch(e){ const l=body.querySelector("#libList"); if(l) l.innerHTML=`<span style="color:var(--red)">No se pudo leer el almacén. Comprueba que tienes sesión iniciada y conexión.</span>`; return; }
+  const l=body.querySelector("#libList"); if(!l) return;
+  l.className="";
+  if(!files.length){ l.innerHTML=`<div class="empty">No hay vídeos en el almacén todavía.<br>Súbelos en Supabase → Storage → jugadas.</div>`; return; }
+  const cats=S.videoCats||{};
+  let shown=files;
+  if(boardCat==="sinclas") shown=files.filter(f=>!cats[f.name]);
+  else if(boardCat!=="todas") shown=files.filter(f=>cats[f.name]===boardCat);
+  if(!shown.length){ l.innerHTML=`<div class="empty">Nada en esta categoría.</div>`; return; }
+  l.innerHTML=shown.map(f=>libRowHTML(f, cats[f.name])).join("");
+  l.querySelectorAll("[data-vplay]").forEach(b=>b.onclick=()=>libPlay(b, b.dataset.vplay));
+  l.querySelectorAll("[data-vcat]").forEach(sel=>sel.onchange=()=>{
+    if(!S.videoCats) S.videoCats={};
+    if(sel.value) S.videoCats[sel.dataset.vcat]=sel.value; else delete S.videoCats[sel.dataset.vcat];
+    save();
+    if(boardCat!=="todas") renderBoardLibrary(body);
+  });
+}
+function libRowHTML(f, cat){
+  return `<div class="card" style="padding:12px;margin-bottom:8px">
+    <div class="row" style="align-items:center;gap:8px">
+      <b class="small grow">${esc(f.name)}</b>
+      <button class="btn sm ghost" data-vplay="${esc(f.name)}">▶ Ver</button>
+    </div>
+    <div class="libplayer"></div>
+    <label class="fld" style="margin-top:8px"><span>Categoría</span>
+      <select data-vcat="${esc(f.name)}">
+        <option value="">Sin clasificar</option>
+        ${PLAY_CATS.map(c=>`<option value="${c.id}" ${cat===c.id?"selected":""}>${c.label}</option>`).join("")}
+      </select>
+    </label>
+  </div>`;
+}
+async function libPlay(btn, name){
+  const card=btn.closest(".card"); const host=card.querySelector(".libplayer");
+  btn.disabled=true; btn.textContent="…";
+  try{ const url=await storageSignedUrl(name);
+    host.innerHTML=`<video src="${url}" controls autoplay playsinline style="width:100%;border-radius:10px;margin-top:8px;background:#000"></video>`;
+  }catch(e){ host.innerHTML=`<div class="small" style="color:var(--red);margin-top:8px">No se pudo cargar el vídeo.</div>`; }
+  btn.disabled=false; btn.textContent="▶ Ver";
 }
 
 function renderPlayEditor(el){
@@ -2553,6 +2693,11 @@ function renderPlayEditor(el){
           <option value="real" ${p.labelMode==="real"?"selected":""}>Dorsales reales</option>
         </select></label>
       </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0">Vídeo de referencia</h2>
+      <div id="pbVideoBox">${playVideoBoxHTML(p)}</div>
     </div>
 
     <div class="pbwrap" id="pbWrap"><canvas id="pbCanvas"></canvas></div>
@@ -2594,6 +2739,7 @@ function renderPlayEditor(el){
   const nm=el.querySelector("#pbName"); nm.oninput=()=>{ p.name=nm.value; save(); };
   const ty=el.querySelector("#pbType"); ty.onchange=()=>{ p.type=ty.value; save(); };
   const lb=el.querySelector("#pbLabel"); lb.onchange=()=>{ p.labelMode=lb.value; save(); pbRelabel(p); pbDraw(p); };
+  bindPlayVideo(el, p);
 
   // tokens
   el.querySelector("#addHome").onclick=()=>pbAddToken(p,"home");
