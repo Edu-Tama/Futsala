@@ -609,7 +609,27 @@ async function syncNow(){
   }catch(e){ setSync("error"); }
   syncBusy=false;
 }
-function schedulePush(){ if(!authToken) return; clearTimeout(pushTimer); pushTimer=setTimeout(function(){ syncNow(); }, 2500); }
+function schedulePush(){ if(!authToken) return; clearTimeout(pushTimer); pushTimer=setTimeout(cloudPush, 2500); }
+async function cloudPush(){
+  if(!authToken || syncBusy) return;
+  if(S.live && S.live.running) return;
+  syncBusy=true; setSync("syncing");
+  try{
+    const localMap=stateToDocs(S);
+    let snap={}; try{ snap=JSON.parse(localStorage.getItem(SNAP_KEY))||{}; }catch(e){ snap={}; }
+    const toPush=[], toDelete=[];
+    Object.keys(localMap).forEach(id=>{ const cur=JSON.stringify(localMap[id].datos); if(cur!==snap[id]) toPush.push(localMap[id]); });
+    Object.keys(snap).forEach(id=>{ if(!localMap[id]) toDelete.push(id); });
+    if(toPush.length) await cloudUpsert(toPush);
+    if(toDelete.length) await cloudDelete(toDelete);
+    const newSnap=Object.assign({}, snap);
+    toPush.forEach(d=>{ newSnap[d.id]=JSON.stringify(d.datos); });
+    toDelete.forEach(id=>{ delete newSnap[id]; });
+    localStorage.setItem(SNAP_KEY, JSON.stringify(newSnap));
+    setSync("ok");
+  }catch(e){ setSync(e.message==="auth"?"error":"offline"); }
+  syncBusy=false;
+}
 
 /* ---- Almacén de vídeos de jugadas (Supabase Storage, bucket 'jugadas') ---- */
 async function storageFetch(path, opts, retry){
@@ -1754,9 +1774,15 @@ function loadByWeek(pid){
 function loadWeeks(pid,n){
   const map=loadByWeek(pid);
   const keys=Object.keys(map).filter(k=>map[k]>0).sort();
-  const endW = keys.length? keys[keys.length-1] : weekStart(ymd(new Date()));
+  const nowW=weekStart(ymd(new Date()));
+  let endW=nowW;
+  if(keys.length && keys[keys.length-1]>endW) endW=keys[keys.length-1];
+  let startW=keys.length? keys[0] : endW;
+  const startD=parseYmd(startW), endD=parseYmd(endW);
+  let weeks=Math.round((endD-startD)/(7*86400000))+1;
+  if(weeks<1) weeks=1; if(weeks>n) weeks=n;
   const base=parseYmd(endW); const out=[];
-  for(let i=n-1;i>=0;i--){ const wd=new Date(base); wd.setDate(base.getDate()-i*7); const k=ymd(wd); out.push({week:k, load:Math.round(map[k]||0)}); }
+  for(let i=weeks-1;i>=0;i--){ const wd=new Date(base); wd.setDate(base.getDate()-i*7); const k=ymd(wd); out.push({week:k, load:Math.round(map[k]||0)}); }
   return out;
 }
 function loadSignal(pid){
@@ -1854,7 +1880,7 @@ function renderPlayerCard(el){
     const hot=isNow && sig.ratio!=null && sig.ratio>=1.5;
     const h=Math.round(w.load/maxL*100);
     const d=parseYmd(w.week);
-    return `<div class="lc-col"><div class="lc-bar ${hot?'hot':''} ${isNow?'now':''}" style="height:${h}%" title="${w.load}"></div><div class="lc-lbl">${d.getDate()}/${d.getMonth()+1}</div></div>`;
+    return `<div class="lc-col"><div class="lc-bar ${hot?'hot':''} ${isNow?'now':''}" style="height:${h}%" title="Semana del ${d.getDate()}/${d.getMonth()+1} · ${w.load} ua"></div><div class="lc-lbl">${d.getDate()}/${d.getMonth()+1}</div></div>`;
   }).join("");
   const states=[["ok","Disponible"],["tocada","Tocada"],["lesionada","Lesionada"],["baja","Baja"]];
 
@@ -1889,7 +1915,7 @@ function renderPlayerCard(el){
       <h2>Carga de entrenamiento</h2>
       ${sig.hasData ? `
         <div class="loadchart">${chartHTML}</div>
-        <div class="row" style="justify-content:space-between;margin-top:10px"><span class="muted small">8 semanas · entrenos + partidos</span><span class="muted small">ua = RPE × min</span></div>
+        <div class="row" style="justify-content:space-between;margin-top:10px"><span class="muted small">Por semana (lun–dom) · entrenos + partidos</span><span class="muted small">ua = RPE × min</span></div>
         ${sig.reasons.length?`<div class="warnrow" style="margin-top:10px">⚠ ${esc(sig.reasons.join(" · "))}. Conviene mirarla.</div>`:`<div class="muted small" style="margin-top:10px">Carga estable. 👍</div>`}
       ` : `<div class="muted small">Aún no hay RPE registrado. Se rellena al cerrar cada entreno.</div>`}
     </div>
