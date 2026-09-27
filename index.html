@@ -1553,7 +1553,8 @@ function renderSeason(){
         <div class="grow"><b>${m.homeAway==="local"?"vs":"@"} ${esc(m.opponent)}</b>
           <div class="muted small">${new Date(m.date).toLocaleDateString("es-ES")}${seasonComp==="todo"?" · "+compLabel(m.comp):""}</div></div>
         <div class="num" style="font-size:20px;font-variant-numeric:tabular-nums">${m.score.us}–${m.score.them}</div>
-        <button class="btn sm ghost" data-edit="${m.id}" style="margin-left:8px">Editar</button>
+        <button class="btn sm ghost" data-summ="${m.id}" style="margin-left:8px" title="Minutos del partido">⏱️</button>
+        <button class="btn sm ghost" data-edit="${m.id}" style="margin-left:6px">Editar</button>
         <button class="btn sm danger" data-delm="${m.id}" style="margin-left:6px" title="Eliminar">✕</button>
       </div>`;}).join("")}
   </div>`;
@@ -1566,6 +1567,9 @@ function renderSeason(){
     const key=th.dataset.k;
     if(seasonSort.key===key) seasonSort.dir*=-1; else seasonSort={key,dir:key==="name"?1:-1};
     renderSeason();
+  });
+  el.querySelectorAll("[data-summ]").forEach(b=>b.onclick=()=>{
+    const m=S.matches.find(x=>x.id===b.dataset.summ); if(m) matchSummarySheet(m);
   });
   el.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>{
     const m=S.matches.find(x=>x.id===b.dataset.edit); if(m) editMatch(m);
