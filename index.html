@@ -315,7 +315,9 @@
   .rpegrid .rpe-row{display:flex;align-items:center;gap:10px}
   .rpegrid .rpe-row .nm{flex:1;min-width:0;font-size:14px}
   .rpegrid .rpe-row input{width:64px;text-align:center}
-  .loadchart{display:flex;gap:4px;align-items:flex-end;height:78px;margin-top:4px}
+  .loadchart{display:flex;gap:4px;align-items:flex-end;height:78px;margin-top:4px;position:relative}
+  .loadchart .lc-base{position:absolute;left:0;right:0;border-top:1px dashed var(--muted-2);opacity:.65;pointer-events:none}
+  .loadchart .lc-base span{position:absolute;right:0;top:-14px;font-size:9px;color:var(--muted-2);background:var(--surface);padding:0 3px}
   .loadchart .lc-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
   .loadchart .lc-bar{width:100%;max-width:26px;background:var(--brand);border-radius:4px 4px 0 0;min-height:2px}
   .loadchart .lc-bar.hot{background:var(--foul)}
@@ -841,15 +843,33 @@ function finishMatch(){
   toast("Partido guardado en la temporada");
 }
 
-/* minutos jugados (segundos) por jugadora en un partido */
+/* Duración reglamentaria de cada parte (segundos). 2×20 en 1ª Autonómica. */
+const REG_HALF_SEC = 20*60;
+/* Longitud real que corrió el reloj en una parte (segundos). */
+function halfRealLen(m, h){
+  let mx=0;
+  (m.stints||[]).forEach(st=>{ if(st.half===h && st.outSec!=null && st.outSec>mx) mx=st.outSec; });
+  return mx;
+}
+/* minutos jugados (segundos) por jugadora en un partido.
+   En partidos finalizados, normaliza cada parte a su duración reglamentaria:
+   como el reloj corre sin pararse en los saques, la parte dura en real más de
+   20', así que escalamos proporcionalmente para que nadie pase de 40' de juego. */
 function minutesFor(m, pid){
+  const done = m.finished;
+  const factor = {};
+  if(done){
+    [1,2].forEach(h=>{ const len=halfRealLen(m,h); factor[h]= len>0 ? Math.min(1, REG_HALF_SEC/len) : 1; });
+  }
   let s=0;
   m.stints.forEach(st=>{
     if(st.pid!==pid) return;
     let out;
     if(st.outSec===null) out = (st.half===m.half) ? m.elapsed : st.inSec; // en pista ahora -> reloj actual
     else out = st.outSec;
-    s += (out - st.inSec);
+    let dur = out - st.inSec;
+    if(done) dur *= (factor[st.half]!=null ? factor[st.half] : 1);
+    s += dur;
   });
   return s;
 }
@@ -1882,6 +1902,19 @@ function renderPlayerCard(el){
     const d=parseYmd(w.week);
     return `<div class="lc-col"><div class="lc-bar ${hot?'hot':''} ${isNow?'now':''}" style="height:${h}%" title="Semana del ${d.getDate()}/${d.getMonth()+1} · ${w.load} ua"></div><div class="lc-lbl">${d.getDate()}/${d.getMonth()+1}</div></div>`;
   }).join("");
+  const baseHTML = sig.chronic>0 ? `<div class="lc-base" style="bottom:${Math.round(sig.chronic/maxL*100)}%"><span>media</span></div>` : "";
+  let vLabel, vColor, vSub;
+  if(!sig.chronic || sig.chronic<=0){ vLabel="Sin media de referencia"; vColor="var(--muted)"; vSub="faltan semanas para comparar"; }
+  else { const pct=Math.round((sig.ratio-1)*100); vSub=`${pct>=0?"+":""}${pct}% sobre su media reciente`;
+    if(sig.ratio>=1.5){ vLabel="Carga muy alta"; vColor="var(--red)"; }
+    else if(sig.ratio>=1.3){ vLabel="Carga alta"; vColor="var(--foul)"; }
+    else if(sig.ratio<0.8){ vLabel="Carga baja"; vColor="var(--muted)"; }
+    else { vLabel="Carga normal"; vColor="var(--club-2)"; }
+  }
+  const estFlags=[];
+  if(injuryActive(p)) estFlags.push("lesión activa");
+  else if((p.injuries||[]).some(j=>j.altaDate && j.altaDate>=ymd(new Date(Date.now()-21*864e5)))) estFlags.push("vuelve de lesión");
+  if(p.status==="tocada") estFlags.push("está tocada");
   const states=[["ok","Disponible"],["tocada","Tocada"],["lesionada","Lesionada"],["baja","Baja"]];
 
   el.innerHTML=`
@@ -1923,9 +1956,10 @@ function renderPlayerCard(el){
     <div class="card">
       <h2>Carga de entrenamiento</h2>
       ${sig.hasData ? `
-        <div class="loadchart">${chartHTML}</div>
-        <div class="row" style="justify-content:space-between;margin-top:10px"><span class="muted small">Por semana (lun–dom) · entrenos + partidos</span><span class="muted small">ua = RPE × min</span></div>
-        ${sig.reasons.length?`<div class="warnrow" style="margin-top:10px">⚠ ${esc(sig.reasons.join(" · "))}. Conviene mirarla.</div>`:`<div class="muted small" style="margin-top:10px">Carga estable. 👍</div>`}
+        <div class="loadchart">${baseHTML}${chartHTML}</div>
+        <div class="row" style="justify-content:space-between;margin-top:8px"><span class="muted small">Por semana (lun–dom) · entrenos + partidos</span><span class="muted small">ua = RPE × min</span></div>
+        <div class="row" style="align-items:baseline;gap:8px;margin-top:10px"><span style="font-weight:800;color:${vColor}">${vLabel}</span><span class="muted small">${vSub}</span></div>
+        ${estFlags.length?`<div class="warnrow" style="margin-top:8px">⚠ ${esc(estFlags.join(" · "))}. Conviene mirarla.</div>`:""}
       ` : `<div class="muted small">Aún no hay RPE registrado. Se rellena al cerrar cada entreno.</div>`}
     </div>
 
