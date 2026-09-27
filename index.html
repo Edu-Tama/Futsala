@@ -1901,15 +1901,24 @@ function renderPlayerCard(el){
     <div class="card">
       <h2>Resumen de temporada</h2>
       <div class="statbox">
-        <div class="s"><div class="v">${st.pj}</div><div class="l">partidos</div></div>
-        <div class="s"><div class="v">${fmt(st.min)}</div><div class="l">minutos</div></div>
+        <div class="s"><div class="v">${st.pj}</div><div class="l">jugados</div></div>
+        <div class="s"><div class="v">${fmt(st.min)}</div><div class="l">min. totales</div></div>
+        <div class="s"><div class="v">${st.pj?fmt(st.min/st.pj):"—"}</div><div class="l">media/partido</div></div>
         <div class="s"><div class="v">${st.g}</div><div class="l">goles</div></div>
-        <div class="s"><div class="v">${st.a}</div><div class="l">asist.</div></div>
       </div>
       <div class="hr"></div>
-      <div class="row" style="justify-content:space-between"><span class="muted small">Tarjetas</span><span>🟨 ${st.y} · 🟥 ${st.r}</span></div>
+      <div class="row" style="justify-content:space-between"><span class="muted small">Asistencias · Tarjetas</span><span>${st.a} asist. · 🟨 ${st.y} · 🟥 ${st.r}</span></div>
       <div class="row" style="justify-content:space-between;margin-top:6px"><span class="muted small">Asistencia a entrenos</span><span>${at.pct!=null?`<b>${at.pct}%</b> <span class="muted small">(${at.att}/${at.total})</span>`:'<span class="muted small">sin datos</span>'}</span></div>
     </div>
+
+    ${(()=>{ const pm=S.matches.filter(m=>m.stints&&m.stints.some(s=>s.pid===p.id)).slice().sort((a,b)=>(b.date||"").localeCompare(a.date||"")); if(!pm.length) return ""; return `
+    <div class="card">
+      <h2>Minutos por partido</h2>
+      ${pm.map(m=>{ const mins=minutesFor(m,p.id); const d=m.date?parseYmd(m.date):null; const fecha=d?`${d.getDate()}/${d.getMonth()+1}`:"—"; const va=m.homeAway==="visitante"?"@":"vs"; return `<div class="row" style="justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line)">
+        <div class="grow"><span class="small">${fecha} · ${va} ${esc(m.opponent||"Rival")}</span>${m.comp&&m.comp!=="liga"?`<span class="cat" style="margin-left:6px">${esc(m.comp)}</span>`:""}</div>
+        <b class="small">${fmt(mins)}</b>
+      </div>`; }).join("")}
+    </div>`; })()}
 
     <div class="card">
       <h2>Carga de entrenamiento</h2>
