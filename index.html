@@ -507,7 +507,7 @@ if(!S.plays) S.plays=[];
 if(!S.videoCats) S.videoCats={};
 if(!S.claudeImports) S.claudeImports={};
 if(!S.briefs) S.briefs={};
-if(!S.ropaDia) S.ropaDia={1:"Amarillo",5:"Rosa"};
+if(!S.ropaDia || (S.ropaDia[1]==="Amarillo" && S.ropaDia[5]==="Rosa" && !S.ropaDia[3] && Object.keys(S.ropaDia).length===2)) S.ropaDia={3:"Amarillo",5:"Rosa"};
 if(S.trainSchedule===undefined) S.trainSchedule=null;
 if(!S.calOverrides) S.calOverrides={};
 if(S.cardLimit===undefined) S.cardLimit=5;
@@ -606,6 +606,7 @@ function docsToState(map){
     if(t==="player")st.roster.push(dt); else if(t==="match")st.matches.push(dt); else if(t==="session")st.sessions.push(dt);
     else if(t==="exercise")st.exercises.push(dt); else if(t==="play")st.plays.push(dt); else if(t==="brief"&&dt&&dt.semana)st.briefs[dt.semana]=dt; else if(t==="ajustes")Object.assign(st,dt); });
   st.roster.sort((a,b)=>(parseInt(a.number)||999)-(parseInt(b.number)||999));
+  if(!st.ropaDia || (st.ropaDia[1]==="Amarillo" && st.ropaDia[5]==="Rosa" && !st.ropaDia[3] && Object.keys(st.ropaDia).length===2)) st.ropaDia={3:"Amarillo",5:"Rosa"};
   return st;
 }
 
