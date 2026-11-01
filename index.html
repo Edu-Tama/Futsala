@@ -361,6 +361,9 @@
   }
 .adapt{margin-top:5px;font-size:12.5px;line-height:1.35;padding:6px 9px;border-radius:8px;background:rgba(76,143,83,.15);color:var(--text)}
 .prepban{border:1px solid var(--club)}
+.bchips{display:flex;flex-wrap:wrap;gap:6px}
+.bchips button{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:13px;cursor:pointer}
+.bchips button[aria-current="true"]{background:var(--club);border-color:var(--club);color:#04140a;font-weight:700}
 </style>
 </head>
 <body>
@@ -469,6 +472,7 @@ if(S.trainTodayCount===undefined) S.trainTodayCount=null;
 if(!S.plays) S.plays=[];
 if(!S.videoCats) S.videoCats={};
 if(!S.claudeImports) S.claudeImports={};
+if(!S.briefs) S.briefs={};
 if(S.trainSchedule===undefined) S.trainSchedule=null;
 if(!S.calOverrides) S.calOverrides={};
 if(S.cardLimit===undefined) S.cardLimit=5;
@@ -557,14 +561,15 @@ function stateToDocs(s){
   (s.sessions||[]).forEach(x=>{ const k=docId("session",x.id); d[k]={id:k,tipo:"session",datos:x}; });
   (s.exercises||[]).forEach(x=>{ const k=docId("exercise",x.id); d[k]={id:k,tipo:"exercise",datos:x}; });
   (s.plays||[]).forEach(x=>{ const k=docId("play",x.id); d[k]={id:k,tipo:"play",datos:x}; });
+  Object.keys(s.briefs||{}).forEach(w=>{ const k=docId("brief",w); d[k]={id:k,tipo:"brief",datos:s.briefs[w]}; });
   d["ajustes"]={id:"ajustes",tipo:"ajustes",datos:{season:s.season,live:s.live,trainTodayCount:s.trainTodayCount,trainSchedule:s.trainSchedule,calOverrides:s.calOverrides,cardLimit:s.cardLimit,draftCall:s.draftCall,videoCats:s.videoCats||{},claudeImports:s.claudeImports||{}}};
   return d;
 }
 function docsToState(map){
-  const st={season:"Temporada 2025–2026 · 1ª Autonómica",roster:[],matches:[],live:null,exercises:[],sessions:[],trainTodayCount:null,plays:[],trainSchedule:null,calOverrides:{},cardLimit:5,draftCall:null,videoCats:{},claudeImports:{}};
+  const st={season:"Temporada 2025–2026 · 1ª Autonómica",roster:[],matches:[],live:null,exercises:[],sessions:[],trainTodayCount:null,plays:[],trainSchedule:null,calOverrides:{},cardLimit:5,draftCall:null,videoCats:{},claudeImports:{},briefs:{}};
   Object.keys(map).forEach(k=>{ const doc=map[k]; if(!doc) return; const t=doc.tipo, dt=doc.datos;
     if(t==="player")st.roster.push(dt); else if(t==="match")st.matches.push(dt); else if(t==="session")st.sessions.push(dt);
-    else if(t==="exercise")st.exercises.push(dt); else if(t==="play")st.plays.push(dt); else if(t==="ajustes")Object.assign(st,dt); });
+    else if(t==="exercise")st.exercises.push(dt); else if(t==="play")st.plays.push(dt); else if(t==="brief"&&dt&&dt.semana)st.briefs[dt.semana]=dt; else if(t==="ajustes")Object.assign(st,dt); });
   st.roster.sort((a,b)=>(parseInt(a.number)||999)-(parseInt(b.number)||999));
   return st;
 }
@@ -990,6 +995,7 @@ function renderHome(){
   el.innerHTML=`
     <div class="home-hero"><div class="row" style="align-items:flex-start"><div class="grow"><div class="hi">${saludo}</div><div class="sub">${esc(fecha)}</div></div>${authToken?`<button class="btn sm ghost" id="hLogout" style="opacity:.65;font-size:12px">Salir</button>`:""}</div></div>
     ${nextMatchHTML}
+    ${briefCardHTML()}
     ${nextHTML}
     ${shortcuts}
     ${parte}
@@ -997,6 +1003,7 @@ function renderHome(){
     ${pendCard}
     ${balance}`;
 
+  bindBriefCard(el);
   const pm=el.querySelector("#hPrepMatch"); if(pm) pm.onclick=()=>{ tab="match"; renderTabs(); prepareFixture(nm.id); };
   const hlo=el.querySelector("#hLogout"); if(hlo) hlo.onclick=()=>{ if(confirm("¿Cerrar sesión en este dispositivo? Los datos siguen en la nube; para volver a sincronizar tendrás que iniciar sesión de nuevo.")){ cloudLogout(); } };
 
@@ -2380,6 +2387,97 @@ function renderCalendar(body){
       if(confirm("¿Añadir un entreno extra este día?")){ S.calOverrides[ds]="on"; openSessionId=ensureSession(ds).id; save(); renderSessions(); }
     }
   });
+}
+
+/* ---- Brief de la semana (rival y objetivos para preparar las sesiones) ---- */
+const BRIEF_OBJ=[
+  ["Con balón",["Salir de su presión","Ataque a defensa en zona","Ataque a defensa individual","Finalización","Atacar con portera-jugadora"]],
+  ["Sin balón",["Presionar alto","Defensa en media pista","Defensa del pívot","Defender su portera-jugadora"]],
+  ["Transiciones",["Transición tras pérdida","Contraataque"]],
+  ["Balón parado",["Balón parado ofensivo","Balón parado defensivo"]]
+];
+function briefWeek(){ const d=new Date(); const dw=(d.getDay()+6)%7; const m=mondayStr(d); if(dw>=5){ const x=parseYmd(m); x.setDate(x.getDate()+7); return ymd(x); } return m; }
+function weekEnd(w){ const x=parseYmd(w); x.setDate(x.getDate()+6); return ymd(x); }
+function weekLbl(w){ const a=parseYmd(w), b=parseYmd(weekEnd(w)); return a.getMonth()===b.getMonth()? `${a.getDate()}–${b.getDate()} ${MONTHS_ES[b.getMonth()].slice(0,3)}` : `${a.getDate()} ${MONTHS_ES[a.getMonth()].slice(0,3)} – ${b.getDate()} ${MONTHS_ES[b.getMonth()].slice(0,3)}`; }
+function matchInWeek(w){ const e=weekEnd(w); return S.matches.filter(m=>!m.finished && m.date && m.date>=w && m.date<=e).sort((a,b)=>matchWhen(a).localeCompare(matchWhen(b)))[0]||null; }
+function briefText(w,B){
+  const o=B.objetivos||[];
+  return ["Prepara la semana del "+weekLbl(w)+" en Futsala ("+w+").",
+    "Rival: "+(B.rival||"—")+(B.campo?" · "+B.campo:"")+(B.dia?" · partido el "+new Date(B.dia+"T00:00").toLocaleDateString("es-ES",{weekday:"long",day:"numeric"}):""),
+    "Objetivo principal: "+(o[0]||"—")+(o.length>1?"\nOtros objetivos: "+o.slice(1).join(", "):""),
+    B.otro?"Matiz: "+B.otro:"", B.rivalNotas?"Cómo juega el rival: "+B.rivalNotas:"", B.ultimo?"Del último partido: "+B.ultimo:"",
+    B.bajas?"Bajas y asistencia: "+B.bajas:"", "Carga de la semana: "+(B.carga||"Normal")].filter(Boolean).join("\n");
+}
+function briefCardHTML(){
+  if(!S.trainSchedule) return "";
+  const w=briefWeek(), B=(S.briefs||{})[w], imp=(S.claudeImports||{})[w], m=matchInWeek(w);
+  if(imp) return `<div class="card prepban"><div class="eyebrow">Semana ${esc(weekLbl(w))}</div>
+    <div style="margin:6px 0 10px"><b>Sesiones preparadas${B&&B.rival?" contra "+esc(B.rival):""}</b><div class="muted small">Están en el calendario. Revísalas y ajústalas según quién venga.</div></div>
+    <div class="row" style="gap:8px"><button class="btn ghost grow" id="hBrief">Ver brief</button><button class="btn primary grow" id="hBriefCal">Ir al calendario</button></div></div>`;
+  if(!B) return `<div class="card prepban"><div class="eyebrow">Semana ${esc(weekLbl(w))}</div>
+    <div style="margin:6px 0 10px"><b>Prepara la semana</b><div class="muted small">${m?`Rival: ${esc(m.opponent)}. `:""}Marca los objetivos y te preparo las sesiones del ${trainDaysTxt(w)}.</div></div>
+    <button class="btn primary block" id="hBrief">Preparar la semana</button></div>`;
+  const o=B.objetivos||[];
+  return `<div class="card prepban"><div class="eyebrow">Semana ${esc(weekLbl(w))} · brief listo</div>
+    <div style="margin:6px 0 8px"><b>${B.rival?(B.campo==="Fuera"?"@ ":"vs ")+esc(B.rival):"Sin rival"}</b>${o.length?`<div class="muted small" style="margin-top:4px">${o.map((x,i)=>i===0?"<b style='color:var(--text)'>"+esc(x)+"</b>":esc(x)).join(" · ")}</div>`:""}</div>
+    <div class="muted small" style="margin-bottom:10px">Envíaselo a Claude para que prepare las sesiones; te avisará aquí cuando estén.</div>
+    <div class="row" style="gap:8px"><button class="btn ghost grow" id="hBrief">Editar</button><button class="btn primary grow" id="hBriefSend">Enviar a Claude</button></div></div>`;
+}
+function trainDaysTxt(w){ const L=[]; for(let i=0;i<7;i++){ const x=parseYmd(w); x.setDate(x.getDate()+i); const ds=ymd(x); if(isTrainingDay(ds)) L.push(x.toLocaleDateString("es-ES",{weekday:"long"})+" "+x.getDate()); } return L.length?L.join(" y "):"la semana"; }
+function bindBriefCard(el){
+  const w=briefWeek();
+  const b=el.querySelector("#hBrief"); if(b) b.onclick=()=>briefModal(w);
+  const c=el.querySelector("#hBriefCal"); if(c) c.onclick=()=>{ openSessionId=null; trainTab="sessions"; tab="train"; calCursor=w.slice(0,7); renderTabs(); renderTrain(); };
+  const s=el.querySelector("#hBriefSend"); if(s) s.onclick=()=>sendBrief(w);
+}
+function sendBrief(w){
+  const B=(S.briefs||{})[w]; if(!B) return;
+  const txt=briefText(w,B);
+  const show=()=>{ modal(`<h3>Enviar a Claude</h3>
+    <p class="muted small" style="margin:-4px 0 10px">Copia este texto y pégalo en tu chat con Claude.</p>
+    <textarea id="bsTxt" readonly style="width:100%;min-height:220px">${esc(txt)}</textarea>
+    <div class="foot"><button class="btn ghost grow" id="bsClose">Cerrar</button><a class="btn primary grow" href="https://claude.ai" target="_blank" rel="noopener" style="text-align:center;text-decoration:none">Abrir Claude</a></div>`);
+    document.getElementById("bsClose").onclick=closeModal; const t=document.getElementById("bsTxt"); t.focus(); t.select(); };
+  try{ navigator.clipboard.writeText(txt).then(()=>{ modal(`<h3>Brief copiado</h3>
+      <p class="muted small" style="margin:-4px 0 12px">Abre tu chat con Claude y pégalo. Cuando las sesiones estén listas, verás el aviso en Entrenar → Calendario.</p>
+      <div class="foot"><button class="btn ghost grow" id="bsClose">Cerrar</button><a class="btn primary grow" href="https://claude.ai" target="_blank" rel="noopener" style="text-align:center;text-decoration:none">Abrir Claude</a></div>`);
+      document.getElementById("bsClose").onclick=closeModal; }, show); }
+  catch(e){ show(); }
+}
+function briefModal(w){
+  S.briefs=S.briefs||{};
+  const B=Object.assign({}, S.briefs[w]||{});
+  const m=matchInWeek(w);
+  if(!S.briefs[w] && m){ B.rival=m.opponent; B.dia=m.date; B.campo=m.homeAway==="local"?"En casa":"Fuera"; }
+  let ord=(B.objetivos||[]).slice();
+  const sat=parseYmd(w); sat.setDate(sat.getDate()+5); const sun=parseYmd(w); sun.setDate(sun.getDate()+6);
+  const opt=(v,l,cur)=>`<option value="${esc(v)}"${cur===v?" selected":""}>${esc(l)}</option>`;
+  modal(`<h3>Semana ${esc(weekLbl(w))}</h3>
+    <div class="muted small" style="margin:-4px 0 12px">El 4-0 y las dualidades van siempre. Aquí decides lo demás.</div>
+    <label class="fld"><span>Rival</span><input id="bRival" value="${esc(B.rival||"")}" placeholder="Ej. Leganés"></label>
+    <div class="row" style="gap:8px">
+      <label class="fld grow"><span>Partido</span><select id="bDia">${opt("","—",B.dia||"")}${opt(ymd(sat),"Sábado "+sat.getDate(),B.dia||"")}${opt(ymd(sun),"Domingo "+sun.getDate(),B.dia||"")}</select></label>
+      <label class="fld grow"><span>Dónde</span><select id="bCampo">${opt("","—",B.campo||"")}${opt("En casa","En casa",B.campo||"")}${opt("Fuera","Fuera",B.campo||"")}</select></label>
+    </div>
+    <label class="fld"><span>Carga de la semana</span><select id="bCarga">${["Normal","Cargar más","Descargar"].map(x=>opt(x,x,B.carga||"Normal")).join("")}</select></label>
+    <div class="fld"><span>Objetivos · el primero que marques es el principal</span>
+      ${BRIEF_OBJ.map(([g,L])=>`<div class="eyebrow" style="margin:8px 0 4px">${g}</div><div class="bchips">${L.map(o=>`<button type="button" data-bobj="${esc(o)}" aria-current="${ord.indexOf(o)>=0}">${esc(o)}</button>`).join("")}</div>`).join("")}
+      <div class="muted small" id="bOrd" style="margin-top:8px"></div>
+    </div>
+    <label class="fld"><span>Otro objetivo o matiz</span><input id="bOtro" value="${esc(B.otro||"")}" placeholder="Ej. repasar las 3 jugadas de córner y la de banda"></label>
+    <label class="fld"><span>Cómo juega el rival</span><textarea id="bRivN" placeholder="Ej. salen en 3-1, pívot fuerte de espaldas">${esc(B.rivalNotas||"")}</textarea></label>
+    <label class="fld"><span>Del último partido</span><textarea id="bUlt" placeholder="Qué salió bien, qué hay que corregir">${esc(B.ultimo||"")}</textarea></label>
+    <label class="fld"><span>Bajas y asistencia prevista</span><input id="bBajas" value="${esc(B.bajas||"")}" placeholder="Ej. el miércoles seremos 10"></label>
+    <div class="foot"><button class="btn ghost grow" id="bCancel">Cancelar</button><button class="btn primary grow" id="bSave">Guardar</button></div>`);
+  const drawOrd=()=>{ const e=document.getElementById("bOrd"); if(e) e.innerHTML=ord.length?`Principal: <b>${esc(ord[0])}</b>${ord.length>1?" · luego "+ord.slice(1).map(esc).join(", "):""}`:"Marca uno o dos objetivos."; };
+  drawOrd();
+  document.querySelectorAll("[data-bobj]").forEach(b=>b.onclick=()=>{ const o=b.dataset.bobj; const i=ord.indexOf(o); if(i>=0) ord.splice(i,1); else ord.push(o); b.setAttribute("aria-current",ord.indexOf(o)>=0); drawOrd(); });
+  document.getElementById("bCancel").onclick=closeModal;
+  document.getElementById("bSave").onclick=()=>{
+    const g=id=>document.getElementById(id).value.trim();
+    S.briefs[w]={semana:w,rival:g("bRival"),dia:g("bDia"),campo:g("bCampo"),carga:g("bCarga"),objetivos:ord.slice(),otro:g("bOtro"),rivalNotas:g("bRivN"),ultimo:g("bUlt"),bajas:g("bBajas"),guardado:new Date().toISOString()};
+    save(); closeModal(); if(tab==="home") renderHome(); toast("Brief guardado");
+  };
 }
 
 /* ---- Sesiones preparadas (archivos semanas/AAAA-MM-DD.json del repositorio) ---- */
