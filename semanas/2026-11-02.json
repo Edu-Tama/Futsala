@@ -1,0 +1,412 @@
+{
+ "semana": "2026-11-02",
+ "generado": "2026-11-01T13:14:54Z",
+ "briefGuardado": "2026-11-01T13:05:52.987Z",
+ "ejercicios": [
+  {
+   "id": "cl-activacion-movilidad-charla",
+   "name": "Activación y movilidad durante la charla",
+   "category": "Calentamiento",
+   "objective": "Preparar tobillo, cadera e isquios y activar el sistema neuromuscular mientras el entrenador explica el objetivo del día.",
+   "desc": "Media pista. Bloque 1 (4'): movilidad dinámica de tobillo, cadera (abrir/cerrar puerta), rotaciones torácicas y zancada con giro. Bloque 2 (3'): skipping, talones, desplazamientos laterales y defensivos con cambio de orientación. Bloque 3 (3'): 3 progresivos de 15 m + 3 frenadas y salida en 2 apoyos. Se hace en círculo alrededor del entrenador mientras da la charla del objetivo.",
+   "players": "6-14",
+   "duration": "10",
+   "material": "Conos",
+   "boardId": null,
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Todas juntas en un círculo."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Todas juntas en un círculo."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Dos filas enfrentadas a 10 m para los progresivos."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos grupos en espejo a ambos lados del entrenador."
+    }
+   ]
+  },
+  {
+   "id": "cl-porteria-salida-pies-presion",
+   "name": "Portería: juego de pies y primer pase ante presión",
+   "category": "Portería",
+   "objective": "Que la portera dé seguridad a la salida de balón: control orientado, temporización y pase al lado débil ante presión media.",
+   "desc": "Momento: EN PARALELO AL INICIO (minutos 0-15), en una portería mientras las jugadoras hacen la activación y el rondo sin portera. Con Julia. 1) Activación específica de portera (3'): desplazamientos laterales, caídas y reincorporación. 2) Juego de pies (6'): Julia sirve desde distintos ángulos; control orientado al lado contrario de donde llega la presionante (Julia hace de presionante), pase tenso a cono-banda a 12-15 m con ambas piernas. Regla de temporización: si la presión no está a menos de 2 m, conduce y fija antes de soltar. 3) Saque con mano rápido tras blocaje (6'): blocaje de tiro desde 9 m + saque inmediato a la banda contraria o al pívot (cono a 20 m), alternando ambas porteras (trabajo-descanso 1:1).",
+   "players": "2 porteras",
+   "duration": "15",
+   "material": "Balones, 4 conos, 1 portería",
+   "boardId": null,
+   "porN": []
+  },
+  {
+   "id": "cl-rondo-dualidades-temporizacion",
+   "name": "Rondo en dualidades 4-0 con temporización",
+   "category": "Posesión",
+   "objective": "Fijar y temporizar en parejas antes de soltar: la jugadora con balón no pasa hasta atraer a su par.",
+   "desc": "Cuadrado de 16x16 m dividido en 4 calles. Parejas atacantes ocupan posiciones de 4-0 (dos cierres-alas, dos alas adelantadas) contra 2 defensoras que presionan. Regla de corrección: la poseedora solo puede soltar cuando la defensora entra a menos de 2 m (fijar) — pase prematuro = pérdida. Defensoras: presión a la jugadora con balón, perfil cerrando línea de pase interior, la segunda vigila la dualidad. 1 punto por 6 pases; 2 puntos si el pase rompe a la defensora fijada (pase entre líneas). Cambio de defensoras cada 90''. Progresión: 2 toques máximo.",
+   "players": "6-14",
+   "duration": "10",
+   "material": "Petos, conos, balones",
+   "boardId": null,
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "4x2 sin portera; con 7 una comodín exterior."
+    },
+    {
+     "rango": "8-9",
+     "txt": "5x2 (comodín central) o 4x2 + 2 en espera que entran por pérdida."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Con 8 de campo: 4x2 + 2 rotando. Las porteras se incorporan al terminar su bloque como apoyos exteriores de salida."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos rondos simultáneos 4x2 (o 5x2) y cambio de defensoras entre rondos."
+    }
+   ]
+  },
+  {
+   "id": "cl-salida-dualidades-2x1-presion",
+   "name": "Salida en dualidades 2+P vs 1 y 3+P vs 2 con presión a la poseedora",
+   "category": "Táctica of.",
+   "objective": "Salir de presión desde la portera en estructuras reducidas: fijar, temporizar y atacar el espacio que deja la presionante.",
+   "desc": "Media pista (20x20 m) con portería y 2 miniporterías de salida en medio campo. Fase A (6'): portera + 2 atacantes (dualidad cierre-ala) vs 1 presionante; atacantes ganan llegando conducido a la línea de medio campo o marcando en una miniportería. Fase B (9'): portera + 3 vs 2 presionantes (simula sistema mixto del rival: una presiona a la poseedora y otra salta a la línea de pase). Consignas de corrección: (ataque) temporizar — no soltar sin fijar; tras el pase, desmarque de apoyo-ruptura de la pareja. (defensa) presión a la jugadora con balón a menos de 1 m, perfil orientando hacia banda, nunca hacia el centro. Puntuación: salida limpia = 1; recuperación de la presión = 2 a la defensa (premia presionar bien). Series de 30'' y rotación de roles.",
+   "players": "6-14",
+   "duration": "15",
+   "material": "Petos, 2 miniporterías, conos, balones",
+   "boardId": null,
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Una portera + 2 vs 1 en una sola portería; rotación de 4-5 de campo."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Dos porterías: una portera en cada; Fase A en ambas, Fase B 3v2 solo en una con la otra en recuperación activa."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Versión principal: dos porterías con una portera cada una, 2+P vs 1 y 3+P vs 2 simultáneos (8 de campo)."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos estaciones en paralelo con 6 de campo por estación; rotar estación a mitad de tarea."
+    }
+   ]
+  },
+  {
+   "id": "cl-salida-presion-4p-mixto",
+   "name": "Salida de presión 4+P vs 3+P ante sistema mixto y presión media",
+   "category": "Táctica of.",
+   "objective": "Llevar la salida en dualidades a espacio real: superar la presión media del rival (mixto 3-1/4-0, defensa zonal) y finalizar.",
+   "desc": "Pista completa 40x20 m. Equipo A (4 + portera) sale desde su portera; Equipo B (3 de campo + portera) presiona en mixto: una sobre la poseedora, dos cerrando el pasillo interior en zona, saltando según orientación. Si B recupera, ataca a portería con contra (tiempo 8''). A gana: llegar a finalizar en ≤10'' tras superar el medio campo = 1 punto; gol = 2. Consignas de corrección: temporizar la salida — tres apoyos de la portera/cierre antes de buscar el pase profundo si la presión es media; pareja de la poseedora siempre en dualidad de apoyo/ruptura. B trabaja la corrección defensiva: presión a la jugadora con balón (distancia, perfil, no saltar sin ayuda). Bloques de 4' con 1' de pausa, rotando quién completa el equipo B. Progresión: B puede presionar con 4 cuando A juega 3 pases seguidos atrás.",
+   "players": "6-14",
+   "duration": "25",
+   "material": "Petos, balones, 2 porterías",
+   "boardId": null,
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "3+P vs 2+P; quien sobra entra por la defensa al recuperar."
+    },
+    {
+     "rango": "8-9",
+     "txt": "4+P vs 2+P y luego 3+P vs 3+P en 'mixto reducido'."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Versión principal 4+P vs 3+P con 8 de campo: 1 en rotación que entra en el siguiente bloque. Rotación de equipo B cada bloque."
+    },
+    {
+     "rango": "12-14",
+     "txt": "4+P vs 4+P con un equipo de 4 en espera; ganadora de cada bloque se queda (5') ."
+    }
+   ]
+  },
+  {
+   "id": "cl-juego-real-salida-presion",
+   "name": "Juego real con salida obligada tras gol y presión condicionada",
+   "category": "Juego",
+   "objective": "Integrar en juego real la salida de presión y la presión a la poseedora.",
+   "desc": "Pista completa, partido 4+P vs 4+P (o según número). Toda reanudación (gol, fuera de fondo) empieza con saque de portera y el rival presionando alto 8''. Gol tras salida limpia desde portera = 2. Recuperación en campo rival por presión a la poseedora con finalización en 6'' = 2. Corrección: si la presionante deja girar a la poseedora, saque de banda para el rival. 2 partes de 7' con 1' de pausa.",
+   "players": "6-14",
+   "duration": "15",
+   "material": "Petos, balones",
+   "boardId": null,
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "3+P vs 2+P con comodín ofensiva."
+    },
+    {
+     "rango": "8-9",
+     "txt": "3+P vs 3+P (o 4+P vs 3+P con la sobrante en campo)."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Versión principal 4+P vs 4+P con 10."
+    },
+    {
+     "rango": "12-14",
+     "txt": "4+P vs 4+P con cambios rotativos cada 2' (como en partido)."
+    }
+   ]
+  },
+  {
+   "id": "cl-porteria-pj-portera-jugadora",
+   "name": "Portería: rol de portera-jugadora y defensa del 5x4",
+   "category": "Portería",
+   "objective": "Preparar a las porteras para jugar como portera-jugadora en ataque y para defender el 5x4 rival.",
+   "desc": "Momento: EN PARALELO AL INICIO (minutos 0-15), en una portería mientras las jugadoras hacen la activación y el rondo sin portera. Con Julia. 1) Activación específica (3'). 2) Portera-jugadora (6'): recepción en zona de cierre a 2-3 m de medio campo, control orientado con ambas piernas, pase interior al pívot y circulación rápida de lado a lado; repliegue de sprint a portería tras señal de pérdida de Julia y tiro de Julia a portería vacía desde 20 m. 3) Defensa del 5x4 (6'): ubicación ante circulación horizontal (dos postes), reacción a segundo palo tras pase cruzado, blocaje y saque largo a portería vacía rival (cono a 30-35 m). Alternar ambas porteras.",
+   "players": "2 porteras",
+   "duration": "15",
+   "material": "Balones, conos, 1 portería",
+   "boardId": null,
+   "porN": []
+  },
+  {
+   "id": "cl-rondo-posicional-5x2-orientado",
+   "name": "Rondo posicional 5x2 con control orientado al lado débil",
+   "category": "Posesión",
+   "objective": "Circular rápido y atacar el lado débil: base para el ataque en superioridad (5x4) y presión a la poseedora.",
+   "desc": "Rectángulo 18x14 m. Cinco atacantes en estructura de 'ataque de 5' (dos bases, dos alas, pívot central) vs 2 defensoras. Regla: control orientado obligatorio al lado contrario del que llega el balón; pase al lado débil = 1 punto, 8 pases = 3 puntos. Defensoras: presión a la poseedora y la otra cierra pase interior; si recuperan y salen con pase a un cono exterior, cambian con quien perdió. Progresión: 2 toques, después 1 toque para el pívot.",
+   "players": "6-14",
+   "duration": "10",
+   "material": "Petos, conos, balones",
+   "boardId": null,
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "4x2 o 5x2 si son 7 de campo."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Versión principal con 7 de campo: 5x2 (las porteras se incorporan al terminar su bloque como exteriores)."
+    },
+    {
+     "rango": "10-11",
+     "txt": "5x2 + 1 en espera que entra por la que pierde."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos rondos 5x2 / 4x2 y cambio de defensoras entre rondos."
+    }
+   ]
+  },
+  {
+   "id": "cl-ataque-5x4-portera-jugadora",
+   "name": "Ataque 5x4 con portera-jugadora",
+   "category": "Táctica of.",
+   "objective": "Atacar en superioridad con portera-jugadora: circulación, fijar y finalizar en el segundo palo o con tiro exterior.",
+   "desc": "Media pista + portería. Ataque: 4 de campo + portera-jugadora (con peto distinto) vs defensa 3 de campo + portera. Estructura 2-2-1 / 3-2: bases y portera-jugadora fijan; alas abiertas al segundo palo; pívot de espaldas. Ataque de 25''. Puntos: gol = 2, gol al segundo palo = 3; pérdida que acaba en tiro rival a la otra portería (vacía, 35 m) = −2. Regla de corrección: la poseedora temporiza hasta que salte una defensora (fijar) antes de soltar; no se cruza el balón por el centro sin fijar. Defensa trabaja presión a la poseedora solo cuando el balón va a banda. 4 series de 5' rotando roles de ataque.",
+   "players": "6-14",
+   "duration": "20",
+   "material": "Petos de 3 colores, balones, 2 porterías",
+   "boardId": null,
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "3+PJ vs 2+P; quien sobra entra como comodín de banda."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Versión principal con 7 de campo: 4+PJ vs 3+P; las dos porteras alternan entre portera-jugadora y portera defensora."
+    },
+    {
+     "rango": "10-11",
+     "txt": "4+PJ vs 4+P con una en rotación (o 4+PJ vs 3+P + 1 que espera para defender)."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos grupos: uno ataca 5x4, el otro trabaja la defensa en la otra portería y se cambia a mitad."
+    }
+   ]
+  },
+  {
+   "id": "cl-defensa-5x4-rival",
+   "name": "Defensa del 5x4 del rival (portera-jugadora cuando va perdiendo)",
+   "category": "Táctica def.",
+   "objective": "Defender la portera-jugadora del rival: rombo/cuadrado compacto, basculación y robo para tiro a portería vacía.",
+   "desc": "Media pista + portería. Las de campo que han atacado ahora defienden: 3 o 4 de campo + portera en rombo/cuadrado compacto, sin saltar a presionar fuera de 10 m; presión a la jugadora con balón solo en banda (trampa en esquina). El ataque (resto + portera-jugadora) circula 25''. Defensa puntúa: recuperar = 1, recuperar y tirar a la portería vacía del otro campo en ≤5'' = 3; gol encajado = −2. Consignas: comunicar basculación, nunca dos defensoras sobre la misma, cerrar segundo palo. 3 series de 5'.",
+   "players": "6-14",
+   "duration": "15",
+   "material": "Petos, balones, 2 porterías",
+   "boardId": null,
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "2+P defienden vs 3+PJ."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Versión principal con 7 de campo: 3+P defienden vs 4+PJ (simulando su 5x4)."
+    },
+    {
+     "rango": "10-11",
+     "txt": "4+P vs 4+PJ (simulación real 4 vs 5)."
+    },
+    {
+     "rango": "12-14",
+     "txt": "4+P vs 4+PJ con dos grupos que rotan cada serie."
+    }
+   ]
+  },
+  {
+   "id": "cl-juego-real-marcador-pj",
+   "name": "Juego real con marcador y portera-jugadora",
+   "category": "Juego",
+   "objective": "Llevar a juego real la decisión de sacar portera-jugadora y defenderla, con presión a la poseedora.",
+   "desc": "Pista completa, partidos cortos de 4'. El equipo que va perdiendo puede (y en el último minuto debe) atacar con portera-jugadora; el que gana defiende el 5x4. Recuperación tras presión a la poseedora y gol en ≤6'' = 2. Pausa de 1' entre partidos con correcciones breves.",
+   "players": "6-14",
+   "duration": "15",
+   "material": "Petos, balones",
+   "boardId": null,
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "3+P vs 2+P con comodín ofensiva."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Versión principal: 4+P vs 3+P; la sobrante entra en el equipo que pierde."
+    },
+    {
+     "rango": "10-11",
+     "txt": "4+P vs 4+P."
+    },
+    {
+     "rango": "12-14",
+     "txt": "4+P vs 4+P con cambios rotativos cada 2'."
+    }
+   ]
+  }
+ ],
+ "sesiones": [
+  {
+   "date": "2026-11-04",
+   "title": "Salir de su presión",
+   "focus": "Superar la presión media del rival (mixto, zonal) con dualidades: temporizar la salida y presionar a la poseedora.",
+   "targetMin": "90",
+   "notes": "Previstas 10 (8 de campo + 2 porteras). Rival: Leganés FS Masdeporte B, sistema mixto, presión media, defensa zonal.",
+   "blocks": [
+    {
+     "name": "Portería (Julia)",
+     "items": [
+      {
+       "exerciseId": "cl-porteria-salida-pies-presion",
+       "minutes": 15,
+       "note": "En paralelo al inicio: porteras con Julia mientras las jugadoras hacen la parte inicial sin portera."
+      }
+     ]
+    },
+    {
+     "name": "Parte inicial",
+     "items": [
+      {
+       "exerciseId": "cl-activacion-movilidad-charla",
+       "minutes": 10,
+       "note": "En paralelo a portería. Charla: objetivo del día = salir de su presión temporizando."
+      },
+      {
+       "exerciseId": "cl-rondo-dualidades-temporizacion",
+       "minutes": 10,
+       "note": "En paralelo a portería (sin portera). Insistir en fijar antes de soltar."
+      }
+     ]
+    },
+    {
+     "name": "Parte central",
+     "items": [
+      {
+       "exerciseId": "cl-salida-dualidades-2x1-presion",
+       "minutes": 15,
+       "note": "Corregir: presión a la jugadora con balón (a <1 m, orientando a banda)."
+      },
+      {
+       "exerciseId": "cl-salida-presion-4p-mixto",
+       "minutes": 25,
+       "note": "Equipo B imita al Leganés: mixto, presión media, zona. Corregir la temporización en nuestra salida."
+      }
+     ]
+    },
+    {
+     "name": "Parte final",
+     "items": [
+      {
+       "exerciseId": "cl-juego-real-salida-presion",
+       "minutes": 15,
+       "note": ""
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "date": "2026-11-06",
+   "title": "Atacar con portera-jugadora",
+   "focus": "Ataque 5x4 con portera-jugadora y defensa de su 5x4 (lo usan cuando van perdiendo).",
+   "targetMin": "85",
+   "notes": "Previstas 9 (7 de campo + 2 porteras). Menos volumen, más cerca del partido. Recordar la presión a la jugadora con balón.",
+   "blocks": [
+    {
+     "name": "Portería (Julia)",
+     "items": [
+      {
+       "exerciseId": "cl-porteria-pj-portera-jugadora",
+       "minutes": 15,
+       "note": "En paralelo al inicio: porteras con Julia mientras las jugadoras hacen la parte inicial sin portera."
+      }
+     ]
+    },
+    {
+     "name": "Parte inicial",
+     "items": [
+      {
+       "exerciseId": "cl-activacion-movilidad-charla",
+       "minutes": 10,
+       "note": "En paralelo a portería. Charla: objetivo del día = ataque con portera-jugadora."
+      },
+      {
+       "exerciseId": "cl-rondo-posicional-5x2-orientado",
+       "minutes": 10,
+       "note": "En paralelo a portería (sin portera)."
+      }
+     ]
+    },
+    {
+     "name": "Parte central",
+     "items": [
+      {
+       "exerciseId": "cl-ataque-5x4-portera-jugadora",
+       "minutes": 20,
+       "note": "Corregir: temporizar y fijar antes de soltar."
+      },
+      {
+       "exerciseId": "cl-defensa-5x4-rival",
+       "minutes": 15,
+       "note": "El Leganés saca portera-jugadora cuando va perdiendo."
+      }
+     ]
+    },
+    {
+     "name": "Parte final",
+     "items": [
+      {
+       "exerciseId": "cl-juego-real-marcador-pj",
+       "minutes": 15,
+       "note": "Intensidad controlada: víspera de partido a dos días."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
