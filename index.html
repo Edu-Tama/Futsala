@@ -2415,14 +2415,15 @@ function briefCardHTML(){
     <div style="margin:6px 0 10px"><b>Sesiones preparadas${B&&B.rival?" contra "+esc(B.rival):""}</b><div class="muted small">Están en el calendario. Revísalas y ajústalas según quién venga.</div></div>
     <div class="row" style="gap:8px"><button class="btn ghost grow" id="hBrief">Ver brief</button><button class="btn primary grow" id="hBriefCal">Ir al calendario</button></div></div>`;
   if(!B) return `<div class="card prepban"><div class="eyebrow">Semana ${esc(weekLbl(w))}</div>
-    <div style="margin:6px 0 10px"><b>Prepara la semana</b><div class="muted small">${m?`Rival: ${esc(m.opponent)}. `:""}Marca los objetivos y te preparo las sesiones del ${trainDaysTxt(w)}.</div></div>
+    <div style="margin:6px 0 10px"><b>Prepara la semana</b><div class="muted small">${m?`Rival: ${esc(m.opponent)}. `:""}Marca los objetivos antes del domingo a las 21:00 y las sesiones del ${trainDaysTxt(w)} se preparan solas.</div></div>
     <button class="btn primary block" id="hBrief">Preparar la semana</button></div>`;
   const o=B.objetivos||[];
   return `<div class="card prepban"><div class="eyebrow">Semana ${esc(weekLbl(w))} · brief listo</div>
     <div style="margin:6px 0 8px"><b>${B.rival?(B.campo==="Fuera"?"@ ":"vs ")+esc(B.rival):"Sin rival"}</b>${o.length?`<div class="muted small" style="margin-top:4px">${o.map((x,i)=>i===0?"<b style='color:var(--text)'>"+esc(x)+"</b>":esc(x)).join(" · ")}</div>`:""}</div>
-    <div class="muted small" style="margin-bottom:10px">Envíaselo a Claude para que prepare las sesiones; te avisará aquí cuando estén.</div>
-    <div class="row" style="gap:8px"><button class="btn ghost grow" id="hBrief">Editar</button><button class="btn primary grow" id="hBriefSend">Enviar a Claude</button></div></div>`;
+    <div class="muted small" style="margin-bottom:10px">${new Date()<briefDeadline(w)?"Las sesiones se preparan solas el domingo a las 21:00 y te llegará un aviso. Si las quieres antes, envíaselo a Claude.":"Ya ha pasado el domingo: envíaselo a Claude para que prepare las sesiones."}</div>
+    <div class="row" style="gap:8px"><button class="btn primary grow" id="hBrief">Editar</button><button class="btn ghost grow" id="hBriefSend">Pedirlas ya</button></div></div>`;
 }
+function briefDeadline(w){ const x=parseYmd(w); x.setDate(x.getDate()-1); x.setHours(20,57,0,0); return x; }
 function trainDaysTxt(w){ const L=[]; for(let i=0;i<7;i++){ const x=parseYmd(w); x.setDate(x.getDate()+i); const ds=ymd(x); if(isTrainingDay(ds)) L.push(x.toLocaleDateString("es-ES",{weekday:"long"})+" "+x.getDate()); } return L.length?L.join(" y "):"la semana"; }
 function bindBriefCard(el){
   const w=briefWeek();
