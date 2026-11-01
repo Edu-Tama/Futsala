@@ -618,6 +618,7 @@ async function syncNow(){
     setSync("ok");
   }catch(e){ setSync("error"); }
   syncBusy=false;
+  if(syncState==="ok") maybeAutoImport();
 }
 function schedulePush(){ if(!authToken) return; clearTimeout(pushTimer); pushTimer=setTimeout(cloudPush, 2500); }
 async function cloudPush(){
@@ -2409,27 +2410,34 @@ function briefText(w,B){
     B.bajas?"Bajas y asistencia: "+B.bajas:"", "Carga de la semana: "+(B.carga||"Normal")].filter(Boolean).join("\n");
 }
 function briefCardHTML(){
-  const w=briefWeek(), B=(S.briefs||{})[w], imp=(S.claudeImports||{})[w], m=matchInWeek(w);
-  if(imp) return `<div class="card prepban"><div class="eyebrow">Semana ${esc(weekLbl(w))}</div>
-    <div style="margin:6px 0 10px"><b>Sesiones preparadas${B&&B.rival?" contra "+esc(B.rival):""}</b><div class="muted small">Están en el calendario. Revísalas y ajústalas según quién venga.</div></div>
-    <div class="row" style="gap:8px"><button class="btn ghost grow" id="hBrief">Ver brief</button><button class="btn primary grow" id="hBriefCal">Ir al calendario</button></div></div>`;
-  if(!B) return `<div class="card prepban"><div class="eyebrow">Semana ${esc(weekLbl(w))}</div>
-    <div style="margin:6px 0 10px"><b>Prepara la semana</b><div class="muted small">${m?`Rival: ${esc(m.opponent)}. `:""}Marca los objetivos antes del domingo a las 21:00 y las sesiones del ${trainDaysTxt(w)} se preparan solas.</div></div>
+  const w=briefWeek(), B=(S.briefs||{})[w], m=matchInWeek(w);
+  const entry=(prepIndex||[]).find(x=>x.semana===w);
+  const imp=(S.claudeImports||{})[w];
+  const head=`<div class="eyebrow">Semana ${esc(weekLbl(w))}</div>`;
+  if(!B && !imp) return `<div class="card prepban">${head}
+    <div style="margin:6px 0 10px"><b>Prepara la semana</b><div class="muted small">${m?`Rival: ${esc(m.opponent)}. `:""}Rellena el brief y las sesiones del ${trainDaysTxt(w)} aparecerán solas en el calendario.</div></div>
     <button class="btn primary block" id="hBrief">Preparar la semana</button></div>`;
-  const o=B.objetivos||[];
-  return `<div class="card prepban"><div class="eyebrow">Semana ${esc(weekLbl(w))} · brief listo</div>
-    <div style="margin:6px 0 8px"><b>${B.rival?(B.campo==="Fuera"?"@ ":"vs ")+esc(B.rival):"Sin rival"}</b>${o.length?`<div class="muted small" style="margin-top:4px">${o.map((x,i)=>i===0?"<b style='color:var(--text)'>"+esc(x)+"</b>":esc(x)).join(" · ")}</div>`:""}</div>
-    <div class="muted small" style="margin-bottom:10px">${new Date()<briefDeadline(w)?"Las sesiones se preparan solas el domingo a las 21:00 y te llegará un aviso. Si las quieres antes, envíaselo a Claude.":"Ya ha pasado el domingo: envíaselo a Claude para que prepare las sesiones."}</div>
-    <div class="row" style="gap:8px"><button class="btn primary grow" id="hBrief">Editar</button><button class="btn ghost grow" id="hBriefSend">Pedirlas ya</button></div></div>`;
+  const o=(B&&B.objetivos)||[];
+  const resumen=B?`<div style="margin:6px 0 8px"><b>${B.rival?(B.campo==="Fuera"?"@ ":"vs ")+esc(B.rival):"Sin rival"}</b>${o.length?`<div class="muted small" style="margin-top:4px">${o.map((x,i)=>i===0?"<b style='color:var(--text)'>"+esc(x)+"</b>":esc(x)).join(" · ")}</div>`:""}</div>`:"";
+  const ready=entry && (!B || !B.guardado || (entry.briefGuardado||"")>=B.guardado);
+  if(ready && imp && !prepNew(entry)) return `<div class="card prepban">${head}${resumen}
+    <div class="muted small" style="margin-bottom:10px">Sesiones listas en el calendario. Revísalas y ajústalas según quién venga.</div>
+    <div class="row" style="gap:8px"><button class="btn ghost grow" id="hBrief">Editar brief</button><button class="btn primary grow" id="hBriefCal">Ver sesiones</button></div></div>`;
+  if(ready) return `<div class="card prepban">${head}${resumen}
+    <div class="muted small" style="margin-bottom:10px">Sesiones preparadas. Ya hay sesiones tuyas en esos días, así que revísalas antes de importarlas.</div>
+    <div class="row" style="gap:8px"><button class="btn ghost grow" id="hBrief">Editar brief</button><button class="btn primary grow" id="hBriefImp">Revisar e importar</button></div></div>`;
+  return `<div class="card prepban">${head} · brief guardado${resumen}
+    <div class="muted small" style="margin-bottom:10px">Preparando las sesiones. En menos de una hora aparecerán en el calendario y te llegará un aviso.</div>
+    <button class="btn ghost block" id="hBrief">Editar brief</button></div>`;
 }
-function briefDeadline(w){ const x=parseYmd(w); x.setDate(x.getDate()-1); x.setHours(20,57,0,0); return x; }
-function trainDaysTxt(w){ const L=[]; if(S.trainSchedule) for(let i=0;i<7;i++){ const x=parseYmd(w); x.setDate(x.getDate()+i); const ds=ymd(x); if(isTrainingDay(ds)) L.push(x.toLocaleDateString("es-ES",{weekday:"long"})+" "+x.getDate()); } return L.length?L.join(" y "):"miércoles y viernes"; }
 function bindBriefCard(el){
   const w=briefWeek();
   const b=el.querySelector("#hBrief"); if(b) b.onclick=()=>briefModal(w);
   const c=el.querySelector("#hBriefCal"); if(c) c.onclick=()=>{ openSessionId=null; trainTab="sessions"; tab="train"; calCursor=w.slice(0,7); renderTabs(); renderTrain(); };
-  const s=el.querySelector("#hBriefSend"); if(s) s.onclick=()=>sendBrief(w);
+  const i=el.querySelector("#hBriefImp"); if(i) i.onclick=()=>prepModal();
 }
+function briefDeadline(w){ const x=parseYmd(w); x.setDate(x.getDate()-1); x.setHours(20,57,0,0); return x; }
+function trainDaysTxt(w){ const L=[]; if(S.trainSchedule) for(let i=0;i<7;i++){ const x=parseYmd(w); x.setDate(x.getDate()+i); const ds=ymd(x); if(isTrainingDay(ds)) L.push(x.toLocaleDateString("es-ES",{weekday:"long"})+" "+x.getDate()); } return L.length?L.join(" y "):"miércoles y viernes"; }
 function sendBrief(w){
   const B=(S.briefs||{})[w]; if(!B) return;
   const txt=briefText(w,B);
@@ -2488,7 +2496,19 @@ async function loadPrepIndex(){
   catch(e){ if(prepIndex==null) prepIndex=[]; }
   return prepIndex;
 }
-function pendingPrep(){ const imp=S.claudeImports||{}, mon=mondayStr(new Date()); return (prepIndex||[]).filter(w=>w.semana>=mon && !imp[w.semana]); }
+function prepNew(w){ const imp=(S.claudeImports||{})[w.semana]; return !imp || (w.generado && w.generado>imp); }
+function pendingPrep(){ const mon=mondayStr(new Date()); return (prepIndex||[]).filter(w=>w.semana>=mon && prepNew(w)); }
+let autoBusy=false;
+async function maybeAutoImport(){
+  if(autoBusy) return; autoBusy=true;
+  try{
+    await loadPrepIndex();
+    for(const w of pendingPrep()){
+      try{ const r=await fetch((w.archivo||("semanas/"+w.semana+".json"))+"?t="+Date.now(),{cache:"no-store"}); if(!r.ok) continue;
+        const pack=await r.json(); pack.generado=pack.generado||w.generado; importPack(pack,{auto:true}); }catch(e){}
+    }
+  }finally{ autoBusy=false; if(tab==="home") renderHome(); }
+}
 async function drawPrepBanner(){
   await loadPrepIndex();
   const el=document.getElementById("prepBan"); if(!el) return;
@@ -2517,8 +2537,13 @@ async function prepModal(){
   document.getElementById("prepFile").onchange=e=>{ const f=e.target.files[0]; if(!f) return; const r=new FileReader();
     r.onload=()=>{ try{ importPack(JSON.parse(r.result)); }catch(err){ toast("Ese archivo no es una semana preparada"); } }; r.readAsText(f); };
 }
-function importPack(pack){
-  if(!pack||!Array.isArray(pack.sesiones)){ toast("Ese archivo no es una semana preparada"); return; }
+function importPack(pack,opts){
+  opts=opts||{};
+  if(!pack||!Array.isArray(pack.sesiones)){ if(!opts.auto) toast("Ese archivo no es una semana preparada"); return; }
+  if(opts.auto){
+    const clash=pack.sesiones.some(ns=>{ const old=ns&&S.sessions.find(x=>x.date===ns.date); return old && sessionCount(old)>0 && old.fromClaude!==pack.semana; });
+    if(clash) return "conflict";
+  }
   (pack.ejercicios||[]).forEach(x=>{ if(!x||!x.id||!x.name) return;
     const clean=Object.assign({category:"Táctica of.",objective:"",desc:"",material:"",players:"",duration:"",variants:"",boardId:null},x);
     const i=S.exercises.findIndex(e=>e.id===x.id); if(i>=0) S.exercises[i]=Object.assign({},S.exercises[i],clean); else S.exercises.push(clean); });
@@ -2526,15 +2551,17 @@ function importPack(pack){
   pack.sesiones.forEach(ns=>{
     if(!ns||!ns.date) return;
     const old=S.sessions.find(x=>x.date===ns.date);
-    if(old && sessionCount(old)>0 && !confirm(`Ya hay una sesión con ejercicios el ${ns.date}. ¿Sustituirla por la preparada?`)){ skipped++; return; }
+    if(!opts.auto && old && sessionCount(old)>0 && old.fromClaude!==pack.semana && !confirm(`Ya hay una sesión con ejercicios el ${ns.date}. ¿Sustituirla por la preparada?`)){ skipped++; return; }
     if(old) S.sessions=S.sessions.filter(x=>x!==old);
-    S.sessions.push({id:uid(), date:ns.date, title:ns.title||"", focus:ns.focus||"", targetMin:String(ns.targetMin||scheduleMinutes()||""), notes:ns.notes||"", absent:[], rpe:{},
+    S.sessions.push({id:uid(), fromClaude:pack.semana||null, date:ns.date, title:ns.title||"", focus:ns.focus||"", targetMin:String(ns.targetMin||scheduleMinutes()||""), notes:ns.notes||"", absent:[], rpe:{},
       blocks:(ns.blocks||[]).map(b=>({id:uid(), name:b.name||"Bloque", items:(b.items||[]).filter(it=>S.exercises.find(e=>e.id===it.exerciseId)).map(it=>({id:uid(), exerciseId:it.exerciseId, minutes:String(it.minutes||""), note:it.note||""}))}))});
     if(S.trainSchedule && !isTrainingDay(ns.date)) S.calOverrides[ns.date]="on";
     added++;
   });
-  if(pack.semana){ S.claudeImports=S.claudeImports||{}; S.claudeImports[pack.semana]=new Date().toISOString(); }
-  save(); closeModal(); openSessionId=null; renderSessions();
+  if(pack.semana){ S.claudeImports=S.claudeImports||{}; S.claudeImports[pack.semana]=pack.generado||new Date().toISOString(); }
+  save();
+  if(opts.auto){ toast(`Sesiones de la semana del ${weekLbl(pack.semana)} listas en el calendario`); if(tab==="train") renderTrain(); return "ok"; }
+  closeModal(); openSessionId=null; renderSessions();
   toast(`${added} ${added===1?"sesión importada":"sesiones importadas"}${skipped?` · ${skipped} sin tocar`:""}`);
 }
 
@@ -3353,6 +3380,7 @@ bindLogin();
 try{ document.getElementById("loginLogo").src=LOGO_SRC; }catch(e){}
 if(authToken){ hideLogin(); setSync("syncing"); syncNow(); }
 else { showLogin(); setSync("local"); }
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible" && authToken) syncNow(); });
 if("serviceWorker" in navigator){ window.addEventListener("load",function(){ navigator.serviceWorker.register("./service-worker.js").catch(function(){}); }); }
 </script>
 </body>
