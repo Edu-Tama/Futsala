@@ -1484,8 +1484,56 @@ function matchSummarySheet(m){
   modal(`<h3>Resumen · ${m.homeAway==="local"?"vs "+esc(m.opponent):"en "+esc(m.opponent)}</h3>
     <p class="muted small">Marcador ${m.score.us}–${m.score.them} · Faltas 1ª ${m.fouls[1]} / 2ª ${m.fouls[2]}</p>
     <table><thead><tr><th>Jugadora</th><th class="n">Min</th><th class="n">G</th><th class="n">A</th></tr></thead><tbody>${rows}</tbody></table>
-    <div class="foot"><button class="btn primary grow" id="ok">Cerrar</button></div>`);
+    <div class="foot"><button class="btn ghost grow" id="ok">Cerrar</button><button class="btn primary grow" id="mClaude">Copiar para Claude</button></div>`);
   document.getElementById("ok").onclick=closeModal;
+  document.getElementById("mClaude").onclick=()=>copyForClaude(claudeMatchText(m),"Partido copiado","Pégalo en el registro post-partido del domingo.");
+}
+
+/* ---- Textos para Claude (registro post-partido y revisión de temporada) ---- */
+function claudeMatchText(m){
+  const mmss=s=>{ s=Math.max(0,Math.round(s||0)); return Math.floor(s/60)+"'"+String(s%60).padStart(2,"0"); };
+  const nm=id=>{ const p=playerById(id); return p?p.name:"?"; };
+  const L=[];
+  L.push("PARTIDO FUTSALA (para Claude)");
+  L.push(`${m.homeAway==="local"?"En casa":"Fuera"} vs ${m.opponent} · ${(m.date||"").slice(0,10)} · ${compLabel(m.comp)}`);
+  L.push(`Marcador: ${m.score.us}-${m.score.them} · Faltas: 1ª parte ${m.fouls[1]}, 2ª parte ${m.fouls[2]}`);
+  L.push("");
+  L.push("Jugadoras (minutos · goles · asistencias · tarjetas):");
+  S.roster.filter(p=>m.stints.some(s=>s.pid===p.id)).forEach(p=>{
+    const g=m.events.filter(e=>e.type==="goal"&&e.pid===p.id).length;
+    const a=m.events.filter(e=>e.type==="goal"&&e.assist===p.id).length;
+    const y=m.events.filter(e=>e.type==="yellow"&&e.pid===p.id).length;
+    const r=m.events.filter(e=>e.type==="red"&&e.pid===p.id).length;
+    L.push(`- ${p.name}: ${fmt(minutesFor(m,p.id))} min · ${g} G · ${a} A${y?` · ${y} amarilla`:""}${r?" · roja":""}`);
+  });
+  const no=S.roster.filter(p=>!m.stints.some(s=>s.pid===p.id)).map(p=>p.name);
+  if(no.length) L.push(`Sin minutos: ${no.join(", ")}`);
+  const ev=m.events.filter(e=>["goal","goal_rival","yellow","red"].includes(e.type)).slice().sort((a,b)=>(a.half-b.half)||(a.sec-b.sec));
+  if(ev.length){ L.push(""); L.push("Acciones:");
+    ev.forEach(e=>{ const t=`${e.half}ª ${mmss(e.sec)}`;
+      if(e.type==="goal") L.push(`- ${t} GOL ${nm(e.pid)}${e.assist?` (asist. ${nm(e.assist)})`:""}`);
+      else if(e.type==="goal_rival") L.push(`- ${t} GOL RIVAL`);
+      else L.push(`- ${t} ${e.type==="yellow"?"Amarilla":"Roja"} ${nm(e.pid)}`); }); }
+  return L.join("\n");
+}
+function claudeSeasonText(){
+  const rec=teamRecord("liga");
+  const L=["TEMPORADA FUTSALA (para Claude)", `Liga: ${rec.pj} jugados · ${rec.v} ganados · ${rec.e} empatados · ${rec.d} perdidos · goles ${rec.gf}-${rec.gc} · últimos: ${rec.form.slice(-6).join(" ")||"—"}`, ""];
+  L.push("Partidos:");
+  playedMatches().slice().sort((a,b)=>matchWhen(a).localeCompare(matchWhen(b))).forEach(m=>L.push(`- ${(m.date||"").slice(0,10)} ${m.homeAway==="local"?"vs":"@"} ${m.opponent} ${m.score.us}-${m.score.them} (${compLabel(m.comp)})`));
+  L.push(""); L.push("Jugadoras (PJ · minutos · G · A · amarillas · rojas · asistencia a entrenos):");
+  S.roster.forEach(p=>{ const st=playerSeasonStats(p.id), at=playerAttendance(p.id);
+    L.push(`- ${p.name}: ${st.pj} PJ · ${fmt(st.min)} min · ${st.g} G · ${st.a} A · ${st.y} TA · ${st.r} TR · entrenos ${at.pct==null?"—":at.pct+"% ("+at.att+"/"+at.total+")"}`); });
+  return L.join("\n");
+}
+function copyForClaude(txt,title,hint){
+  const show=()=>{ modal(`<h3>${esc(title)}</h3>
+    <p class="muted small" style="margin:-4px 0 10px">Si no se ha copiado solo, selecciona el texto y cópialo.</p>
+    <textarea id="ccTxt" readonly style="width:100%;min-height:220px;font-size:13px">${esc(txt)}</textarea>
+    <div class="foot"><button class="btn primary grow" id="ccClose">Cerrar</button></div>`);
+    document.getElementById("ccClose").onclick=closeModal; const t=document.getElementById("ccTxt"); t.focus(); t.select(); };
+  try{ navigator.clipboard.writeText(txt).then(()=>{ toast(title+". "+hint); }, show); }
+  catch(e){ show(); }
 }
 
 /* ---------- TEMPORADA ---------- */
@@ -1559,6 +1607,7 @@ function renderSeason(){
     <div class="hr"></div>
     <div class="row" style="justify-content:space-between"><span class="muted small">Goles</span><span><b>${rec.gf}</b> a favor · <b>${rec.gc}</b> en contra · <b style="color:${rec.dif>=0?'var(--goal)':'var(--red)'}">${rec.dif>=0?'+':''}${rec.dif}</b></span></div>
     ${rec.form.length?`<div class="row" style="justify-content:space-between;margin-top:8px"><span class="muted small">Últimos</span><span>${formHTML}</span></div>`:""}
+    <button class="btn sm ghost block" id="seasonClaude" style="margin-top:10px">Copiar temporada para Claude</button>
   </div>`;
 
   // ---- control de carga / riesgo ----
@@ -1633,6 +1682,7 @@ function renderSeason(){
       S.matches=S.matches.filter(x=>x.id!==b.dataset.delm); save(); renderSeason();
     }
   });
+  { const sc=el.querySelector("#seasonClaude"); if(sc) sc.onclick=()=>copyForClaude(claudeSeasonText(),"Temporada copiada","Pégalo en tu chat con Claude."); }
   bindDataCard(el);
 }
 
