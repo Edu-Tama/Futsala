@@ -359,6 +359,8 @@
     #printArea .pitem .pd{font-size:13px;color:#222;margin-top:2px;white-space:pre-wrap}
     #printArea .pitem .pextra{font-size:12px;color:#555;margin-top:2px}
   }
+.adapt{margin-top:5px;font-size:12.5px;line-height:1.35;padding:6px 9px;border-radius:8px;background:rgba(76,143,83,.15);color:var(--text)}
+.prepban{border:1px solid var(--club)}
 </style>
 </head>
 <body>
@@ -466,6 +468,7 @@ if(!S.sessions) S.sessions=[];
 if(S.trainTodayCount===undefined) S.trainTodayCount=null;
 if(!S.plays) S.plays=[];
 if(!S.videoCats) S.videoCats={};
+if(!S.claudeImports) S.claudeImports={};
 if(S.trainSchedule===undefined) S.trainSchedule=null;
 if(!S.calOverrides) S.calOverrides={};
 if(S.cardLimit===undefined) S.cardLimit=5;
@@ -554,11 +557,11 @@ function stateToDocs(s){
   (s.sessions||[]).forEach(x=>{ const k=docId("session",x.id); d[k]={id:k,tipo:"session",datos:x}; });
   (s.exercises||[]).forEach(x=>{ const k=docId("exercise",x.id); d[k]={id:k,tipo:"exercise",datos:x}; });
   (s.plays||[]).forEach(x=>{ const k=docId("play",x.id); d[k]={id:k,tipo:"play",datos:x}; });
-  d["ajustes"]={id:"ajustes",tipo:"ajustes",datos:{season:s.season,live:s.live,trainTodayCount:s.trainTodayCount,trainSchedule:s.trainSchedule,calOverrides:s.calOverrides,cardLimit:s.cardLimit,draftCall:s.draftCall,videoCats:s.videoCats||{}}};
+  d["ajustes"]={id:"ajustes",tipo:"ajustes",datos:{season:s.season,live:s.live,trainTodayCount:s.trainTodayCount,trainSchedule:s.trainSchedule,calOverrides:s.calOverrides,cardLimit:s.cardLimit,draftCall:s.draftCall,videoCats:s.videoCats||{},claudeImports:s.claudeImports||{}}};
   return d;
 }
 function docsToState(map){
-  const st={season:"Temporada 2025–2026 · 1ª Autonómica",roster:[],matches:[],live:null,exercises:[],sessions:[],trainTodayCount:null,plays:[],trainSchedule:null,calOverrides:{},cardLimit:5,draftCall:null,videoCats:{}};
+  const st={season:"Temporada 2025–2026 · 1ª Autonómica",roster:[],matches:[],live:null,exercises:[],sessions:[],trainTodayCount:null,plays:[],trainSchedule:null,calOverrides:{},cardLimit:5,draftCall:null,videoCats:{},claudeImports:{}};
   Object.keys(map).forEach(k=>{ const doc=map[k]; if(!doc) return; const t=doc.tipo, dt=doc.datos;
     if(t==="player")st.roster.push(dt); else if(t==="match")st.matches.push(dt); else if(t==="session")st.sessions.push(dt);
     else if(t==="exercise")st.exercises.push(dt); else if(t==="play")st.plays.push(dt); else if(t==="ajustes")Object.assign(st,dt); });
@@ -2092,6 +2095,12 @@ function fitBadge(str){
   if(f.k==='low') return `<span class="fit low">faltan ${f.d}</span>`;
   return `<span class="fit high">+${f.d}</span>`;
 }
+/* Adaptación del ejercicio según cuántas vienen (campo porN: [{rango:"7-9", txt:"…"}]) */
+function adaptFor(ex,n){
+  if(!ex||!Array.isArray(ex.porN)||n==null||isNaN(n)) return null;
+  return ex.porN.find(a=>{ const r=parsePlayers(a.rango); return r && n>=r.min && n<=r.max; })||null;
+}
+function adaptHTML(ex,n){ const a=adaptFor(ex,n); return a?`<div class="adapt">👥 Con ${n}: ${esc(a.txt)}</div>`:""; }
 
 function renderTrain(){
   const el=document.getElementById("view-train");
@@ -2269,12 +2278,14 @@ function renderCalendarSetup(body){
       <h2 style="color:var(--text);font-size:18px;text-transform:none;letter-spacing:-.01em;margin:6px 0 8px">Programa tu temporada</h2>
       <p class="muted small" style="margin:0 0 12px">Define las fechas y los días de entreno y tendrás un calendario con la sesión de cada día.</p>
       <button class="btn primary block" id="calCfg">Configurar calendario</button>
+      <button class="btn ghost block" id="calImport" style="margin-top:8px">⬇️ Sesiones preparadas</button>
     </div>
     ${loose.length?`<div class="card" style="padding:4px 14px"><h2>Sesiones sueltas</h2>
       ${loose.map(s=>`<div class="sess"><span class="d">${s.date?new Date(s.date+'T00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'short'}):"—"}</span>
         <div class="grow"><b>${esc(s.title||"Sesión")}</b><div class="muted small">${sessionMinutes(s)}′ · ${sessionCount(s)} ejercicios</div></div>
         <button class="btn sm ghost" data-open="${s.id}">Abrir</button></div>`).join("")}</div>`:""}`;
   body.querySelector("#calCfg").onclick=()=>calConfig();
+  body.querySelector("#calImport").onclick=()=>prepModal();
   body.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ openSessionId=b.dataset.open; renderSessions(); });
 }
 
@@ -2352,12 +2363,16 @@ function renderCalendar(body){
       </div>
     </div>
     <div class="pb-hint">Toca un día de entreno para preparar la sesión. Toca otro día para añadir un entreno extra.</div>
+    <div id="prepBan"></div>
+    <button class="btn ghost block" id="calImport">⬇️ Sesiones preparadas</button>
     <button class="btn ghost block" id="calReconf">Reconfigurar temporada</button>
     ${balanceCard()}`;
 
   body.querySelector("#calPrev").onclick=()=>{ if(canPrev){ calCursor=prevM; renderCalendar(body);} };
   body.querySelector("#calNext").onclick=()=>{ if(canNext){ calCursor=nextM; renderCalendar(body);} };
   body.querySelector("#calReconf").onclick=()=>calConfig();
+  body.querySelector("#calImport").onclick=()=>prepModal();
+  drawPrepBanner();
   body.querySelectorAll("[data-day]").forEach(c=>c.onclick=()=>{
     const ds=c.dataset.day; if(c.dataset.range!=="1") return;
     if(c.dataset.train==="1"){ openSessionId=ensureSession(ds).id; renderSessions(); }
@@ -2365,6 +2380,64 @@ function renderCalendar(body){
       if(confirm("¿Añadir un entreno extra este día?")){ S.calOverrides[ds]="on"; openSessionId=ensureSession(ds).id; save(); renderSessions(); }
     }
   });
+}
+
+/* ---- Sesiones preparadas (archivos semanas/AAAA-MM-DD.json del repositorio) ---- */
+let prepIndex=null;
+function mondayStr(d){ const x=new Date(d); x.setDate(x.getDate()-((x.getDay()+6)%7)); return ymd(x); }
+async function loadPrepIndex(){
+  try{ const r=await fetch("semanas/index.json?t="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); prepIndex=Array.isArray(j.semanas)?j.semanas:[]; } else if(prepIndex==null) prepIndex=[]; }
+  catch(e){ if(prepIndex==null) prepIndex=[]; }
+  return prepIndex;
+}
+function pendingPrep(){ const imp=S.claudeImports||{}, mon=mondayStr(new Date()); return (prepIndex||[]).filter(w=>w.semana>=mon && !imp[w.semana]); }
+async function drawPrepBanner(){
+  await loadPrepIndex();
+  const el=document.getElementById("prepBan"); if(!el) return;
+  const p=pendingPrep();
+  el.innerHTML=p.length?`<div class="card prepban"><div class="eyebrow">Sesiones preparadas</div>
+    <div style="margin:6px 0 10px"><b>${esc(p[0].titulo||("Semana del "+p[0].semana))}</b>${p[0].resumen?`<div class="muted small" style="margin-top:4px">${esc(p[0].resumen)}</div>`:""}</div>
+    <button class="btn primary block" id="prepGo">Revisar e importar</button></div>`:"";
+  const g=document.getElementById("prepGo"); if(g) g.onclick=()=>prepModal();
+}
+async function prepModal(){
+  await loadPrepIndex();
+  const imp=S.claudeImports||{};
+  const L=(prepIndex||[]).slice().sort((a,b)=>b.semana.localeCompare(a.semana)).slice(0,8);
+  modal(`<h3>Sesiones preparadas</h3>
+    <p class="muted small" style="margin:-4px 0 12px">Al importar, las sesiones aparecen en el calendario (también para Julia) y sus ejercicios se añaden a la biblioteca. Después puedes retocar lo que quieras.</p>
+    ${L.length?L.map(w=>`<div class="sess"><div class="grow"><b>${esc(w.titulo||("Semana del "+w.semana))}</b><div class="muted small">${imp[w.semana]?"Ya importada":esc(w.resumen||"")}</div></div>
+      <button class="btn sm ${imp[w.semana]?"ghost":"primary"}" data-prep="${esc(w.archivo||("semanas/"+w.semana+".json"))}">${imp[w.semana]?"Reimportar":"Importar"}</button></div>`).join("")
+      :`<div class="empty">No hay sesiones preparadas${navigator.onLine?"":" (sin conexión)"}.</div>`}
+    <label class="btn ghost block" style="margin-top:12px;text-align:center">Importar desde un archivo…<input type="file" id="prepFile" accept=".json,application/json" hidden></label>
+    <div class="foot"><button class="btn ghost grow" id="prepClose">Cerrar</button></div>`);
+  document.getElementById("prepClose").onclick=closeModal;
+  document.querySelectorAll("[data-prep]").forEach(b=>b.onclick=async()=>{
+    try{ const r=await fetch(b.dataset.prep+"?t="+Date.now(),{cache:"no-store"}); if(!r.ok) throw 0; importPack(await r.json()); }
+    catch(e){ toast("No se pudo descargar. Revisa la conexión."); }
+  });
+  document.getElementById("prepFile").onchange=e=>{ const f=e.target.files[0]; if(!f) return; const r=new FileReader();
+    r.onload=()=>{ try{ importPack(JSON.parse(r.result)); }catch(err){ toast("Ese archivo no es una semana preparada"); } }; r.readAsText(f); };
+}
+function importPack(pack){
+  if(!pack||!Array.isArray(pack.sesiones)){ toast("Ese archivo no es una semana preparada"); return; }
+  (pack.ejercicios||[]).forEach(x=>{ if(!x||!x.id||!x.name) return;
+    const clean=Object.assign({category:"Táctica of.",objective:"",desc:"",material:"",players:"",duration:"",variants:"",boardId:null},x);
+    const i=S.exercises.findIndex(e=>e.id===x.id); if(i>=0) S.exercises[i]=Object.assign({},S.exercises[i],clean); else S.exercises.push(clean); });
+  let added=0, skipped=0;
+  pack.sesiones.forEach(ns=>{
+    if(!ns||!ns.date) return;
+    const old=S.sessions.find(x=>x.date===ns.date);
+    if(old && sessionCount(old)>0 && !confirm(`Ya hay una sesión con ejercicios el ${ns.date}. ¿Sustituirla por la preparada?`)){ skipped++; return; }
+    if(old) S.sessions=S.sessions.filter(x=>x!==old);
+    S.sessions.push({id:uid(), date:ns.date, title:ns.title||"", focus:ns.focus||"", targetMin:String(ns.targetMin||scheduleMinutes()||""), notes:ns.notes||"", absent:[], rpe:{},
+      blocks:(ns.blocks||[]).map(b=>({id:uid(), name:b.name||"Bloque", items:(b.items||[]).filter(it=>S.exercises.find(e=>e.id===it.exerciseId)).map(it=>({id:uid(), exerciseId:it.exerciseId, minutes:String(it.minutes||""), note:it.note||""}))}))});
+    if(S.trainSchedule && !isTrainingDay(ns.date)) S.calOverrides[ns.date]="on";
+    added++;
+  });
+  if(pack.semana){ S.claudeImports=S.claudeImports||{}; S.claudeImports[pack.semana]=new Date().toISOString(); }
+  save(); closeModal(); openSessionId=null; renderSessions();
+  toast(`${added} ${added===1?"sesión importada":"sesiones importadas"}${skipped?` · ${skipped} sin tocar`:""}`);
 }
 
 function duplicateSession(id){
@@ -2544,6 +2617,7 @@ function renderSessionEditor(body){
       ${bl.items.map(it=>{ const ex=S.exercises.find(e=>e.id===it.exerciseId);
         return `<div class="item">
           <div class="inm"><div class="row" style="gap:6px"><b>${esc(ex?ex.name:"(ejercicio borrado)")}</b>${ex&&ex.category?`<span class="muted small">· ${esc(ex.category)}</span>`:""}${ex?fitBadge(ex.players):""}</div>
+            ${ex?adaptHTML(ex,sessionCtxCount):""}
             <input class="inote" value="${esc(it.note||'')}" data-note="${it.id}" placeholder="ajuste / nota (opcional)">
             <button class="btn sm ghost teambtn" data-teams="${bl.id}|${it.id}">🎽 ${it.teams&&it.teams.length?"Equipos":"Hacer equipos"}</button>
             ${teamsSummaryHTML(it)}</div>
@@ -2596,6 +2670,7 @@ function pkRow(x){ return `<div class="ex" data-pick="${x.id}"><div class="meta"
 /* ---- Vista "modo pista" ---- */
 function sessionView(s){
   const blocks=(s.blocks||[]).filter(b=>b.items.length);
+  const nPres=presentCount(s);
   modal(`<h3>${esc(s.title||"Sesión")} · ${sessionMinutes(s)}′</h3>
     ${s.focus?`<div class="muted small" style="margin:-6px 0 10px">🎯 ${esc(s.focus)}</div>`:""}
     ${blocks.length? blocks.map(b=>`
@@ -2606,6 +2681,7 @@ function sessionView(s){
             <div class="row"><b class="grow">${esc(ex.name)}</b><span class="dur">${it.minutes?esc(it.minutes)+"′":""}</span></div>
             ${ex.objective?`<div class="muted small" style="margin-top:2px">${esc(ex.objective)}</div>`:""}
             ${ex.desc?`<div class="small" style="margin-top:4px;white-space:pre-wrap">${esc(ex.desc)}</div>`:""}
+            ${adaptHTML(ex,nPres)}
             ${ex.material?`<div class="muted small" style="margin-top:4px">🎒 ${esc(ex.material)}</div>`:""}
             ${(ex.boardId && S.plays.find(pl=>pl.id===ex.boardId))?`<button class="btn sm ghost" data-play="${ex.boardId}" style="margin-top:6px">🎬 Ver jugada</button>`:""}
             ${it.note?`<div class="small" style="margin-top:4px;color:var(--brand)">✎ ${esc(it.note)}</div>`:""}
@@ -2635,6 +2711,7 @@ function printSession(s){
           ${ex.objective?`<div class="pextra"><b>Objetivo:</b> ${esc(ex.objective)}</div>`:""}
           ${ex.desc?`<div class="pd">${esc(ex.desc)}</div>`:""}
           ${ex.material?`<div class="pextra"><b>Material:</b> ${esc(ex.material)}</div>`:""}
+          ${(()=>{ const n=presentCount(s), a=adaptFor(ex,n); return a?`<div class="pextra"><b>Con ${n}:</b> ${esc(a.txt)}</div>`:""; })()}
           ${it.note?`<div class="pextra"><b>Nota:</b> ${esc(it.note)}</div>`:""}
           ${it.teams&&it.teams.length?`<div class="pextra"><b>Equipos:</b> ${it.teams.map(t=>esc(t.color)+" ("+t.ids.map(id=>{const p=playerById(id);return p?("#"+p.number):"";}).filter(Boolean).join(", ")+")").join(" · ")}</div>`:""}
         </div>`;}).join("")}
