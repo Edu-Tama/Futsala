@@ -1,0 +1,3584 @@
+{
+ "semana": "2026-11-02-banco",
+ "generado": "2026-11-01T23:32:15Z",
+ "ejercicios": [
+  {
+   "id": "bt-pivot-1-2x2-ala-pivot",
+   "name": "Defensa de la pívot 1/5 · 2x2 ala-pívot en media pista",
+   "category": "Táctica def.",
+   "objective": "Defender a la pívot por detrás y quitar el pase interior desde la presión a la pasadora",
+   "desc": "Dos campos a la vez, uno en cada media pista, con portera. Ataque: una ala con balón a unos 12 m y una pívot de espaldas en la frontal. Defensa: una presiona a la ala orientándola a banda y la otra defiende a la pívot por detrás, con contacto y brazo por delante para disputar el pase. Si la pívot recibe, juega el 1x1 o la devolución. Si la defensa roba o intercepta, tiene 3\" para marcar en una de las dos miniporterías de medio campo. Series de 30\" / 30\"; cambio de roles cada 2 series. Consigna: si la pívot gira, la defensora de la ala ayuda por dentro y la pívot defensora no salta a banda. Progresión 1/5.",
+   "players": "10",
+   "duration": "10",
+   "material": "2 miniporterías por campo, petos",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Un campo 2x2; las dos sobrantes entran por la pareja que defiende."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Dos campos 2x2; con 9, una comodina rota por la pareja que pierde."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Dos campos 2x2 y la décima rota por series."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos campos 3x3 (añade una ala débil que puede ayudar a la pívot defensora)."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "gk",
+      "kind": "home",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "d1",
+      "kind": "home",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "d2",
+      "kind": "home",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "Pv",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "a1": {
+        "x": 0.68,
+        "y": 0.25
+       },
+       "a2": {
+        "x": 0.84,
+        "y": 0.5
+       },
+       "d1": {
+        "x": 0.72,
+        "y": 0.3
+       },
+       "d2": {
+        "x": 0.88,
+        "y": 0.5
+       },
+       "b": {
+        "x": 0.67,
+        "y": 0.25
+       }
+      }
+     },
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "a1": {
+        "x": 0.68,
+        "y": 0.25
+       },
+       "a2": {
+        "x": 0.84,
+        "y": 0.5
+       },
+       "d1": {
+        "x": 0.75,
+        "y": 0.33
+       },
+       "d2": {
+        "x": 0.86,
+        "y": 0.48
+       },
+       "b": {
+        "x": 0.84,
+        "y": 0.47
+       }
+      }
+     }
+    ],
+    "zonas": [
+     {
+      "x": 0.5,
+      "y": 0.02,
+      "w": 0.48,
+      "h": 0.96,
+      "label": "Campo 1"
+     }
+    ],
+    "miniporterias": [
+     {
+      "x": 0.5,
+      "y": 0.25,
+      "vertical": true
+     },
+     {
+      "x": 0.5,
+      "y": 0.75,
+      "vertical": true
+     }
+    ],
+    "conos": []
+   }
+  },
+  {
+   "id": "bt-pivot-2-3x3-ayuda-lado-debil",
+   "name": "Defensa de la pívot 2/5 · 3x3 con ayuda del lado débil",
+   "category": "Táctica def.",
+   "objective": "Coordinar la defensa de la pívot con la ayuda de la ala del lado débil",
+   "desc": "Dos campos en media pista con portera. Ataque en 2-1: dos alas y una pívot. Defensa individual: la pívot defendida por detrás. La ala defensora del lado contrario al balón se hunde para ayudar sobre la pívot. Si el balón cambia de lado, vuelve a su par y ayuda la otra. Gol del ataque = 1 punto. Robo de la defensa y pase a una de las miniporterías de medio campo en menos de 4\" = 1 punto. Series de 40\" / 20\"; cambio de roles cada 2 series. Progresión 2/5.",
+   "players": "12",
+   "duration": "10",
+   "material": "4 miniporterías, petos",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Un campo 3x3; las porteras en las dos porterías de ese campo y se rota cada serie."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Un campo 3x3 y otro 2x2 (ala-pívot)."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Dos campos: 3x3 y 2x2; la sobrante entra por quien defienda la pívot."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos campos 3x3."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "gk",
+      "kind": "home",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "d1",
+      "kind": "home",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "d2",
+      "kind": "home",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "d3",
+      "kind": "home",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "Pv",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "a1": {
+        "x": 0.66,
+        "y": 0.2
+       },
+       "a2": {
+        "x": 0.66,
+        "y": 0.8
+       },
+       "a3": {
+        "x": 0.85,
+        "y": 0.5
+       },
+       "d1": {
+        "x": 0.7,
+        "y": 0.25
+       },
+       "d2": {
+        "x": 0.72,
+        "y": 0.72
+       },
+       "d3": {
+        "x": 0.89,
+        "y": 0.5
+       },
+       "b": {
+        "x": 0.65,
+        "y": 0.2
+       }
+      }
+     },
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "a1": {
+        "x": 0.66,
+        "y": 0.2
+       },
+       "a2": {
+        "x": 0.66,
+        "y": 0.8
+       },
+       "a3": {
+        "x": 0.85,
+        "y": 0.5
+       },
+       "d1": {
+        "x": 0.72,
+        "y": 0.27
+       },
+       "d2": {
+        "x": 0.8,
+        "y": 0.6
+       },
+       "d3": {
+        "x": 0.89,
+        "y": 0.48
+       },
+       "b": {
+        "x": 0.65,
+        "y": 0.2
+       }
+      }
+     }
+    ],
+    "zonas": [
+     {
+      "x": 0.5,
+      "y": 0.02,
+      "w": 0.48,
+      "h": 0.96,
+      "label": "Campo 1"
+     }
+    ],
+    "miniporterias": [
+     {
+      "x": 0.5,
+      "y": 0.25,
+      "vertical": true
+     },
+     {
+      "x": 0.5,
+      "y": 0.75,
+      "vertical": true
+     }
+    ],
+    "conos": []
+   }
+  },
+  {
+   "id": "bt-pivot-3-4x4-contra-31",
+   "name": "Defensa de la pívot 3/5 · 4x4 contra 3-1 con salida a la contra",
+   "category": "Táctica def.",
+   "objective": "Defender un 3-1 con presión orientada a banda, la pívot por detrás y transición tras robo",
+   "desc": "Pista entera con dos porterías. Equipo B ataca siempre en 3-1 con una pívot fija. Equipo A defiende a media pista con nuestras normas: presión a la poseedora hacia banda, la pívot por detrás, ayuda del lado débil y los cambios los canta la de atrás. Si A roba, contraataca a la otra portería (transición real) y la jugada termina en gol, tiro o pérdida. Después, B reinicia desde su portera. Series de 2' por equipo; cambio de roles al terminar cada serie. Progresión 3/5.",
+   "players": "10",
+   "duration": "12",
+   "material": "Petos",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "3x3 (B en 2-1 con pívot) a media pista; la sobrante comodina en la contra de A."
+    },
+    {
+     "rango": "8-9",
+     "txt": "4x4; con 9, comodina del equipo que ataca en la contra."
+    },
+    {
+     "rango": "10-11",
+     "txt": "4x4 y 2 suplentes que entran por cambios volantes cada serie."
+    },
+    {
+     "rango": "12-14",
+     "txt": "4x4 y 4 suplentes con cambios volantes; o dos campos 3x3 si son 12 de campo."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "g1",
+      "kind": "home",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "g2",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "h3",
+      "kind": "home",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "h4",
+      "kind": "home",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "C",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a4",
+      "kind": "away",
+      "label": "Pv",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "g1": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "g2": {
+        "x": 0.04,
+        "y": 0.5
+       },
+       "a1": {
+        "x": 0.55,
+        "y": 0.5
+       },
+       "a2": {
+        "x": 0.65,
+        "y": 0.18
+       },
+       "a3": {
+        "x": 0.65,
+        "y": 0.82
+       },
+       "a4": {
+        "x": 0.86,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.62,
+        "y": 0.5
+       },
+       "h2": {
+        "x": 0.7,
+        "y": 0.22
+       },
+       "h3": {
+        "x": 0.72,
+        "y": 0.75
+       },
+       "h4": {
+        "x": 0.9,
+        "y": 0.5
+       },
+       "b": {
+        "x": 0.64,
+        "y": 0.18
+       }
+      }
+     },
+     {
+      "pos": {
+       "g1": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "g2": {
+        "x": 0.04,
+        "y": 0.5
+       },
+       "a1": {
+        "x": 0.55,
+        "y": 0.5
+       },
+       "a2": {
+        "x": 0.65,
+        "y": 0.18
+       },
+       "a3": {
+        "x": 0.65,
+        "y": 0.82
+       },
+       "a4": {
+        "x": 0.86,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.5,
+        "y": 0.4
+       },
+       "h2": {
+        "x": 0.6,
+        "y": 0.2
+       },
+       "h3": {
+        "x": 0.4,
+        "y": 0.7
+       },
+       "h4": {
+        "x": 0.9,
+        "y": 0.5
+       },
+       "b": {
+        "x": 0.5,
+        "y": 0.42
+       }
+      }
+     }
+    ],
+    "zonas": [],
+    "miniporterias": [],
+    "conos": []
+   }
+  },
+  {
+   "id": "bt-pivot-4-pivot-cae-banda",
+   "name": "Defensa de la pívot 4/5 · La pívot cae a banda: acompañar o cambiar",
+   "category": "Táctica def.",
+   "objective": "Resolver la pívot que sale de la zona central: acompañarla o cambiar, cantado por la de atrás",
+   "desc": "Dos campos en media pista con portera, 3x3. El ataque tiene una pívot que puede quedarse dentro o caer a banda a recibir, bloquear o fijar. La defensa decide en cada jugada: la defensora de la pívot la acompaña o cambia con la ala, y lo canta la de atrás. Ataque: gol = 1, gol aprovechando un cambio tardío o sin cantar = 2. Defensa: robo y salida conduciendo por la línea de medio campo = 1. Series de 40\" / 20\"; cambio de roles cada 2 series. Progresión 4/5.",
+   "players": "12",
+   "duration": "10",
+   "material": "Petos, conos para marcar la línea de salida",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Un campo 3x3; rotación por series."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Un campo 3x3 y otro 2x2 con pívot."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Dos campos 3x3 y 2x2; la sobrante entra por la pareja que pierda."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos campos 3x3."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "gk",
+      "kind": "home",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "d1",
+      "kind": "home",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "d2",
+      "kind": "home",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "d3",
+      "kind": "home",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "Pv",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "a1": {
+        "x": 0.65,
+        "y": 0.5
+       },
+       "a2": {
+        "x": 0.72,
+        "y": 0.15
+       },
+       "a3": {
+        "x": 0.86,
+        "y": 0.45
+       },
+       "d1": {
+        "x": 0.69,
+        "y": 0.5
+       },
+       "d2": {
+        "x": 0.76,
+        "y": 0.2
+       },
+       "d3": {
+        "x": 0.9,
+        "y": 0.45
+       },
+       "b": {
+        "x": 0.64,
+        "y": 0.5
+       }
+      }
+     },
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "a1": {
+        "x": 0.65,
+        "y": 0.5
+       },
+       "a2": {
+        "x": 0.8,
+        "y": 0.3
+       },
+       "a3": {
+        "x": 0.8,
+        "y": 0.12
+       },
+       "d1": {
+        "x": 0.69,
+        "y": 0.5
+       },
+       "d2": {
+        "x": 0.82,
+        "y": 0.16
+       },
+       "d3": {
+        "x": 0.84,
+        "y": 0.32
+       },
+       "b": {
+        "x": 0.64,
+        "y": 0.5
+       }
+      }
+     }
+    ],
+    "zonas": [
+     {
+      "x": 0.5,
+      "y": 0.02,
+      "w": 0.48,
+      "h": 0.96,
+      "label": "Campo 1"
+     }
+    ],
+    "miniporterias": [],
+    "conos": [
+     {
+      "x": 0.52,
+      "y": 0.1
+     },
+     {
+      "x": 0.52,
+      "y": 0.9
+     }
+    ]
+   }
+  },
+  {
+   "id": "bt-pivot-5-partido-31",
+   "name": "Defensa de la pívot 5/5 · Partido contra 3-1: robar el pase interior vale doble",
+   "category": "Juego",
+   "objective": "Trasladar la defensa de la pívot al juego real con marcador",
+   "desc": "Partido 4x4 con porteras en pista entera. Los dos equipos atacan en 3-1 con pívot, como la mayoría de rivales de la liga. Se defiende con nuestras normas (presión alta hacia banda, la pívot por detrás, cambios cantados por la de atrás). Marcador: gol = 1; interceptar un pase dirigido a la pívot = 1 punto extra para la defensa. Series de 3' con 1' de pausa. Progresión 5/5.",
+   "players": "10",
+   "duration": "15",
+   "material": "Petos",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Partido 3x3 con porteras; la sobrante comodina en ataque (máximo +1)."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Partido 4x4; con 9, comodina en ataque."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Partido 4x4 y cambios volantes."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Partido 4x4 con cambios volantes, o dos partidos 3x3 en media pista."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "g1",
+      "kind": "home",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "g2",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "C",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h3",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h4",
+      "kind": "home",
+      "label": "Pv",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "C",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a4",
+      "kind": "away",
+      "label": "Pv",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "g1": {
+        "x": 0.04,
+        "y": 0.5
+       },
+       "g2": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.65,
+        "y": 0.5
+       },
+       "h2": {
+        "x": 0.75,
+        "y": 0.2
+       },
+       "h3": {
+        "x": 0.75,
+        "y": 0.8
+       },
+       "h4": {
+        "x": 0.9,
+        "y": 0.5
+       },
+       "a1": {
+        "x": 0.45,
+        "y": 0.5
+       },
+       "a2": {
+        "x": 0.55,
+        "y": 0.2
+       },
+       "a3": {
+        "x": 0.55,
+        "y": 0.8
+       },
+       "a4": {
+        "x": 0.86,
+        "y": 0.48
+       },
+       "b": {
+        "x": 0.55,
+        "y": 0.22
+       }
+      }
+     },
+     {
+      "pos": {
+       "g1": {
+        "x": 0.04,
+        "y": 0.5
+       },
+       "g2": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.6,
+        "y": 0.45
+       },
+       "h2": {
+        "x": 0.62,
+        "y": 0.22
+       },
+       "h3": {
+        "x": 0.75,
+        "y": 0.8
+       },
+       "h4": {
+        "x": 0.85,
+        "y": 0.47
+       },
+       "a1": {
+        "x": 0.45,
+        "y": 0.5
+       },
+       "a2": {
+        "x": 0.55,
+        "y": 0.2
+       },
+       "a3": {
+        "x": 0.55,
+        "y": 0.8
+       },
+       "a4": {
+        "x": 0.86,
+        "y": 0.48
+       },
+       "b": {
+        "x": 0.83,
+        "y": 0.46
+       }
+      }
+     }
+    ],
+    "zonas": [],
+    "miniporterias": [],
+    "conos": []
+   }
+  },
+  {
+   "id": "bt-bloqueo-1-2x2-directo",
+   "name": "Bloqueo y continuación 1/5 · 2x2 bloqueo directo y lectura",
+   "category": "Táctica of.",
+   "objective": "Atacar: leer la defensa del bloqueo. Defender: cambio cantado por la de atrás o pasar por delante",
+   "desc": "Dos campos en media pista con portera. Poseedora y bloqueadora contra dos defensoras. La bloqueadora pone un bloqueo directo sobre quien defiende a la poseedora. Lectura del ataque: si cambian, continuación de la bloqueadora hacia portería; si pasan por delante, conducir hacia el bloqueo y jugar el 2x1; si pasan por detrás, tiro. La defensa aplica nuestra norma: la de atrás canta el cambio y, si no hay cambio, se pasa por delante. Si la defensa roba, tiene 3\" para marcar en una miniportería de medio campo. Series de 30\" / 30\"; cambio de roles cada 2 series. Progresión 1/5.",
+   "players": "10",
+   "duration": "10",
+   "material": "4 miniporterías, petos",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Un campo 2x2 y rotación; las dos sobrantes atacan la contra si roban."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Dos campos 2x2; con 9, comodina rotatoria."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Dos campos 2x2 y la sobrante rota por la pareja que pierde."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos campos 2x2 + una tercera atacante fija en banda que solo da y recibe (pasa a ser progresión 2)."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "gk",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "B",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.62,
+        "y": 0.4
+       },
+       "h2": {
+        "x": 0.7,
+        "y": 0.6
+       },
+       "a1": {
+        "x": 0.67,
+        "y": 0.42
+       },
+       "a2": {
+        "x": 0.75,
+        "y": 0.6
+       },
+       "b": {
+        "x": 0.61,
+        "y": 0.4
+       }
+      }
+     },
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.7,
+        "y": 0.4
+       },
+       "h2": {
+        "x": 0.84,
+        "y": 0.55
+       },
+       "a1": {
+        "x": 0.68,
+        "y": 0.44
+       },
+       "a2": {
+        "x": 0.72,
+        "y": 0.42
+       },
+       "b": {
+        "x": 0.83,
+        "y": 0.55
+       }
+      }
+     }
+    ],
+    "zonas": [
+     {
+      "x": 0.5,
+      "y": 0.02,
+      "w": 0.48,
+      "h": 0.96,
+      "label": "Campo 1"
+     }
+    ],
+    "miniporterias": [
+     {
+      "x": 0.5,
+      "y": 0.25,
+      "vertical": true
+     },
+     {
+      "x": 0.5,
+      "y": 0.75,
+      "vertical": true
+     }
+    ],
+    "conos": []
+   }
+  },
+  {
+   "id": "bt-bloqueo-2-3x3-indirecto",
+   "name": "Bloqueo y continuación 2/5 · 3x3 bloqueo indirecto para liberar a la tercera",
+   "category": "Táctica of.",
+   "objective": "Bloquear sin balón para liberar una recepción y leer el cambio defensivo",
+   "desc": "Dos campos en media pista con portera, 3x3. Una atacante bloquea a la defensora de una compañera sin balón para que esta reciba con ventaja. Si la defensa cambia, la bloqueadora continúa y recibe. La defensa aplica su norma (cambio cantado por la de atrás). Gol = 1; gol tras bloqueo = 2. Robo de la defensa y salida conduciendo por medio campo = 1. Series de 40\" / 20\"; cambio de roles cada 2 series. Progresión 2/5.",
+   "players": "12",
+   "duration": "10",
+   "material": "Petos, conos para la línea de salida",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Un campo 3x3; rotación por series."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Un campo 3x3 y otro 2x2 (bloqueo directo)."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Dos campos: 3x3 y 2x2; la sobrante entra por quien pierde."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos campos 3x3."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "gk",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "B",
+      "gk": false
+     },
+     {
+      "id": "h3",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.62,
+        "y": 0.5
+       },
+       "h2": {
+        "x": 0.75,
+        "y": 0.2
+       },
+       "h3": {
+        "x": 0.8,
+        "y": 0.45
+       },
+       "a1": {
+        "x": 0.66,
+        "y": 0.5
+       },
+       "a2": {
+        "x": 0.78,
+        "y": 0.24
+       },
+       "a3": {
+        "x": 0.83,
+        "y": 0.45
+       },
+       "b": {
+        "x": 0.61,
+        "y": 0.5
+       }
+      }
+     },
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.62,
+        "y": 0.5
+       },
+       "h2": {
+        "x": 0.82,
+        "y": 0.35
+       },
+       "h3": {
+        "x": 0.74,
+        "y": 0.25
+       },
+       "a1": {
+        "x": 0.66,
+        "y": 0.5
+       },
+       "a2": {
+        "x": 0.79,
+        "y": 0.3
+       },
+       "a3": {
+        "x": 0.84,
+        "y": 0.4
+       },
+       "b": {
+        "x": 0.73,
+        "y": 0.26
+       }
+      }
+     }
+    ],
+    "zonas": [
+     {
+      "x": 0.5,
+      "y": 0.02,
+      "w": 0.48,
+      "h": 0.96,
+      "label": "Campo 1"
+     }
+    ],
+    "miniporterias": [],
+    "conos": [
+     {
+      "x": 0.52,
+      "y": 0.1
+     },
+     {
+      "x": 0.52,
+      "y": 0.9
+     }
+    ]
+   }
+  },
+  {
+   "id": "bt-bloqueo-3-3x3-salto-apoyo",
+   "name": "Bloqueo y continuación 3/5 · Bloqueo y salto a la tercera",
+   "category": "Táctica of.",
+   "objective": "Cuando la defensa se ajusta al bloqueo del lado fuerte, conectar con la tercera del lado débil",
+   "desc": "Dos campos en media pista con portera, 3x3. Bloqueo directo en el lado fuerte. Si las dos defensoras se cierran sobre el bloqueo, el pase va a la tercera del lado débil, que tira o juega la diagonal. Si no se cierran, se juega la continuación. Gol = 1; gol de la tercera tras un bloqueo = 2. Defensa: robo y 4\" para marcar en miniportería = 1. Series de 40\" / 20\". Progresión 3/5.",
+   "players": "12",
+   "duration": "10",
+   "material": "4 miniporterías, petos",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Un campo 3x3."
+    },
+    {
+     "rango": "8-9",
+     "txt": "3x3 y 2x2 (bloqueo directo)."
+    },
+    {
+     "rango": "10-11",
+     "txt": "3x3 y 2x2 con la sobrante rotando."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos campos 3x3."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "gk",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "B",
+      "gk": false
+     },
+     {
+      "id": "h3",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.64,
+        "y": 0.3
+       },
+       "h2": {
+        "x": 0.72,
+        "y": 0.42
+       },
+       "h3": {
+        "x": 0.7,
+        "y": 0.85
+       },
+       "a1": {
+        "x": 0.68,
+        "y": 0.33
+       },
+       "a2": {
+        "x": 0.76,
+        "y": 0.42
+       },
+       "a3": {
+        "x": 0.74,
+        "y": 0.8
+       },
+       "b": {
+        "x": 0.63,
+        "y": 0.3
+       }
+      }
+     },
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.7,
+        "y": 0.32
+       },
+       "h2": {
+        "x": 0.8,
+        "y": 0.4
+       },
+       "h3": {
+        "x": 0.8,
+        "y": 0.82
+       },
+       "a1": {
+        "x": 0.72,
+        "y": 0.34
+       },
+       "a2": {
+        "x": 0.73,
+        "y": 0.38
+       },
+       "a3": {
+        "x": 0.76,
+        "y": 0.6
+       },
+       "b": {
+        "x": 0.79,
+        "y": 0.8
+       }
+      }
+     }
+    ],
+    "zonas": [
+     {
+      "x": 0.5,
+      "y": 0.02,
+      "w": 0.48,
+      "h": 0.96,
+      "label": "Campo 1"
+     }
+    ],
+    "miniporterias": [
+     {
+      "x": 0.5,
+      "y": 0.25,
+      "vertical": true
+     },
+     {
+      "x": 0.5,
+      "y": 0.75,
+      "vertical": true
+     }
+    ],
+    "conos": []
+   }
+  },
+  {
+   "id": "bt-bloqueo-4-4x4-contra-cambios",
+   "name": "Bloqueo y continuación 4/5 · 4-0 contra defensa de cambios",
+   "category": "Táctica of.",
+   "objective": "Atacar una defensa que cambia: cortar por delante y castigar el cambio con la continuación",
+   "desc": "Media pista con portera, 4x4. Ataque en 4-0 con rotación de 4. Defensa individual con cambios, como el Leganés y como nosotras. Ataque: gol = 1, gol tras bloqueo y continuación o tras un desajuste del cambio = 2. Defensa: robo y salida conduciendo por la línea de medio campo, o pase a una de las dos miniporterías = 1. Series de 1'30\" por equipo; cambio de roles tras cada serie. Progresión 4/5.",
+   "players": "10",
+   "duration": "12",
+   "material": "2 miniporterías, petos",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "3x3 en media pista."
+    },
+    {
+     "rango": "8-9",
+     "txt": "4x4; con 9, comodina defensiva que entra por quien pierda el balón."
+    },
+    {
+     "rango": "10-11",
+     "txt": "4x4 y 2 suplentes con cambio por serie."
+    },
+    {
+     "rango": "12-14",
+     "txt": "4x4 en cada media pista (dos campos) o 4x4 con cambios volantes."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "gk",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "C",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h3",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h4",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a4",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.6,
+        "y": 0.38
+       },
+       "h2": {
+        "x": 0.6,
+        "y": 0.62
+       },
+       "h3": {
+        "x": 0.68,
+        "y": 0.12
+       },
+       "h4": {
+        "x": 0.68,
+        "y": 0.88
+       },
+       "a1": {
+        "x": 0.66,
+        "y": 0.4
+       },
+       "a2": {
+        "x": 0.66,
+        "y": 0.6
+       },
+       "a3": {
+        "x": 0.74,
+        "y": 0.16
+       },
+       "a4": {
+        "x": 0.74,
+        "y": 0.84
+       },
+       "b": {
+        "x": 0.59,
+        "y": 0.38
+       }
+      }
+     },
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.68,
+        "y": 0.45
+       },
+       "h2": {
+        "x": 0.6,
+        "y": 0.62
+       },
+       "h3": {
+        "x": 0.84,
+        "y": 0.35
+       },
+       "h4": {
+        "x": 0.68,
+        "y": 0.88
+       },
+       "a1": {
+        "x": 0.72,
+        "y": 0.42
+       },
+       "a2": {
+        "x": 0.66,
+        "y": 0.6
+       },
+       "a3": {
+        "x": 0.7,
+        "y": 0.42
+       },
+       "a4": {
+        "x": 0.74,
+        "y": 0.84
+       },
+       "b": {
+        "x": 0.83,
+        "y": 0.36
+       }
+      }
+     }
+    ],
+    "zonas": [
+     {
+      "x": 0.5,
+      "y": 0.02,
+      "w": 0.48,
+      "h": 0.96,
+      "label": "Campo 1"
+     }
+    ],
+    "miniporterias": [
+     {
+      "x": 0.5,
+      "y": 0.25,
+      "vertical": true
+     },
+     {
+      "x": 0.5,
+      "y": 0.75,
+      "vertical": true
+     }
+    ],
+    "conos": []
+   }
+  },
+  {
+   "id": "bt-bloqueo-5-partido",
+   "name": "Bloqueo y continuación 5/5 · Partido: el bloqueo puntúa en ataque y en defensa",
+   "category": "Juego",
+   "objective": "Usar el bloqueo en el juego real y defenderlo con nuestras normas",
+   "desc": "Partido 4x4 con porteras en pista entera, con presión alta y cambios. Marcador: gol = 1; gol tras bloqueo y continuación = 2. Si la defensa roba justo después de un bloqueo rival (cambio bien cantado o bloqueo pasado por delante), suma 1 punto extra. Series de 3' con 1' de pausa. Progresión 5/5.",
+   "players": "10",
+   "duration": "15",
+   "material": "Petos",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Partido 3x3 con porteras."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Partido 4x4; con 9, comodina en ataque (máx. +1)."
+    },
+    {
+     "rango": "10-11",
+     "txt": "4x4 con cambios volantes."
+    },
+    {
+     "rango": "12-14",
+     "txt": "4x4 con cambios volantes, o dos partidos 3x3 en media pista."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "g1",
+      "kind": "home",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "g2",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "C",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h3",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h4",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a4",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "g1": {
+        "x": 0.04,
+        "y": 0.5
+       },
+       "g2": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.58,
+        "y": 0.4
+       },
+       "h2": {
+        "x": 0.6,
+        "y": 0.62
+       },
+       "h3": {
+        "x": 0.7,
+        "y": 0.15
+       },
+       "h4": {
+        "x": 0.7,
+        "y": 0.85
+       },
+       "a1": {
+        "x": 0.64,
+        "y": 0.42
+       },
+       "a2": {
+        "x": 0.66,
+        "y": 0.6
+       },
+       "a3": {
+        "x": 0.76,
+        "y": 0.18
+       },
+       "a4": {
+        "x": 0.76,
+        "y": 0.82
+       },
+       "b": {
+        "x": 0.57,
+        "y": 0.4
+       }
+      }
+     },
+     {
+      "pos": {
+       "g1": {
+        "x": 0.04,
+        "y": 0.5
+       },
+       "g2": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.66,
+        "y": 0.48
+       },
+       "h2": {
+        "x": 0.6,
+        "y": 0.62
+       },
+       "h3": {
+        "x": 0.85,
+        "y": 0.38
+       },
+       "h4": {
+        "x": 0.7,
+        "y": 0.85
+       },
+       "a1": {
+        "x": 0.7,
+        "y": 0.45
+       },
+       "a2": {
+        "x": 0.66,
+        "y": 0.6
+       },
+       "a3": {
+        "x": 0.72,
+        "y": 0.4
+       },
+       "a4": {
+        "x": 0.76,
+        "y": 0.82
+       },
+       "b": {
+        "x": 0.84,
+        "y": 0.38
+       }
+      }
+     }
+    ],
+    "zonas": [],
+    "miniporterias": [],
+    "conos": []
+   }
+  },
+  {
+   "id": "bt-diagonal-1-3x2-lado-debil",
+   "name": "Diagonal 1/5 · 3x2: la ala débil ataca la diagonal",
+   "category": "Táctica of.",
+   "objective": "Fijar en un lado y cambiar la orientación con una diagonal que atraviesa el eje",
+   "desc": "Dos campos en media pista con portera. Cierre y dos alas contra dos defensoras a 10 m. El balón empieza en una ala. La ala del lado débil hace la diagonal a la espalda de su defensora, hacia el carril contrario, mientras la poseedora fija. Gol = 1; gol tras una diagonal que cruza el eje = 2. Si la defensa roba, tiene 3\" para marcar en una miniportería de medio campo. Series de 30\" / 30\"; la que defiende rota a atacante cada serie. Progresión 1/5.",
+   "players": "12",
+   "duration": "10",
+   "material": "4 miniporterías, petos",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Un campo 3x2; las sobrantes esperan para entrar a defender."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Un campo 3x2 y otro 2x2 (diagonal pura)."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Dos campos 3x2."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos campos 3x3 (sin superioridad)."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "gk",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "C",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h3",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.58,
+        "y": 0.5
+       },
+       "h2": {
+        "x": 0.68,
+        "y": 0.18
+       },
+       "h3": {
+        "x": 0.68,
+        "y": 0.82
+       },
+       "a1": {
+        "x": 0.72,
+        "y": 0.25
+       },
+       "a2": {
+        "x": 0.74,
+        "y": 0.72
+       },
+       "b": {
+        "x": 0.67,
+        "y": 0.18
+       }
+      }
+     },
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.58,
+        "y": 0.5
+       },
+       "h2": {
+        "x": 0.68,
+        "y": 0.18
+       },
+       "h3": {
+        "x": 0.86,
+        "y": 0.35
+       },
+       "a1": {
+        "x": 0.72,
+        "y": 0.22
+       },
+       "a2": {
+        "x": 0.76,
+        "y": 0.6
+       },
+       "b": {
+        "x": 0.85,
+        "y": 0.36
+       }
+      }
+     }
+    ],
+    "zonas": [
+     {
+      "x": 0.5,
+      "y": 0.02,
+      "w": 0.48,
+      "h": 0.96,
+      "label": "Campo 1"
+     }
+    ],
+    "miniporterias": [
+     {
+      "x": 0.5,
+      "y": 0.25,
+      "vertical": true
+     },
+     {
+      "x": 0.5,
+      "y": 0.75,
+      "vertical": true
+     }
+    ],
+    "conos": []
+   }
+  },
+  {
+   "id": "bt-diagonal-2-2x2-diagonal-puerta-atras",
+   "name": "Diagonal 2/5 · 2x2: diagonal o puerta atrás",
+   "category": "Táctica of.",
+   "objective": "Leer a la defensora: si anticipa la diagonal, puerta atrás; si se hunde, recibir de cara",
+   "desc": "Dos campos en media pista con portera. Poseedora en el centro a 12 m y ala en la banda contraria al balón, cada una con su defensora. La ala ataca la diagonal. Si su defensora anticipa, finta y recibe a la espalda (puerta atrás). Si se hunde, recibe de cara para tirar. Gol = 1; gol a la primera tras la diagonal = 2. Si la defensa roba, tiene 3\" para marcar en una miniportería de medio campo. Series de 20\" / 20\"; cambio de roles cada 2 series. Progresión 2/5.",
+   "players": "10",
+   "duration": "8",
+   "material": "4 miniporterías, petos",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Un campo 2x2 y rotación."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Dos campos 2x2; con 9, comodina rotatoria."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Dos campos 2x2 y la sobrante entra por la pareja que pierde."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos campos 3x3 (añade una cierre que inicia)."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "gk",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.64,
+        "y": 0.5
+       },
+       "h2": {
+        "x": 0.7,
+        "y": 0.88
+       },
+       "a1": {
+        "x": 0.69,
+        "y": 0.5
+       },
+       "a2": {
+        "x": 0.75,
+        "y": 0.82
+       },
+       "b": {
+        "x": 0.63,
+        "y": 0.5
+       }
+      }
+     },
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.64,
+        "y": 0.5
+       },
+       "h2": {
+        "x": 0.86,
+        "y": 0.3
+       },
+       "a1": {
+        "x": 0.69,
+        "y": 0.5
+       },
+       "a2": {
+        "x": 0.78,
+        "y": 0.55
+       },
+       "b": {
+        "x": 0.85,
+        "y": 0.31
+       }
+      }
+     }
+    ],
+    "zonas": [
+     {
+      "x": 0.5,
+      "y": 0.02,
+      "w": 0.48,
+      "h": 0.96,
+      "label": "Campo 1"
+     }
+    ],
+    "miniporterias": [
+     {
+      "x": 0.5,
+      "y": 0.25,
+      "vertical": true
+     },
+     {
+      "x": 0.5,
+      "y": 0.75,
+      "vertical": true
+     }
+    ],
+    "conos": []
+   }
+  },
+  {
+   "id": "bt-diagonal-3-4x4-media-pista",
+   "name": "Diagonal 3/5 · 4-0 contra bloque a media pista",
+   "category": "Táctica of.",
+   "objective": "Atravesar el eje contra la defensa más habitual de la liga (media pista)",
+   "desc": "Media pista con portera, 4x4. La defensa espera en bloque a 10 m, como El Valle, Villalba o Torrejón. El ataque en 4-0 busca atravesar el eje: división por el centro, ampliación y diagonal al carril contrario. Gol = 1; gol tras un pase que cruza el eje en diagonal = 2. Defensa: robo y pase a una de las dos miniporterías de medio campo en menos de 4\" = 1. Series de 1'30\" por equipo. Progresión 3/5.",
+   "players": "10",
+   "duration": "12",
+   "material": "2 miniporterías, petos",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "3x3 en media pista."
+    },
+    {
+     "rango": "8-9",
+     "txt": "4x4; con 9, comodina en ataque."
+    },
+    {
+     "rango": "10-11",
+     "txt": "4x4 y 2 suplentes rotando por serie."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos campos 4x4 (uno en cada media pista) o 4x4 con cambios volantes."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "gk",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "C",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h3",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h4",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a4",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.56,
+        "y": 0.38
+       },
+       "h2": {
+        "x": 0.56,
+        "y": 0.62
+       },
+       "h3": {
+        "x": 0.64,
+        "y": 0.12
+       },
+       "h4": {
+        "x": 0.64,
+        "y": 0.88
+       },
+       "a1": {
+        "x": 0.72,
+        "y": 0.4
+       },
+       "a2": {
+        "x": 0.72,
+        "y": 0.6
+       },
+       "a3": {
+        "x": 0.76,
+        "y": 0.2
+       },
+       "a4": {
+        "x": 0.76,
+        "y": 0.8
+       },
+       "b": {
+        "x": 0.63,
+        "y": 0.12
+       }
+      }
+     },
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.62,
+        "y": 0.45
+       },
+       "h2": {
+        "x": 0.56,
+        "y": 0.62
+       },
+       "h3": {
+        "x": 0.64,
+        "y": 0.12
+       },
+       "h4": {
+        "x": 0.85,
+        "y": 0.35
+       },
+       "a1": {
+        "x": 0.72,
+        "y": 0.38
+       },
+       "a2": {
+        "x": 0.74,
+        "y": 0.55
+       },
+       "a3": {
+        "x": 0.74,
+        "y": 0.22
+       },
+       "a4": {
+        "x": 0.79,
+        "y": 0.7
+       },
+       "b": {
+        "x": 0.84,
+        "y": 0.36
+       }
+      }
+     }
+    ],
+    "zonas": [
+     {
+      "x": 0.5,
+      "y": 0.02,
+      "w": 0.48,
+      "h": 0.96,
+      "label": "Campo 1"
+     }
+    ],
+    "miniporterias": [
+     {
+      "x": 0.5,
+      "y": 0.25,
+      "vertical": true
+     },
+     {
+      "x": 0.5,
+      "y": 0.75,
+      "vertical": true
+     }
+    ],
+    "conos": []
+   }
+  },
+  {
+   "id": "bt-diagonal-4-cambio-orientacion-oleadas",
+   "name": "Diagonal 4/5 · Oleadas 3x3: cambio de orientación y finalización",
+   "category": "Finalización",
+   "objective": "Cambiar la orientación rápido y finalizar antes de que la defensa bascule",
+   "desc": "Pista entera, oleadas continuas con dos porterías. Un equipo ataca 3x3 en un lado del eje y, si la defensa bascula, cambia de orientación (diagonal o tercer hombre) y finaliza. Tras gol, tiro o robo, el equipo que defendía sale atacando hacia la otra portería contra tres nuevas defensoras que esperan en medio campo. Gol = 1; gol tras cambio de orientación en menos de 3 pases = 2. Progresión 4/5.",
+   "players": "11",
+   "duration": "10",
+   "material": "Petos de 3 colores",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Oleadas 2x2 con dos porterías."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Oleadas 3x3 con 3 equipos (con 8, 2x2+ comodina)."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Oleadas 3x3 con 3 equipos; la sobrante rota."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Oleadas 4x4 con 3 equipos."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "g1",
+      "kind": "home",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "g2",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h3",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "g1": {
+        "x": 0.04,
+        "y": 0.5
+       },
+       "g2": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.62,
+        "y": 0.25
+       },
+       "h2": {
+        "x": 0.66,
+        "y": 0.5
+       },
+       "h3": {
+        "x": 0.66,
+        "y": 0.85
+       },
+       "a1": {
+        "x": 0.7,
+        "y": 0.28
+       },
+       "a2": {
+        "x": 0.72,
+        "y": 0.48
+       },
+       "a3": {
+        "x": 0.74,
+        "y": 0.8
+       },
+       "b": {
+        "x": 0.61,
+        "y": 0.25
+       }
+      }
+     },
+     {
+      "pos": {
+       "g1": {
+        "x": 0.04,
+        "y": 0.5
+       },
+       "g2": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.62,
+        "y": 0.25
+       },
+       "h2": {
+        "x": 0.7,
+        "y": 0.42
+       },
+       "h3": {
+        "x": 0.84,
+        "y": 0.7
+       },
+       "a1": {
+        "x": 0.7,
+        "y": 0.3
+       },
+       "a2": {
+        "x": 0.74,
+        "y": 0.38
+       },
+       "a3": {
+        "x": 0.78,
+        "y": 0.6
+       },
+       "b": {
+        "x": 0.83,
+        "y": 0.7
+       }
+      }
+     }
+    ],
+    "zonas": [],
+    "miniporterias": [],
+    "conos": []
+   }
+  },
+  {
+   "id": "bt-diagonal-5-partido-media-pista",
+   "name": "Diagonal 5/5 · Partido contra media pista: atravesar el eje vale doble",
+   "category": "Juego",
+   "objective": "Aplicar la diagonal y el cambio de orientación en juego real contra bloque medio",
+   "desc": "Partido 4x4 con porteras en pista entera. El equipo que defiende lo hace a media pista, y alternáis cada serie quién defiende así. Marcador: gol = 1; gol tras una diagonal que cruza el eje = 2. La defensa suma 1 si roba y marca en menos de 6\". Series de 3' con 1' de pausa. Progresión 5/5.",
+   "players": "10",
+   "duration": "15",
+   "material": "Petos",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Partido 3x3 con porteras."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Partido 4x4; con 9, comodina en ataque."
+    },
+    {
+     "rango": "10-11",
+     "txt": "4x4 con cambios volantes."
+    },
+    {
+     "rango": "12-14",
+     "txt": "4x4 con cambios volantes, o dos partidos 3x3 en media pista."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "g1",
+      "kind": "home",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "g2",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "C",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h3",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h4",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a4",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "g1": {
+        "x": 0.04,
+        "y": 0.5
+       },
+       "g2": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.55,
+        "y": 0.5
+       },
+       "h2": {
+        "x": 0.62,
+        "y": 0.15
+       },
+       "h3": {
+        "x": 0.62,
+        "y": 0.85
+       },
+       "h4": {
+        "x": 0.7,
+        "y": 0.5
+       },
+       "a1": {
+        "x": 0.7,
+        "y": 0.35
+       },
+       "a2": {
+        "x": 0.7,
+        "y": 0.65
+       },
+       "a3": {
+        "x": 0.78,
+        "y": 0.2
+       },
+       "a4": {
+        "x": 0.78,
+        "y": 0.8
+       },
+       "b": {
+        "x": 0.61,
+        "y": 0.15
+       }
+      }
+     },
+     {
+      "pos": {
+       "g1": {
+        "x": 0.04,
+        "y": 0.5
+       },
+       "g2": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.6,
+        "y": 0.42
+       },
+       "h2": {
+        "x": 0.62,
+        "y": 0.15
+       },
+       "h3": {
+        "x": 0.86,
+        "y": 0.38
+       },
+       "h4": {
+        "x": 0.7,
+        "y": 0.55
+       },
+       "a1": {
+        "x": 0.7,
+        "y": 0.3
+       },
+       "a2": {
+        "x": 0.72,
+        "y": 0.55
+       },
+       "a3": {
+        "x": 0.76,
+        "y": 0.22
+       },
+       "a4": {
+        "x": 0.8,
+        "y": 0.65
+       },
+       "b": {
+        "x": 0.85,
+        "y": 0.38
+       }
+      }
+     }
+    ],
+    "zonas": [],
+    "miniporterias": [],
+    "conos": []
+   }
+  },
+  {
+   "id": "bt-decision-1-oleadas-2x1-2x2",
+   "name": "Decisión 1/5 · Oleadas 2x1 que pasan a 2x2",
+   "category": "Finalización",
+   "objective": "Decidir rápido (tiro, pase o conducción) antes de que llegue la segunda defensora",
+   "desc": "Pista entera con dos porterías y oleadas continuas. Dos atacantes salen desde medio campo contra una defensora. Una segunda defensora sale desde la línea de fondo cuando se da el primer pase, así que hay unos 3\" de superioridad. Tras gol, tiro o robo, las dos defensoras atacan hacia la otra portería contra dos nuevas. Gol en superioridad = 1; gol tras igualar = 2. Progresión 1/5.",
+   "players": "10",
+   "duration": "10",
+   "material": "Balones en las dos porterías",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Oleadas 2x1 → 2x2 en una sola portería."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Oleadas en las dos porterías, con filas cortas."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Oleadas en las dos porterías a la vez (dos circuitos)."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos circuitos 3x2 → 3x3."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "g1",
+      "kind": "home",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "g2",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "g1": {
+        "x": 0.04,
+        "y": 0.5
+       },
+       "g2": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.52,
+        "y": 0.35
+       },
+       "h2": {
+        "x": 0.52,
+        "y": 0.65
+       },
+       "a1": {
+        "x": 0.75,
+        "y": 0.5
+       },
+       "a2": {
+        "x": 0.98,
+        "y": 0.15
+       },
+       "b": {
+        "x": 0.51,
+        "y": 0.35
+       }
+      }
+     },
+     {
+      "pos": {
+       "g1": {
+        "x": 0.04,
+        "y": 0.5
+       },
+       "g2": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.72,
+        "y": 0.38
+       },
+       "h2": {
+        "x": 0.84,
+        "y": 0.7
+       },
+       "a1": {
+        "x": 0.76,
+        "y": 0.45
+       },
+       "a2": {
+        "x": 0.88,
+        "y": 0.3
+       },
+       "b": {
+        "x": 0.83,
+        "y": 0.68
+       }
+      }
+     }
+    ],
+    "zonas": [],
+    "miniporterias": [],
+    "conos": []
+   }
+  },
+  {
+   "id": "bt-decision-2-defensora-clave",
+   "name": "Decisión 2/5 · La defensora clave: tiro exterior o pase interior",
+   "category": "Finalización",
+   "objective": "Leer a una defensora que decide quedarse dentro o salir, como en nuestras jugadas de estrategia",
+   "desc": "Dos campos en media pista con portera, 3x3. Las atacantes salen desde los 10 m y tienen una tiradora fuera y una jugadora dentro. Una defensora (la clave, con peto distinto) decide en cada repetición si se queda dentro o sale a la tiradora. Si sale, pase interior y remate. Si se queda, tiro exterior con la portera tapada. Gol = 1; gol tras la lectura correcta = 2. Si la defensa roba, 3\" para marcar en miniportería. Series de 30\" / 30\"; rotación de roles. Progresión 2/5.",
+   "players": "12",
+   "duration": "10",
+   "material": "4 miniporterías, peto distinto para la defensora clave",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Un campo 3x3."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Un campo 3x3 y otro 2x2."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Dos campos 3x3 y 2x2."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos campos 3x3."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "gk",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "T",
+      "gk": false
+     },
+     {
+      "id": "h3",
+      "kind": "home",
+      "label": "I",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "K",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.65,
+        "y": 0.12
+       },
+       "h2": {
+        "x": 0.68,
+        "y": 0.45
+       },
+       "h3": {
+        "x": 0.86,
+        "y": 0.62
+       },
+       "a1": {
+        "x": 0.7,
+        "y": 0.16
+       },
+       "a2": {
+        "x": 0.8,
+        "y": 0.5
+       },
+       "a3": {
+        "x": 0.88,
+        "y": 0.66
+       },
+       "b": {
+        "x": 0.64,
+        "y": 0.12
+       }
+      }
+     },
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.65,
+        "y": 0.12
+       },
+       "h2": {
+        "x": 0.68,
+        "y": 0.45
+       },
+       "h3": {
+        "x": 0.86,
+        "y": 0.62
+       },
+       "a1": {
+        "x": 0.7,
+        "y": 0.16
+       },
+       "a2": {
+        "x": 0.72,
+        "y": 0.46
+       },
+       "a3": {
+        "x": 0.88,
+        "y": 0.66
+       },
+       "b": {
+        "x": 0.85,
+        "y": 0.6
+       }
+      }
+     }
+    ],
+    "zonas": [
+     {
+      "x": 0.5,
+      "y": 0.02,
+      "w": 0.48,
+      "h": 0.96,
+      "label": "Campo 1"
+     }
+    ],
+    "miniporterias": [
+     {
+      "x": 0.5,
+      "y": 0.25,
+      "vertical": true
+     },
+     {
+      "x": 0.5,
+      "y": 0.75,
+      "vertical": true
+     }
+    ],
+    "conos": []
+   }
+  },
+  {
+   "id": "bt-decision-3-segundo-palo",
+   "name": "Decisión 3/5 · Llegada al segundo palo o pase atrás",
+   "category": "Finalización",
+   "objective": "Finalizar cerca de portería eligiendo entre segundo palo y pase atrás según la defensa",
+   "desc": "Dos campos en media pista con portera, 3x2 que pasa a 3x3. Una ala conduce por banda hasta línea de fondo, como en «Segovia: pisar y seguir». Una compañera ataca el segundo palo y otra llega desde atrás a la frontal. Dos defensoras eligen qué cerrar, y una tercera llega tarde desde medio campo. Pase al segundo palo si está libre; pase atrás si la defensa se hunde. Gol de primeras = 2. Si la defensa roba, sale conduciendo por medio campo. Series de 30\" / 30\". Progresión 3/5.",
+   "players": "12",
+   "duration": "10",
+   "material": "Conos, petos",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "Un campo 3x2 → 3x3."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Un campo 3x2 → 3x3 y otro 2x1 → 2x2."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Dos campos (3x2 y 2x2)."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos campos 3x2 → 3x3."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "gk",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "S",
+      "gk": false
+     },
+     {
+      "id": "h3",
+      "kind": "home",
+      "label": "F",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.76,
+        "y": 0.06
+       },
+       "h2": {
+        "x": 0.8,
+        "y": 0.6
+       },
+       "h3": {
+        "x": 0.66,
+        "y": 0.45
+       },
+       "a1": {
+        "x": 0.82,
+        "y": 0.12
+       },
+       "a2": {
+        "x": 0.88,
+        "y": 0.48
+       },
+       "a3": {
+        "x": 0.54,
+        "y": 0.5
+       },
+       "b": {
+        "x": 0.75,
+        "y": 0.06
+       }
+      }
+     },
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.95,
+        "y": 0.08
+       },
+       "h2": {
+        "x": 0.92,
+        "y": 0.7
+       },
+       "h3": {
+        "x": 0.8,
+        "y": 0.45
+       },
+       "a1": {
+        "x": 0.93,
+        "y": 0.15
+       },
+       "a2": {
+        "x": 0.9,
+        "y": 0.45
+       },
+       "a3": {
+        "x": 0.7,
+        "y": 0.48
+       },
+       "b": {
+        "x": 0.91,
+        "y": 0.68
+       }
+      }
+     }
+    ],
+    "zonas": [
+     {
+      "x": 0.5,
+      "y": 0.02,
+      "w": 0.48,
+      "h": 0.96,
+      "label": "Campo 1"
+     }
+    ],
+    "miniporterias": [],
+    "conos": [
+     {
+      "x": 0.52,
+      "y": 0.1
+     },
+     {
+      "x": 0.52,
+      "y": 0.9
+     }
+    ]
+   }
+  },
+  {
+   "id": "bt-decision-4-4x4-tiempo-ataque",
+   "name": "Decisión 4/5 · 4x4 con ventaja que caduca",
+   "category": "Juego",
+   "objective": "Decidir cuándo acelerar y cuándo reorganizar: el gol rápido tras robo vale más",
+   "desc": "Media pista con portera, 4x4. Ataque organizado en 4-0. Cuando la defensa roba, contraataca a una de las dos miniporterías de medio campo. Ataque: gol en ataque organizado = 1. Defensa: gol en menos de 5\" tras robo = 2; más tarde, 0 (debe asegurar y salir). Esto entrena las dos decisiones clave: transición directa o pausa. Series de 1'30\" por equipo. Progresión 4/5.",
+   "players": "10",
+   "duration": "12",
+   "material": "2 miniporterías, petos",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "3x3 en media pista."
+    },
+    {
+     "rango": "8-9",
+     "txt": "4x4; con 9, comodina en ataque."
+    },
+    {
+     "rango": "10-11",
+     "txt": "4x4 y 2 suplentes que rotan."
+    },
+    {
+     "rango": "12-14",
+     "txt": "Dos campos 4x4, o 4x4 con cambios volantes."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "gk",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "C",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h3",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h4",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "a4",
+      "kind": "away",
+      "label": "D",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.58,
+        "y": 0.4
+       },
+       "h2": {
+        "x": 0.58,
+        "y": 0.6
+       },
+       "h3": {
+        "x": 0.68,
+        "y": 0.15
+       },
+       "h4": {
+        "x": 0.68,
+        "y": 0.85
+       },
+       "a1": {
+        "x": 0.66,
+        "y": 0.42
+       },
+       "a2": {
+        "x": 0.66,
+        "y": 0.6
+       },
+       "a3": {
+        "x": 0.74,
+        "y": 0.2
+       },
+       "a4": {
+        "x": 0.74,
+        "y": 0.8
+       },
+       "b": {
+        "x": 0.57,
+        "y": 0.4
+       }
+      }
+     },
+     {
+      "pos": {
+       "gk": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.6,
+        "y": 0.38
+       },
+       "h2": {
+        "x": 0.6,
+        "y": 0.6
+       },
+       "h3": {
+        "x": 0.68,
+        "y": 0.15
+       },
+       "h4": {
+        "x": 0.68,
+        "y": 0.85
+       },
+       "a1": {
+        "x": 0.56,
+        "y": 0.28
+       },
+       "a2": {
+        "x": 0.66,
+        "y": 0.6
+       },
+       "a3": {
+        "x": 0.74,
+        "y": 0.2
+       },
+       "a4": {
+        "x": 0.74,
+        "y": 0.8
+       },
+       "b": {
+        "x": 0.53,
+        "y": 0.26
+       }
+      }
+     }
+    ],
+    "zonas": [
+     {
+      "x": 0.5,
+      "y": 0.02,
+      "w": 0.48,
+      "h": 0.96,
+      "label": "Campo 1"
+     }
+    ],
+    "miniporterias": [
+     {
+      "x": 0.5,
+      "y": 0.25,
+      "vertical": true
+     },
+     {
+      "x": 0.5,
+      "y": 0.75,
+      "vertical": true
+     }
+    ],
+    "conos": []
+   }
+  },
+  {
+   "id": "bt-decision-5-rey-de-pista",
+   "name": "Decisión 5/5 · Rey de pista 4x4 con tres equipos",
+   "category": "Juego",
+   "objective": "Competir con decisiones reales y sin pausa: quien marca se queda",
+   "desc": "Pista entera con porteras y tres equipos de 4 (o 3). Juegan dos equipos y el tercero espera en el medio campo. Quien marca se queda y defiende contra el que entra, que sale ya atacando desde su medio campo. Si en 1' no hay gol, sale el equipo que más tiempo lleva en pista. Puntúa cada gol. Consigna libre: se aplican los cuatro criterios de libre elección. Series de 3' / 1'. Progresión 5/5.",
+   "players": "12",
+   "duration": "15",
+   "material": "Petos de 3 colores",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "3x3 con dos porterías; la sobrante entra en cada gol."
+    },
+    {
+     "rango": "8-9",
+     "txt": "3 equipos de 3."
+    },
+    {
+     "rango": "10-11",
+     "txt": "Equipos de 4, 4 y 3 (o 2 equipos de 4 y 2 comodinas en espera)."
+    },
+    {
+     "rango": "12-14",
+     "txt": "3 equipos de 4."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "g1",
+      "kind": "home",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "g2",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "h1",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h3",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h4",
+      "kind": "home",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "B",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "B",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "B",
+      "gk": false
+     },
+     {
+      "id": "a4",
+      "kind": "away",
+      "label": "B",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
+      "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "g1": {
+        "x": 0.04,
+        "y": 0.5
+       },
+       "g2": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.58,
+        "y": 0.4
+       },
+       "h2": {
+        "x": 0.58,
+        "y": 0.6
+       },
+       "h3": {
+        "x": 0.7,
+        "y": 0.15
+       },
+       "h4": {
+        "x": 0.7,
+        "y": 0.85
+       },
+       "a1": {
+        "x": 0.64,
+        "y": 0.42
+       },
+       "a2": {
+        "x": 0.64,
+        "y": 0.6
+       },
+       "a3": {
+        "x": 0.76,
+        "y": 0.2
+       },
+       "a4": {
+        "x": 0.76,
+        "y": 0.8
+       },
+       "b": {
+        "x": 0.57,
+        "y": 0.4
+       }
+      }
+     },
+     {
+      "pos": {
+       "g1": {
+        "x": 0.04,
+        "y": 0.5
+       },
+       "g2": {
+        "x": 0.96,
+        "y": 0.5
+       },
+       "h1": {
+        "x": 0.66,
+        "y": 0.45
+       },
+       "h2": {
+        "x": 0.6,
+        "y": 0.62
+       },
+       "h3": {
+        "x": 0.86,
+        "y": 0.35
+       },
+       "h4": {
+        "x": 0.7,
+        "y": 0.85
+       },
+       "a1": {
+        "x": 0.7,
+        "y": 0.42
+       },
+       "a2": {
+        "x": 0.64,
+        "y": 0.6
+       },
+       "a3": {
+        "x": 0.74,
+        "y": 0.3
+       },
+       "a4": {
+        "x": 0.76,
+        "y": 0.8
+       },
+       "b": {
+        "x": 0.85,
+        "y": 0.36
+       }
+      }
+     }
+    ],
+    "zonas": [],
+    "miniporterias": [],
+    "conos": []
+   }
+  }
+ ],
+ "sesiones": []
+}

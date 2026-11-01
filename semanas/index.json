@@ -1,6 +1,13 @@
 {
  "semanas": [
   {
+   "semana": "2026-11-02-banco",
+   "titulo": "Banco de tareas · 20 ejercicios nuevos para la biblioteca",
+   "resumen": "Defensa de la pívot, bloqueo y continuación, diagonal y toma de decisiones (5 de cada). No trae sesiones: solo añade ejercicios a la biblioteca.",
+   "archivo": "semanas/banco-tareas-v1.json",
+   "generado": "2026-11-01T23:32:15Z"
+  },
+  {
    "semana": "2026-11-02",
    "titulo": "Semana del 2 al 8 nov · vs Leganés FS Masdeporte B",
    "resumen": "Miércoles: salir de su presión, de la pareja al 4-0, y presión a la poseedora. Viernes: atacar y defender el 5x4, balón parado ofensivo y segunda jugada.",
