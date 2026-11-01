@@ -361,6 +361,37 @@
   }
 .adapt{margin-top:5px;font-size:12.5px;line-height:1.35;padding:6px 9px;border-radius:8px;background:rgba(76,143,83,.15);color:var(--text)}
 .prepban{border:1px solid var(--club)}
+.bhead{padding:16px;border-radius:16px;border:1px solid var(--line);background:linear-gradient(135deg,var(--club-deep),var(--surface));margin-bottom:12px}
+.btitle{font-size:24px;font-weight:800;margin:4px 0 2px}
+.bres{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:7px;font-size:12px;font-weight:800;color:#04140a;background:var(--muted-2)}
+.bres.V{background:var(--goal)} .bres.D{background:var(--red);color:#fff} .bres.E{background:var(--foul)}
+.bsec h2{margin-bottom:10px}
+.bgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px;margin-top:10px}
+.bgrid .k{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.bstat{padding:10px 12px;border-radius:12px;background:var(--surface-2)}
+.warnc{color:var(--foul)}
+.bin{width:100%}
+.bpill{font-size:12px;padding:4px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);margin-left:6px;white-space:nowrap}
+.bpill.ok{border-color:var(--club);color:var(--club-2)}
+.avr{display:grid;grid-template-columns:minmax(0,1fr) repeat(var(--nd,2),40px) 40px;gap:6px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}
+.avr.avh{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:0 0 4px;text-align:center}
+.avn{min-width:0}
+.avn b{font-size:14px}
+.gkt{font-size:11px;margin-left:6px;color:var(--brand)}
+.stt{font-weight:700} .stt.warn{color:var(--foul)} .stt.bad{color:var(--red)}
+.avb{height:36px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-weight:800;cursor:pointer}
+.avb.on{background:rgba(76,143,83,.22);border-color:var(--club);color:var(--club-2)}
+.avb.off{background:rgba(239,68,68,.14);border-color:rgba(239,68,68,.45);color:var(--red)}
+.avb.red.on{background:rgba(245,158,11,.18);border-color:var(--foul);color:var(--foul)}
+.avsums{display:grid;gap:6px;margin-top:12px}
+.avsum{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:8px 10px;border-radius:10px;background:var(--surface-2);font-size:13px}
+.bbase{font-size:13px;padding:8px 10px;border-radius:10px;background:var(--surface-2);margin-bottom:4px}
+.bsub{margin-top:12px}
+.gkcard{border-color:var(--brand)}
+.gkday{padding:12px;border-radius:12px;background:var(--surface-2);margin-top:10px}
+.bfoot{position:sticky;bottom:calc(76px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;padding:10px 0;background:linear-gradient(to top,var(--bg) 70%,transparent);z-index:5}
+.redline{font-size:13px;margin-top:8px;color:var(--foul)}
+
 .bchips{display:flex;flex-wrap:wrap;gap:6px}
 .bchips button{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:13px;cursor:pointer}
 .bchips button[aria-current="true"]{background:var(--club);border-color:var(--club);color:#04140a;font-weight:700}
@@ -932,6 +963,7 @@ function homePending(){
 
 function renderHome(){
   const el=document.getElementById("view-home");
+  if(briefOpen){ el.style.setProperty("--nd",trainDatesOf(briefOpen).length); renderBrief(el); return; }
   S.roster.forEach(ensurePlayer);
   const now=new Date(), hi=now.getHours();
   const saludo = hi<12?"Buenos días":(hi<20.5?"Buenas tardes":"Buenas noches");
@@ -2413,7 +2445,8 @@ function briefCardHTML(){
   const w=briefWeek(), B=(S.briefs||{})[w], m=matchInWeek(w);
   const entry=(prepIndex||[]).find(x=>x.semana===w);
   const imp=(S.claudeImports||{})[w];
-  const head=`<div class="eyebrow">Semana ${esc(weekLbl(w))}</div>`;
+  const bst=briefStatus(B,w);
+  const head=`<div class="row" style="justify-content:space-between;gap:6px"><div class="eyebrow">Semana ${esc(weekLbl(w))}</div>${B?`<div><span class="bpill ${bst.mine?"ok":""}">${bst.mine?"✓":"•"} Entrenador</span><span class="bpill ${bst.gk?"ok":""}">${bst.gk?"✓":"•"} Portería</span></div>`:""}</div>`;
   if(!B && !imp) return `<div class="card prepban">${head}
     <div style="margin:6px 0 10px"><b>Prepara la semana</b><div class="muted small">${m?`Rival: ${esc(m.opponent)}. `:""}Rellena el brief y las sesiones del ${trainDaysTxt(w)} aparecerán solas en el calendario.</div></div>
     <button class="btn primary block" id="hBrief">Preparar la semana</button></div>`;
@@ -2426,13 +2459,13 @@ function briefCardHTML(){
   if(ready) return `<div class="card prepban">${head}${resumen}
     <div class="muted small" style="margin-bottom:10px">Sesiones preparadas. Ya hay sesiones tuyas en esos días, así que revísalas antes de importarlas.</div>
     <div class="row" style="gap:8px"><button class="btn ghost grow" id="hBrief">Editar brief</button><button class="btn primary grow" id="hBriefImp">Revisar e importar</button></div></div>`;
-  return `<div class="card prepban">${head} · brief guardado${resumen}
+  return `<div class="card prepban">${head}${resumen}
     <div class="muted small" style="margin-bottom:10px">Preparando las sesiones. En menos de una hora aparecerán en el calendario y te llegará un aviso.</div>
     <button class="btn ghost block" id="hBrief">Editar brief</button></div>`;
 }
 function bindBriefCard(el){
   const w=briefWeek();
-  const b=el.querySelector("#hBrief"); if(b) b.onclick=()=>briefModal(w);
+  const b=el.querySelector("#hBrief"); if(b) b.onclick=()=>openBrief(w);
   const c=el.querySelector("#hBriefCal"); if(c) c.onclick=()=>{ openSessionId=null; trainTab="sessions"; tab="train"; calCursor=w.slice(0,7); renderTabs(); renderTrain(); };
   const i=el.querySelector("#hBriefImp"); if(i) i.onclick=()=>prepModal();
 }
@@ -2486,6 +2519,195 @@ function briefModal(w){
     S.briefs[w]={semana:w,rival:g("bRival"),dia:g("bDia"),campo:g("bCampo"),carga:g("bCarga"),objetivos:ord.slice(),otro:g("bOtro"),rivalNotas:g("bRivN"),ultimo:g("bUlt"),bajas:g("bBajas"),guardado:new Date().toISOString()};
     save(); closeModal(); if(tab==="home") renderHome(); toast("Brief guardado");
   };
+}
+
+/* ================= Brief profesional de la semana ================= */
+let briefOpen=null, BR=null;
+const RIVAL_OPC={
+  rivalSis:["Sistema habitual",["4-0","3-1","2-2","Mixto"]],
+  rivalPres:["Su presión",["Alta","Media","Baja","Cambia según marcador"]],
+  rivalDef:["Su defensa",["Zonal","Individual","Mixta"]],
+  rivalPJ:["Portera-jugadora",["No la usa","Cuando va perdiendo","En ataque estático"]]
+};
+const GK_MOM=["En paralelo al inicio","En paralelo en la parte central","Integrada en las tareas"];
+const GK_CONT=["Blocaje","Desvíos","1x1","Juego con pies y salida","Colocación en balón parado","Defensa de portera-jugadora","Reacción y reflejos"];
+function trainDatesOf(w){ const L=[]; for(let i=0;i<7;i++){ const x=parseYmd(w); x.setDate(x.getDate()+i); const ds=ymd(x); if(S.trainSchedule?isTrainingDay(ds):(i===2||i===4)) L.push(ds); } return L; }
+function dayShort(ds){ const d=new Date(ds+"T00:00"); return d.toLocaleDateString("es-ES",{weekday:"long"}).replace(/^./,c=>c.toUpperCase())+" "+d.getDate(); }
+function lastPlayed(){ return playedMatches().slice().sort((a,b)=>matchWhen(b).localeCompare(matchWhen(a)))[0]||null; }
+function sameRival(a,b){ const n=x=>String(x||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim(); return n(a) && n(a)===n(b); }
+function prevWeekClose(w){
+  const a=parseYmd(w); a.setDate(a.getDate()-7); const from=ymd(a), to=ymd(new Date(parseYmd(w).getTime()-864e5));
+  const ss=S.sessions.filter(s=>s.date>=from && s.date<=to && sessionCount(s)>0);
+  if(!ss.length) return null;
+  const pres=ss.map(s=>presentCount(s)); const rp=[]; ss.forEach(s=>Object.values(s.rpe||{}).forEach(v=>{ if(+v) rp.push(+v); }));
+  return {n:ss.length, asis:pres.reduce((x,y)=>x+y,0)/pres.length, rpe:rp.length?rp.reduce((x,y)=>x+y,0)/rp.length:null, focos:ss.map(s=>s.focus||s.title).filter(Boolean)};
+}
+function newBriefDraft(w){
+  const old=(S.briefs||{})[w]||{}; const m=matchInWeek(w);
+  const B=JSON.parse(JSON.stringify(old));
+  if(!old.semana){ B.semana=w; if(m){ B.rival=m.opponent; B.dia=m.date; B.hora=m.time||""; B.campo=m.homeAway==="local"?"En casa":"Fuera"; } }
+  if(B.ultimo && !B.corregir) B.corregir=B.ultimo;
+  B.objetivos=B.objetivos||[]; B.jugadas=B.jugadas||[]; B.carga=B.carga||"Normal";
+  B.asistencia=B.asistencia||{}; B.porteria=B.porteria||{};
+  trainDatesOf(w).forEach(ds=>{
+    if(!B.asistencia[ds]){
+      const s=sessionForDate(ds);
+      const fuera=s&&s.absent&&s.absent.length? s.absent.slice() : S.roster.filter(p=>p.status==="lesionada"||p.status==="baja").map(p=>p.id);
+      const red=S.roster.filter(p=>fuera.indexOf(p.id)<0 && loadSignal(p.id).reasons.length).map(p=>p.id);
+      B.asistencia[ds]={fuera, reducida:red};
+    }
+    if(!B.porteria[ds]) B.porteria[ds]={min:null,momento:"",contenido:[],notas:""};
+  });
+  return B;
+}
+function attSummary(B,ds){
+  const a=B.asistencia[ds]||{fuera:[],reducida:[]};
+  const pres=S.roster.filter(p=>a.fuera.indexOf(p.id)<0);
+  return {total:pres.length, porteras:pres.filter(isGK).length, reducida:pres.filter(p=>(a.reducida||[]).indexOf(p.id)>=0)};
+}
+function briefStatus(B,w){
+  const ds=trainDatesOf(w);
+  const mine=!!(B && B.objetivos && B.objetivos.length);
+  const gk=!!(B && ds.length && ds.every(d=>B.porteria&&B.porteria[d]&&B.porteria[d].min!=null));
+  return {mine,gk,ok:mine};
+}
+function openBrief(w){ briefOpen=w; BR=newBriefDraft(w); tab="home"; renderTabs(); renderHome(); window.scrollTo(0,0); }
+function closeBrief(){ briefOpen=null; BR=null; renderHome(); window.scrollTo(0,0); }
+
+function renderBrief(el){
+  const w=briefOpen, B=BR, ds=trainDatesOf(w);
+  const sc=window.scrollY;
+  const lp=lastPlayed(), rec=teamRecord("todo"), ida=playedMatches().filter(m=>sameRival(m.opponent,B.rival)).sort((a,b)=>matchWhen(b).localeCompare(matchWhen(a)))[0];
+  const daysTo=B.dia? Math.round((parseYmd(B.dia)-parseYmd(ymd(new Date())))/864e5) : null;
+  const pw=prevWeekClose(w);
+  const flagged=S.roster.filter(p=>loadSignal(p.id).reasons.length && ds.some(d=>B.asistencia[d].fuera.indexOf(p.id)<0));
+  const chip=(grp,v,on)=>`<button type="button" data-bk="${grp}" data-bv="${esc(v)}" aria-current="${!!on}">${esc(v)}</button>`;
+  const st=briefStatus(B,w);
+  // último partido
+  let lpHTML='<div class="muted small">Aún no hay partidos jugados.</div>';
+  if(lp){
+    const gh=h=>lp.events.filter(e=>e.type==="goal"&&e.half===h).length, ch=h=>lp.events.filter(e=>e.type==="goal_rival"&&e.half===h).length;
+    const res=lp.score.us>lp.score.them?"V":lp.score.us<lp.score.them?"D":"E";
+    const tarj=lp.events.filter(e=>e.type==="yellow").length, roj=lp.events.filter(e=>e.type==="red").length;
+    const gol={}; lp.events.filter(e=>e.type==="goal"&&e.pid).forEach(e=>{ const p=playerById(e.pid); if(p) gol[p.name]=(gol[p.name]||0)+1; });
+    const f1=(lp.fouls||{})[1]||0, f2=(lp.fouls||{})[2]||0;
+    lpHTML=`<div class="bstat">
+      <div><span class="bres ${res}">${res}</span> <b>${lp.score.us}-${lp.score.them}</b> ${lp.homeAway==="local"?"vs":"@"} ${esc(lp.opponent)} <span class="muted small">· ${esc(fmtMatchDay(lp))}</span></div>
+      <div class="bgrid">
+        <div><span class="k">Goles 1ª / 2ª</span><b>${gh(1)}-${ch(1)} · ${gh(2)}-${ch(2)}</b></div>
+        <div><span class="k">Faltas 1ª / 2ª</span><b class="${Math.max(f1,f2)>=FOUL_LIMIT?'warnc':''}">${f1} · ${f2}</b></div>
+        <div><span class="k">Tarjetas</span><b>${tarj}${roj?` + ${roj} roja`:""}</b></div>
+        <div><span class="k">Goleadoras</span><b class="small">${Object.entries(gol).map(([n,c])=>esc(n)+(c>1?" ×"+c:"")).join(", ")||"—"}</b></div>
+      </div></div>`;
+  }
+  // disponibilidad
+  const roster=S.roster.slice().sort((a,b)=>(isGK(b)-isGK(a))||((parseInt(a.number)||99)-(parseInt(b.number)||99)));
+  const stCls={ok:"ok",tocada:"warn",lesionada:"bad",baja:"bad"};
+  const availRows=roster.map(p=>{
+    const sig=loadSignal(p.id);
+    const anyRed=ds.some(d=>(B.asistencia[d].reducida||[]).indexOf(p.id)>=0);
+    return `<div class="avr">
+      <div class="avn"><b>${esc(p.number)} · ${esc(p.name)}</b>${isGK(p)?'<span class="gkt">🧤 Portera</span>':""}
+        <div class="small muted">${p.status&&p.status!=="ok"?`<span class="stt ${stCls[p.status]}">${esc(statusLabel(p.status))}</span> `:""}${(()=>{ const r=sig.reasons.filter(x=>!(x==="está tocada"&&p.status==="tocada")&&!(x==="lesión activa"&&p.status==="lesionada")); return r.length?`<span class="warnc">⚠ ${esc(r.join(" · "))}</span>`:""; })()}</div></div>
+      ${ds.map(d=>{ const out=B.asistencia[d].fuera.indexOf(p.id)>=0; return `<button type="button" class="avb ${out?"off":"on"}" data-att="${d}|${p.id}" aria-label="${esc(p.name)} ${dayShort(d)}">${out?"✕":"✓"}</button>`; }).join("")}
+      <button type="button" class="avb red ${anyRed?"on":""}" data-red="${p.id}" title="Carga reducida">${anyRed?"↓":"·"}</button>
+    </div>`;
+  }).join("");
+  const sums=ds.map(d=>{ const s=attSummary(B,d); return `<div class="avsum"><b>${dayShort(d)}</b><span>${s.total} jugadoras · ${s.porteras} ${s.porteras===1?"portera":"porteras"}${s.reducida.length?` · ${s.reducida.length} con carga reducida`:""}</span></div>`; }).join("");
+  // balón parado
+  const wantsABP=B.objetivos.some(o=>/bal[oó]n parado/i.test(o));
+  const playsHTML=wantsABP? `<div class="bsub"><div class="eyebrow">Jugadas de la Pizarra a repasar</div>
+      ${S.plays.length? `<div class="bchips">${S.plays.map(pl=>chip("jugada",pl.id,B.jugadas.indexOf(pl.id)>=0).replace(`>${esc(pl.id)}<`,`>${esc(pl.name||"Jugada sin nombre")}<`)).join("")}</div>`
+      : `<div class="muted small">No tienes jugadas en la Pizarra. Puedes describirlas en "Su balón parado" o crearlas en Pizarra.</div>`}</div>` : "";
+  // portería
+  const gkHTML=ds.map(d=>{ const g=B.porteria[d]; const s=attSummary(B,d);
+    const names=S.roster.filter(p=>isGK(p)&&B.asistencia[d].fuera.indexOf(p.id)<0).map(p=>p.name);
+    return `<div class="gkday"><div class="row" style="justify-content:space-between"><b>${dayShort(d)}</b><span class="muted small">${names.length?esc(names.join(" y ")):"Sin porteras"}</span></div>
+      <div class="eyebrow" style="margin:10px 0 6px">Minutos específicos</div>
+      <div class="bchips">${[0,10,15,20,25,30].map(n=>`<button type="button" data-gkmin="${d}|${n}" aria-current="${g.min===n}">${n?n+"′":"Nada"}</button>`).join("")}</div>
+      ${g.min?`<div class="eyebrow" style="margin:10px 0 6px">Momento</div><div class="bchips">${GK_MOM.map(v=>`<button type="button" data-gkmom="${d}|${esc(v)}" aria-current="${g.momento===v}">${esc(v)}</button>`).join("")}</div>
+      <div class="eyebrow" style="margin:10px 0 6px">Contenido</div><div class="bchips">${GK_CONT.map(v=>`<button type="button" data-gkc="${d}|${esc(v)}" aria-current="${g.contenido.indexOf(v)>=0}">${esc(v)}</button>`).join("")}</div>
+      <input class="bin" data-gknot="${d}" value="${esc(g.notas||"")}" placeholder="Notas de Julia (opcional)" style="margin-top:10px">`:""}
+      ${s.porteras===0&&g.min?`<div class="warnc small" style="margin-top:6px">⚠ No hay porteras marcadas para este día.</div>`:""}</div>`; }).join("");
+
+  el.innerHTML=`
+  <div class="row" style="margin-bottom:10px"><button class="btn sm ghost" id="brBack">← Banquillo</button><div class="grow"></div>
+    <span class="bpill ${st.mine?"ok":""}">${st.mine?"✓":"•"} Entrenador</span><span class="bpill ${st.gk?"ok":""}">${st.gk?"✓":"•"} Portería</span></div>
+  <div class="bhead"><div class="eyebrow">Brief · semana ${esc(weekLbl(w))}</div>
+    <div class="btitle">${B.rival?(B.campo==="Fuera"?"@ ":"vs ")+esc(B.rival):"Sin rival"}</div>
+    <div class="muted">${B.dia?esc(new Date(B.dia+"T00:00").toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"}))+(B.hora?" · "+esc(B.hora):""):"Sin partido esta semana"}${daysTo!=null&&daysTo>=0?` · faltan ${daysTo} ${daysTo===1?"día":"días"}`:""}</div>
+    <div class="row" style="gap:6px;margin-top:10px">${rec.form.slice(-5).map(f=>`<span class="bres ${f}">${f}</span>`).join("")}${ida?`<span class="muted small" style="margin-left:6px">Ida: ${ida.score.us}-${ida.score.them}</span>`:""}</div>
+  </div>
+
+  <div class="card bsec"><h2>Semana anterior y último partido</h2>
+    ${pw?`<div class="bgrid" style="margin-bottom:12px"><div><span class="k">Sesiones</span><b>${pw.n}</b></div><div><span class="k">Asistencia media</span><b>${pw.asis.toFixed(1)}</b></div><div><span class="k">RPE medio</span><b>${pw.rpe!=null?pw.rpe.toFixed(1):"—"}</b></div><div><span class="k">Se trabajó</span><b class="small">${esc(pw.focos.join(" · ")||"—")}</b></div></div>`:""}
+    ${lpHTML}
+    <label class="fld" style="margin-top:12px;margin-bottom:0"><span>Qué hay que corregir</span><textarea data-bf="corregir" placeholder="Ej. perdemos la ruptura tras pase; sufrimos en la defensa del segundo palo">${esc(B.corregir||"")}</textarea></label>
+  </div>
+
+  <div class="card bsec"><h2>Disponibilidad</h2>
+    <div class="muted small" style="margin:-4px 0 10px">Lo que marques aquí queda como asistencia de cada sesión. En pista solo ajustas lo imprevisto.</div>
+    <div class="avr avh"><div></div>${ds.map(d=>`<div>${esc(dayShort(d).split(" ")[0].slice(0,3))}</div>`).join("")}<div title="Carga reducida">↓</div></div>
+    ${availRows}
+    <div class="avsums">${sums}</div>
+    ${flagged.length?`<div class="muted small" style="margin-top:8px">↓ = carga reducida. Vienen marcadas las jugadoras con aviso de carga o que vuelven de lesión.</div>`:`<div class="muted small" style="margin-top:8px">↓ = carga reducida: su sesión incluirá una nota de adaptación.</div>`}
+  </div>
+
+  <div class="card bsec"><h2>Rival</h2>
+    ${Object.entries(RIVAL_OPC).map(([k,[lbl,opts]])=>`<div class="eyebrow" style="margin:6px 0 6px">${lbl}</div><div class="bchips">${opts.map(v=>chip(k,v,B[k]===v)).join("")}</div>`).join("")}
+    <label class="fld" style="margin-top:12px"><span>Jugadoras clave</span><input class="bin" data-bf="rivalClave" value="${esc(B.rivalClave||"")}" placeholder="Ej. pívot zurda muy fuerte de espaldas; ala rápida a la contra"></label>
+    <label class="fld"><span>Su balón parado</span><input class="bin" data-bf="rivalABP" value="${esc(B.rivalABP||"")}" placeholder="Ej. córner con bloqueo al primer palo"></label>
+    <label class="fld" style="margin-bottom:0"><span>Otras notas</span><textarea data-bf="rivalNotas" placeholder="Cualquier cosa que deba condicionar las tareas">${esc(B.rivalNotas||"")}</textarea></label>
+  </div>
+
+  <div class="card bsec"><h2>Objetivos y carga</h2>
+    <div class="bbase">Base fija: <b>4-0</b> · <b>dualidades</b></div>
+    ${BRIEF_OBJ.map(([g,L])=>`<div class="eyebrow" style="margin:10px 0 6px">${g}</div><div class="bchips">${L.map(o=>{ const i=B.objetivos.indexOf(o); return `<button type="button" data-bobj="${esc(o)}" aria-current="${i>=0}">${i===0?"① ":i===1?"② ":""}${esc(o)}</button>`; }).join("")}</div>`).join("")}
+    <div class="muted small" style="margin-top:10px">${B.objetivos.length?`① Principal (${ds[0]?dayShort(ds[0]):"1er entreno"}): <b>${esc(B.objetivos[0])}</b>${B.objetivos[1]?` · ② Secundario (${ds[1]?dayShort(ds[1]):"2º entreno"}): <b>${esc(B.objetivos[1])}</b>`:""}`:"Marca uno o dos objetivos. El primero es el principal."}</div>
+    ${playsHTML}
+    <div class="eyebrow" style="margin:14px 0 6px">Carga de la semana</div>
+    <div class="bchips">${["Normal","Cargar más","Descargar"].map(v=>chip("carga",v,B.carga===v)).join("")}</div>
+    ${flagged.length>=3&&B.carga!=="Descargar"?`<div class="warnc small" style="margin-top:6px">⚠ ${flagged.length} jugadoras con aviso de carga: valora descargar.</div>`:""}
+    <label class="fld" style="margin-top:12px;margin-bottom:0"><span>Otro matiz</span><input class="bin" data-bf="otro" value="${esc(B.otro||"")}" placeholder="Ej. terminar el viernes con penaltis y dobles penaltis"></label>
+  </div>
+
+  <div class="card bsec gkcard"><h2>🧤 Portería · Julia</h2>
+    <div class="muted small" style="margin:-4px 0 10px">Tiempo y contenido específico de porteras en cada entreno. Las sesiones reservan esos minutos y organizan al resto mientras tanto.</div>
+    ${gkHTML}
+  </div>
+
+  <div class="bfoot"><button class="btn ghost grow" id="brCancel">Cancelar</button><button class="btn primary grow" id="brSave">Guardar brief</button></div>`;
+  window.scrollTo(0,sc);
+
+  const rer=()=>renderBrief(el);
+  el.querySelector("#brBack").onclick=closeBrief; el.querySelector("#brCancel").onclick=closeBrief;
+  el.querySelectorAll("[data-bf]").forEach(i=>i.oninput=()=>{ B[i.dataset.bf]=i.value; });
+  el.querySelectorAll("[data-bk]").forEach(b=>b.onclick=()=>{ const k=b.dataset.bk, v=b.dataset.bv;
+    if(k==="jugada"){ const i=B.jugadas.indexOf(v); if(i>=0) B.jugadas.splice(i,1); else B.jugadas.push(v); }
+    else B[k]=B[k]===v&&k!=="carga"?"":v; rer(); });
+  el.querySelectorAll("[data-bobj]").forEach(b=>b.onclick=()=>{ const o=b.dataset.bobj, i=B.objetivos.indexOf(o); if(i>=0) B.objetivos.splice(i,1); else B.objetivos.push(o); rer(); });
+  el.querySelectorAll("[data-att]").forEach(b=>b.onclick=()=>{ const [d,id]=b.dataset.att.split("|"); const a=B.asistencia[d]; const i=a.fuera.indexOf(id);
+    if(i>=0) a.fuera.splice(i,1); else { a.fuera.push(id); a.reducida=(a.reducida||[]).filter(x=>x!==id); } rer(); });
+  el.querySelectorAll("[data-red]").forEach(b=>b.onclick=()=>{ const id=b.dataset.red; const on=ds.some(d=>(B.asistencia[d].reducida||[]).indexOf(id)>=0);
+    ds.forEach(d=>{ const a=B.asistencia[d]; a.reducida=(a.reducida||[]).filter(x=>x!==id); if(!on && a.fuera.indexOf(id)<0) a.reducida.push(id); }); rer(); });
+  el.querySelectorAll("[data-gkmin]").forEach(b=>b.onclick=()=>{ const [d,n]=b.dataset.gkmin.split("|"); const g=B.porteria[d]; g.min=+n; if(!g.min){ g.momento=""; g.contenido=[]; } else if(!g.momento) g.momento=GK_MOM[0]; rer(); });
+  el.querySelectorAll("[data-gkmom]").forEach(b=>b.onclick=()=>{ const [d,v]=b.dataset.gkmom.split("|"); B.porteria[d].momento=v; rer(); });
+  el.querySelectorAll("[data-gkc]").forEach(b=>b.onclick=()=>{ const [d,v]=b.dataset.gkc.split("|"); const c=B.porteria[d].contenido; const i=c.indexOf(v); if(i>=0) c.splice(i,1); else c.push(v); rer(); });
+  el.querySelectorAll("[data-gknot]").forEach(i=>i.oninput=()=>{ B.porteria[i.dataset.gknot].notas=i.value; });
+  el.querySelector("#brSave").onclick=saveBrief;
+}
+function saveBrief(){
+  const w=briefOpen, B=BR; if(!B) return;
+  if(!B.objetivos.length && !confirm("No has marcado ningún objetivo. ¿Guardar igualmente?")) return;
+  const ds=trainDatesOf(w);
+  // resumen sin nombres para la generación
+  B.resumen={}; ds.forEach(d=>{ const s=attSummary(B,d); B.resumen[d]={total:s.total,porteras:s.porteras,reducida:s.reducida.map(p=>p.pos||"jugadora")}; });
+  B.jugadasNombres=B.jugadas.map(id=>{ const pl=S.plays.find(x=>x.id===id); return pl?{id,name:pl.name||"Jugada"}:null; }).filter(Boolean);
+  B.guardado=new Date().toISOString();
+  S.briefs=S.briefs||{}; S.briefs[w]=B;
+  // asistencia prevista → sesiones
+  if(S.trainSchedule) ds.forEach(d=>{ const s=ensureSession(d); s.absent=B.asistencia[d].fuera.slice(); });
+  save(); toast("Brief guardado. Las sesiones se preparan en menos de una hora."); closeBrief();
 }
 
 /* ---- Sesiones preparadas (archivos semanas/AAAA-MM-DD.json del repositorio) ---- */
@@ -2553,7 +2775,7 @@ function importPack(pack,opts){
     const old=S.sessions.find(x=>x.date===ns.date);
     if(!opts.auto && old && sessionCount(old)>0 && old.fromClaude!==pack.semana && !confirm(`Ya hay una sesión con ejercicios el ${ns.date}. ¿Sustituirla por la preparada?`)){ skipped++; return; }
     if(old) S.sessions=S.sessions.filter(x=>x!==old);
-    S.sessions.push({id:uid(), fromClaude:pack.semana||null, date:ns.date, title:ns.title||"", focus:ns.focus||"", targetMin:String(ns.targetMin||scheduleMinutes()||""), notes:ns.notes||"", absent:[], rpe:{},
+    S.sessions.push({id:uid(), fromClaude:pack.semana||null, date:ns.date, title:ns.title||"", focus:ns.focus||"", targetMin:String(ns.targetMin||scheduleMinutes()||""), notes:ns.notes||"", absent:(old&&old.absent&&old.absent.length)?old.absent.slice():((((S.briefs||{})[pack.semana]||{}).asistencia||{})[ns.date]||{}).fuera||[], rpe:{},
       blocks:(ns.blocks||[]).map(b=>({id:uid(), name:b.name||"Bloque", items:(b.items||[]).filter(it=>S.exercises.find(e=>e.id===it.exerciseId)).map(it=>({id:uid(), exerciseId:it.exerciseId, minutes:String(it.minutes||""), note:it.note||""}))}))});
     if(S.trainSchedule && !isTrainingDay(ns.date)) S.calOverrides[ns.date]="on";
     added++;
@@ -2671,6 +2893,7 @@ function renderSessionEditor(body){
       </div>
     </div>
 
+    ${(()=>{ const B=(S.briefs||{})[mondayStr(new Date(s.date+"T00:00"))]; const r=B&&B.asistencia&&B.asistencia[s.date]&&B.asistencia[s.date].reducida||[]; const n=r.map(id=>playerById(id)).filter(Boolean).map(p=>p.name); return n.length?`<div class="redline">↓ Carga reducida: ${esc(n.join(", "))}</div>`:""; })()}
     <div class="totbar">${totbarHTML(s)}</div>
     <div id="blocks"></div>
     <button class="btn ghost block" id="seAddBlock">+ Añadir bloque</button>
