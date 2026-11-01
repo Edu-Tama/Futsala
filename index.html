@@ -390,6 +390,9 @@
 .gkcard{border-color:var(--brand)}
 .gkday{padding:12px;border-radius:12px;background:var(--surface-2);margin-top:10px}
 .bfoot{position:sticky;bottom:calc(76px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;padding:10px 0;background:linear-gradient(to top,var(--bg) 70%,transparent);z-index:5}
+.item .inm{min-width:0}
+.ilus{display:block;width:100%;min-width:0;max-width:360px;border-radius:10px;margin:6px 0 2px;box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.ilus.big{max-width:100%}
 .redline{font-size:13px;margin-top:8px;color:var(--foul)}
 
 .bchips{display:flex;flex-wrap:wrap;gap:6px}
@@ -504,6 +507,7 @@ if(!S.plays) S.plays=[];
 if(!S.videoCats) S.videoCats={};
 if(!S.claudeImports) S.claudeImports={};
 if(!S.briefs) S.briefs={};
+if(!S.ropaDia) S.ropaDia={1:"Amarillo",5:"Rosa"};
 if(S.trainSchedule===undefined) S.trainSchedule=null;
 if(!S.calOverrides) S.calOverrides={};
 if(S.cardLimit===undefined) S.cardLimit=5;
@@ -593,7 +597,7 @@ function stateToDocs(s){
   (s.exercises||[]).forEach(x=>{ const k=docId("exercise",x.id); d[k]={id:k,tipo:"exercise",datos:x}; });
   (s.plays||[]).forEach(x=>{ const k=docId("play",x.id); d[k]={id:k,tipo:"play",datos:x}; });
   Object.keys(s.briefs||{}).forEach(w=>{ const k=docId("brief",w); d[k]={id:k,tipo:"brief",datos:s.briefs[w]}; });
-  d["ajustes"]={id:"ajustes",tipo:"ajustes",datos:{season:s.season,live:s.live,trainTodayCount:s.trainTodayCount,trainSchedule:s.trainSchedule,calOverrides:s.calOverrides,cardLimit:s.cardLimit,draftCall:s.draftCall,videoCats:s.videoCats||{},claudeImports:s.claudeImports||{}}};
+  d["ajustes"]={id:"ajustes",tipo:"ajustes",datos:{season:s.season,live:s.live,trainTodayCount:s.trainTodayCount,trainSchedule:s.trainSchedule,calOverrides:s.calOverrides,cardLimit:s.cardLimit,draftCall:s.draftCall,videoCats:s.videoCats||{},claudeImports:s.claudeImports||{},ropaDia:s.ropaDia||{}}};
   return d;
 }
 function docsToState(map){
@@ -2206,6 +2210,7 @@ function editExercise(id){
   const x = id? S.exercises.find(e=>e.id===id) : {name:"",category:"Técnica",objective:"",desc:"",material:"",players:"",duration:"",variants:""};
   modal(`
     <h3>${id?"Editar ejercicio":"Nuevo ejercicio"}</h3>
+    ${id?illusHTML(x,560,"ilus big"):""}
     <label class="fld"><span>Nombre</span><input id="fName" value="${esc(x.name)}" placeholder="Ej. Rondo 4v1 con apoyos"></label>
     <label class="fld"><span>Categoría</span><select id="fCat">${EX_CATS.map(c=>`<option ${c===x.category?"selected":""}>${c}</option>`).join("")}</select></label>
     <label class="fld"><span>Objetivo (una línea)</span><input id="fObj" value="${esc(x.objective)}" placeholder="Qué se trabaja"></label>
@@ -2247,7 +2252,7 @@ function editExercise(id){
 }
 
 /* ---- Sesiones ---- */
-function sessionMinutes(s){ return (s.blocks||[]).reduce((t,b)=>t+b.items.reduce((u,i)=>u+(parseInt(i.minutes)||0),0),0); }
+function sessionMinutes(s){ return (s.blocks||[]).reduce((t,b)=>t+(b.paralelo?0:b.items.reduce((u,i)=>u+(parseInt(i.minutes)||0),0)),0); }
 function sessionCount(s){ return (s.blocks||[]).reduce((t,b)=>t+b.items.length,0); }
 
 function balanceCard(){
@@ -2340,21 +2345,28 @@ function calConfig(){
     <label class="fld"><span>Días de entreno</span>
       <div class="dowpick" id="cfDows">${order.map(d=>`<button data-d="${d}" aria-current="${s.weekdays.indexOf(d)>=0}">${["D","L","M","X","J","V","S"][d]}</button>`).join("")}</div>
     </label>
+    <div class="fld"><span>Camiseta de entreno por día</span><div id="cfKit"></div><div class="muted small" style="margin-top:4px">Se usa para proponer los equipos: un equipo con la camiseta del día y el resto con petos azules, rojos o amarillos.</div></div>
     <div class="row" style="gap:8px">
       <label class="fld grow"><span>Hora inicio</span><input id="cfT1" type="time" value="${esc(s.startTime)}"></label>
       <label class="fld grow"><span>Hora fin</span><input id="cfT2" type="time" value="${esc(s.endTime)}"></label>
     </div>
     <div class="foot"><button class="btn ghost grow" id="cfCancel">Cancelar</button><button class="btn primary grow" id="cfSave">Guardar</button></div>`);
   const sel=new Set(s.weekdays);
+  const kit=Object.assign({},S.ropaDia||{});
+  const drawKit=()=>{ const el=document.getElementById("cfKit"); if(!el) return; const days=[1,2,3,4,5,6,0].filter(d=>sel.has(d));
+    el.innerHTML=days.map(d=>`<div class="row" style="gap:8px;margin-top:6px"><span style="width:90px">${["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"][d]}</span><select data-kit="${d}" class="grow">${["","Amarillo","Rosa","Azul","Rojo","Verde","Blanco","Negro","Naranja"].map(c=>`<option value="${c}"${(kit[d]||"")===c?" selected":""}>${c||"— sin color fijo —"}</option>`).join("")}</select></div>`).join("")||'<span class="muted small">Elige primero los días de entreno.</span>';
+    el.querySelectorAll("[data-kit]").forEach(x=>x.onchange=()=>{ kit[x.dataset.kit]=x.value; }); };
+  drawKit();
   document.querySelectorAll("#cfDows button").forEach(b=>b.onclick=()=>{
     const d=+b.dataset.d; if(sel.has(d))sel.delete(d); else sel.add(d);
-    b.setAttribute("aria-current", sel.has(d));
+    b.setAttribute("aria-current", sel.has(d)); drawKit();
   });
   document.getElementById("cfCancel").onclick=closeModal;
   document.getElementById("cfSave").onclick=()=>{
     const start=document.getElementById("cfStart").value, end=document.getElementById("cfEnd").value;
     if(!start||!end||start>end){ toast("Revisa las fechas"); return; }
     if(!sel.size){ toast("Elige al menos un día"); return; }
+    S.ropaDia=kit;
     S.trainSchedule={start, end, weekdays:[...sel], startTime:document.getElementById("cfT1").value||"20:00", endTime:document.getElementById("cfT2").value||"21:30"};
     if(!calCursor || calCursor<start.slice(0,7)) calCursor=start.slice(0,7);
     save(); closeModal(); renderSessions(); toast("Calendario configurado");
@@ -2519,6 +2531,70 @@ function briefModal(w){
     S.briefs[w]={semana:w,rival:g("bRival"),dia:g("bDia"),campo:g("bCampo"),carga:g("bCarga"),objetivos:ord.slice(),otro:g("bOtro"),rivalNotas:g("bRivN"),ultimo:g("bUlt"),bajas:g("bBajas"),guardado:new Date().toISOString()};
     save(); closeModal(); if(tab==="home") renderHome(); toast("Brief guardado");
   };
+}
+
+/* ---- Colores de equipo: camiseta del día + petos ---- */
+const KIT={Amarillo:"#facc15",Rosa:"#ec4899",Azul:"#3b82f6",Rojo:"#ef4444",Verde:"#22c55e",Blanco:"#e5e7eb",Negro:"#1f2937",Naranja:"#f97316"};
+const PETOS=["Azul","Rojo","Amarillo"];
+function teamColorsFor(date){
+  const dw=date? parseYmd(date).getDay() : null;
+  const base=dw!=null? (S.ropaDia||{})[dw]||"" : "";
+  const L=[]; if(base) L.push({key:base+" (camiseta)",hex:KIT[base]||"#9ca3af"});
+  PETOS.filter(c=>c!==base).forEach(c=>L.push({key:"Peto "+c.toLowerCase(),hex:KIT[c]}));
+  return L;
+}
+function proposeTeams(s,n,withGK){
+  const TC=teamColorsFor(s.date); n=Math.max(2,Math.min(n||2,TC.length));
+  const pres=S.roster.filter(p=>(s.absent||[]).indexOf(p.id)<0 && (withGK!==false || !isGK(p)));
+  const gks=pres.filter(isGK), field=pres.filter(p=>!isGK(p));
+  const grp=p=>/cierre/i.test(p.pos||"")?0:/p[ií]vot/i.test(p.pos||"")?2:1;
+  for(let i=field.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=field[i]; field[i]=field[j]; field[j]=t; }
+  field.sort((a,b)=>grp(a)-grp(b));
+  const teams=TC.slice(0,n).map(c=>({color:c.key,hex:c.hex,ids:[]}));
+  gks.forEach((p,i)=>teams[i%n].ids.push(p.id));
+  // reparto en serpiente para equilibrar puestos
+  field.forEach((p,i)=>{ const r=Math.floor(i/n), k=i%n; teams[r%2?n-1-k:k].ids.push(p.id); });
+  return teams.filter(t=>t.ids.length);
+}
+/* ---- Ilustración del ejercicio (pista dibujada con el estilo de la Pizarra) ---- */
+const ILLUS_CACHE={};
+function illusDataURL(il, w){
+  if(!il||!Array.isArray(il.tokens)||!il.tokens.length) return "";
+  const key=w+"|"+JSON.stringify(il); if(ILLUS_CACHE[key]) return ILLUS_CACHE[key];
+  const W=w, H=w/2, dpr=2;
+  const cv=document.createElement("canvas"); cv.width=W*dpr; cv.height=H*dpr;
+  const ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  const prev=pbCtx; pbCtx=ctx;
+  try{
+    pbDrawPitch(W,H);
+    (il.zonas||[]).forEach(z=>{ ctx.save(); ctx.fillStyle="rgba(14,165,233,.18)"; ctx.strokeStyle="rgba(255,255,255,.95)"; ctx.setLineDash([6,4]); ctx.lineWidth=1.6;
+      ctx.fillRect(z.x*W,z.y*H,z.w*W,z.h*H); ctx.strokeRect(z.x*W,z.y*H,z.w*W,z.h*H); ctx.setLineDash([]);
+      if(z.label){ ctx.font=`700 ${Math.max(9,Math.round(W*0.028))}px system-ui,sans-serif`; ctx.textAlign="left"; ctx.textBaseline="top";
+        ctx.fillStyle="rgba(0,0,0,.55)"; const tw=ctx.measureText(z.label).width; ctx.fillRect(z.x*W+3,z.y*H+3,tw+8,Math.max(12,W*0.036)); ctx.fillStyle="#fff"; ctx.fillText(z.label,z.x*W+7,z.y*H+5); }
+      ctx.restore(); });
+    (il.miniporterias||[]).forEach(m=>{ ctx.fillStyle="#fff"; ctx.strokeStyle="#111"; ctx.lineWidth=1; const L=W*0.04,T=W*0.009;
+      if(m.vertical){ ctx.fillRect(m.x*W-T/2,m.y*H-L/2,T,L); ctx.strokeRect(m.x*W-T/2,m.y*H-L/2,T,L); } else { ctx.fillRect(m.x*W-L/2,m.y*H-T/2,L,T); ctx.strokeRect(m.x*W-L/2,m.y*H-T/2,L,T); } });
+    (il.conos||[]).forEach(c=>{ ctx.fillStyle="#f97316"; ctx.beginPath(); ctx.moveTo(c.x*W,c.y*H-5); ctx.lineTo(c.x*W-4,c.y*H+4); ctx.lineTo(c.x*W+4,c.y*H+4); ctx.closePath(); ctx.fill(); });
+    const s0=(il.steps&&il.steps[0]&&il.steps[0].pos)||{}, s1=il.steps&&il.steps[1]&&il.steps[1].pos;
+    if(s1) il.tokens.forEach(t=>{ const a=s0[t.id], b=s1[t.id]; if(!a||!b||(a.x===b.x&&a.y===b.y)) return;
+      ctx.strokeStyle=t.kind==="ball"?"rgba(255,255,255,.95)":(t.kind==="home"?"rgba(20,83,45,.95)":"rgba(127,29,29,.9)");
+      ctx.lineWidth=2; ctx.setLineDash(t.kind==="ball"?[3,4]:[7,5]);
+      ctx.beginPath(); ctx.moveTo(a.x*W,a.y*H); ctx.lineTo(b.x*W,b.y*H); ctx.stroke(); ctx.setLineDash([]);
+      const ang=Math.atan2((b.y-a.y)*H,(b.x-a.x)*W);
+      ctx.beginPath(); ctx.moveTo(b.x*W,b.y*H); ctx.lineTo(b.x*W-9*Math.cos(ang-0.42), b.y*H-9*Math.sin(ang-0.42));
+      ctx.moveTo(b.x*W,b.y*H); ctx.lineTo(b.x*W-9*Math.cos(ang+0.42), b.y*H-9*Math.sin(ang+0.42)); ctx.stroke(); });
+    il.tokens.forEach(t=>{ const p=s0[t.id]; if(p) pbDrawToken(t,p,W,H); });
+  }catch(e){} finally{ pbCtx=prev; }
+  try{ ILLUS_CACHE[key]=cv.toDataURL("image/png"); }catch(e){ return ""; }
+  return ILLUS_CACHE[key];
+}
+function illusHTML(ex,w,cls){ const u=ex&&ex.ilus?illusDataURL(ex.ilus,w||360):""; return u?`<img class="${cls||"ilus"}" src="${u}" alt="Esquema de ${esc(ex.name)}">`:""; }
+/* ---- Resolver ejercicios de la biblioteca por nombre ---- */
+function normTxt(x){ return String(x||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/\s+/g," ").trim(); }
+function findExerciseRef(ref){
+  const r=normTxt(ref); if(!r) return null;
+  const words=r.split(" ").filter(w=>w.length>2);
+  return S.exercises.find(e=>normTxt(e.name)===r) || S.exercises.find(e=>words.every(w=>normTxt(e.name).includes(w))) || null;
 }
 
 /* ================= Brief profesional de la semana ================= */
@@ -2703,6 +2779,8 @@ function saveBrief(){
   // resumen sin nombres para la generación
   B.resumen={}; ds.forEach(d=>{ const s=attSummary(B,d); B.resumen[d]={total:s.total,porteras:s.porteras,reducida:s.reducida.map(p=>p.pos||"jugadora")}; });
   B.jugadasNombres=B.jugadas.map(id=>{ const pl=S.plays.find(x=>x.id===id); return pl?{id,name:pl.name||"Jugada"}:null; }).filter(Boolean);
+  B.biblioteca=S.exercises.filter(e=>!/^cl-/.test(e.id)).slice(0,250).map(e=>({id:e.id,name:e.name,category:e.category||"",players:e.players||"",duration:e.duration||"",objective:e.objective||""}));
+  B.ropa={}; ds.forEach(d=>{ B.ropa[d]=(S.ropaDia||{})[parseYmd(d).getDay()]||""; });
   B.guardado=new Date().toISOString();
   S.briefs=S.briefs||{}; S.briefs[w]=B;
   // asistencia prevista → sesiones
@@ -2776,7 +2854,8 @@ function importPack(pack,opts){
     if(!opts.auto && old && sessionCount(old)>0 && old.fromClaude!==pack.semana && !confirm(`Ya hay una sesión con ejercicios el ${ns.date}. ¿Sustituirla por la preparada?`)){ skipped++; return; }
     if(old) S.sessions=S.sessions.filter(x=>x!==old);
     S.sessions.push({id:uid(), fromClaude:pack.semana||null, date:ns.date, title:ns.title||"", focus:ns.focus||"", targetMin:String(ns.targetMin||scheduleMinutes()||""), notes:ns.notes||"", absent:(old&&old.absent&&old.absent.length)?old.absent.slice():((((S.briefs||{})[pack.semana]||{}).asistencia||{})[ns.date]||{}).fuera||[], rpe:{},
-      blocks:(ns.blocks||[]).map(b=>({id:uid(), name:b.name||"Bloque", items:(b.items||[]).filter(it=>S.exercises.find(e=>e.id===it.exerciseId)).map(it=>({id:uid(), exerciseId:it.exerciseId, minutes:String(it.minutes||""), note:it.note||""}))}))});
+      blocks:(ns.blocks||[]).map(b=>({id:uid(), name:b.name||"Bloque", paralelo:!!b.paralelo, items:(b.items||[]).map(it=>{ if(!S.exercises.find(e=>e.id===it.exerciseId) && it.ref){ let f=findExerciseRef(it.ref); if(!f && it.fallback && it.fallback.id){ f=S.exercises.find(e=>e.id===it.fallback.id); if(!f){ f=Object.assign({category:"Posesión",objective:"",desc:"",material:"",players:"",duration:"",variants:"",boardId:null},it.fallback); S.exercises.push(f); } } if(f) it=Object.assign({},it,{exerciseId:f.id}); } return it; }).filter(it=>S.exercises.find(e=>e.id===it.exerciseId)).map(it=>({id:uid(), exerciseId:it.exerciseId, minutes:String(it.minutes||""), note:it.note||"", equipos:it.equipos||null}))}))});
+    { const ns2=S.sessions[S.sessions.length-1]; ns2.blocks.forEach(b=>b.items.forEach(it=>{ if(it.equipos){ const eq=typeof it.equipos==="object"?it.equipos:{n:+it.equipos}; it.teams=proposeTeams(ns2,+eq.n||2,eq.porteras!==false); } delete it.equipos; })); }
     if(S.trainSchedule && !isTrainingDay(ns.date)) S.calOverrides[ns.date]="on";
     added++;
   });
@@ -2809,6 +2888,7 @@ function totbarHTML(s){
 
 var TEAM_COLORS=[{key:"Rojos",hex:"#ef4444"},{key:"Azules",hex:"#3b82f6"},{key:"Amarillos",hex:"#eab308"},{key:"Verdes",hex:"#22c55e"}];
 function teamMaker(s, item, body){
+  const TC=teamColorsFor(s.date);
   const present = S.roster.filter(p=>(s.absent||[]).indexOf(p.id)<0);
   if(!present.length){ toast("Marca primero quién viene (asistencia)"); return; }
   let count = (item.teams && item.teams.length>=2) ? item.teams.length : 2;
@@ -2823,9 +2903,9 @@ function teamMaker(s, item, body){
   ensureAssign();
   function draw(){
     const counts=[]; for(let i=0;i<count;i++) counts.push(present.filter(p=>assign[p.id]===i).length);
-    const countSel=`<div class="row" style="gap:6px;justify-content:center;margin-bottom:10px">${[2,3,4].map(n=>`<button class="btn sm ${n===count?'primary':'ghost'}" data-count="${n}">${n}</button>`).join("")}<span class="muted small" style="align-self:center;margin-left:4px">equipos</span></div>`;
-    const resumen=`<div class="row" style="gap:8px;justify-content:center;flex-wrap:wrap;margin:6px 0 10px">${TEAM_COLORS.slice(0,count).map((c,i)=>`<span class="teamchip" style="background:${c.hex}">${c.key} · ${counts[i]}</span>`).join("")}</div>`;
-    const list=present.map(p=>{ const ti=assign[p.id]; const c=ti>=0?TEAM_COLORS[ti]:null;
+    const countSel=`<div class="row" style="gap:6px;justify-content:center;margin-bottom:10px">${[2,3,4].filter(n=>n<=TC.length).map(n=>`<button class="btn sm ${n===count?'primary':'ghost'}" data-count="${n}">${n}</button>`).join("")}<span class="muted small" style="align-self:center;margin-left:4px">equipos</span></div>`;
+    const resumen=`<div class="row" style="gap:8px;justify-content:center;flex-wrap:wrap;margin:6px 0 10px">${TC.slice(0,count).map((c,i)=>`<span class="teamchip" style="background:${c.hex}">${c.key} · ${counts[i]}</span>`).join("")}</div>`;
+    const list=present.map(p=>{ const ti=assign[p.id]; const c=ti>=0?TC[ti]:null;
       return `<button class="tmrow" data-tm="${p.id}"><span class="tmdot" style="background:${c?c.hex:'transparent'};${c?'':'border:1px dashed var(--muted-2)'}"></span><span class="grow" style="text-align:left">#${esc(p.number)} ${esc(p.name)}</span><span class="muted small">${c?c.key:"toca para asignar"}</span></button>`;
     }).join("");
     modal(`<h3>Equipos del ejercicio</h3>
@@ -2840,7 +2920,7 @@ function teamMaker(s, item, body){
     document.querySelectorAll("[data-tm]").forEach(b=>b.onclick=()=>{ const id=b.dataset.tm; const cur=assign[id]; assign[id] = cur<0?0:((cur+1)%count); draw(); });
     document.getElementById("tmClear").onclick=()=>{ item.teams=null; save(); closeModal(); renderSessionEditor(body); };
     document.getElementById("tmSave").onclick=()=>{
-      const teams=[]; for(let i=0;i<count;i++) teams.push({color:TEAM_COLORS[i].key, hex:TEAM_COLORS[i].hex, ids:present.filter(p=>assign[p.id]===i).map(p=>p.id)});
+      const teams=[]; for(let i=0;i<count;i++) teams.push({color:TC[i].key, hex:TC[i].hex, ids:present.filter(p=>assign[p.id]===i).map(p=>p.id)});
       item.teams=teams.filter(t=>t.ids.length); save(); closeModal(); renderSessionEditor(body);
     };
   }
@@ -2867,7 +2947,7 @@ function renderSessionEditor(body){
   const isPattern = s.date && S.trainSchedule && S.trainSchedule.weekdays.indexOf(parseYmd(s.date).getDay())>=0 && s.date>=S.trainSchedule.start && s.date<=S.trainSchedule.end;
 
   body.innerHTML=`
-    <div class="row" style="margin-bottom:10px">
+    <div class="row" style="margin-bottom:10px;flex-wrap:wrap;gap:6px">
       <button class="btn sm ghost" id="seBack">← Calendario</button>
       <div class="grow"></div>
       <button class="btn sm ghost" id="seDup">Duplicar</button>
@@ -2962,9 +3042,11 @@ function renderSessionEditor(body){
         <button class="btn sm ghost" data-add="${bl.id}">+ Ejercicio</button>
         <button class="btn sm danger" data-bdel="${bl.id}">✕</button>
       </div>
+      ${bl.paralelo?'<div class="muted small" style="margin:-2px 0 6px">⏱ En paralelo: estos minutos no suman al total de la sesión</div>':''}
       ${bl.items.map(it=>{ const ex=S.exercises.find(e=>e.id===it.exerciseId);
         return `<div class="item">
           <div class="inm"><div class="row" style="gap:6px"><b>${esc(ex?ex.name:"(ejercicio borrado)")}</b>${ex&&ex.category?`<span class="muted small">· ${esc(ex.category)}</span>`:""}${ex?fitBadge(ex.players):""}</div>
+            ${illusHTML(ex,300)}
             ${ex?adaptHTML(ex,sessionCtxCount):""}
             <input class="inote" value="${esc(it.note||'')}" data-note="${it.id}" placeholder="ajuste / nota (opcional)">
             <button class="btn sm ghost teambtn" data-teams="${bl.id}|${it.id}">🎽 ${it.teams&&it.teams.length?"Equipos":"Hacer equipos"}</button>
@@ -3028,6 +3110,7 @@ function sessionView(s){
           return `<div style="padding:10px 0;border-bottom:1px solid var(--line)">
             <div class="row"><b class="grow">${esc(ex.name)}</b><span class="dur">${it.minutes?esc(it.minutes)+"′":""}</span></div>
             ${ex.objective?`<div class="muted small" style="margin-top:2px">${esc(ex.objective)}</div>`:""}
+            ${illusHTML(ex,560,"ilus big")}
             ${ex.desc?`<div class="small" style="margin-top:4px;white-space:pre-wrap">${esc(ex.desc)}</div>`:""}
             ${adaptHTML(ex,nPres)}
             ${ex.material?`<div class="muted small" style="margin-top:4px">🎒 ${esc(ex.material)}</div>`:""}
@@ -3057,6 +3140,7 @@ function printSession(s){
         return `<div class="pitem">
           <div class="pt">${esc(ex.name)} ${it.minutes?`<span class="pmin">· ${esc(it.minutes)} min</span>`:""}</div>
           ${ex.objective?`<div class="pextra"><b>Objetivo:</b> ${esc(ex.objective)}</div>`:""}
+          ${ex.ilus?`<div class="pextra"><img src="${illusDataURL(ex.ilus,520)}" style="width:260px;border-radius:6px"></div>`:""}
           ${ex.desc?`<div class="pd">${esc(ex.desc)}</div>`:""}
           ${ex.material?`<div class="pextra"><b>Material:</b> ${esc(ex.material)}</div>`:""}
           ${(()=>{ const n=presentCount(s), a=adaptFor(ex,n); return a?`<div class="pextra"><b>Con ${n}:</b> ${esc(a.txt)}</div>`:""; })()}
