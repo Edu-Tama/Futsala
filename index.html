@@ -393,7 +393,11 @@
 .item .inm{min-width:0}
 .drag{flex:none;align-self:stretch;display:flex;align-items:center;justify-content:center;width:22px;margin-left:-4px;color:var(--muted);font-size:18px;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
 .item.dragging{opacity:.35}
-.dragmode .ilus,.dragmode .adapt,.dragmode .inote,.dragmode .teambtn,.dragmode .teamsum{display:none!important}
+.dragmode .ilus,.dragmode .adapt,.dragmode .inote,.dragmode .teambtn,.dragmode .teamsum,.dragmode .iobj,.dragmode .idesc{display:none!important}
+.iobj{font-size:13px;color:var(--muted);margin-top:3px}
+.idesc{margin:6px 0 2px;font-size:13px}
+.idesc summary{cursor:pointer;font-weight:700;color:var(--club-2,inherit)}
+.idtxt{white-space:pre-wrap;margin-top:4px;line-height:1.45}
 .dragmode .item{padding:6px 0}
 .dropline{height:3px;border-radius:2px;background:var(--brand);margin:2px 0;box-shadow:0 0 0 3px rgba(14,165,233,.25)}
 .ilus{display:block;width:100%;min-width:0;max-width:360px;border-radius:10px;margin:6px 0 2px;box-shadow:0 1px 0 rgba(0,0,0,.25)}
@@ -3154,7 +3158,9 @@ function renderSessionEditor(body){
         return `<div class="item" data-iid="${it.id}">
           <span class="drag" data-drag="${bl.id}|${it.id}" title="Arrastra para mover" aria-label="Mover ejercicio">⠿</span>
           <div class="inm"><div class="row" style="gap:6px"><b>${esc(ex?ex.name:"(ejercicio borrado)")}</b>${ex&&ex.category?`<span class="muted small">· ${esc(ex.category)}</span>`:""}${ex?fitBadge(ex.players, ex.porteras===false):""}</div>
+            ${ex&&ex.objective?`<div class="iobj">${esc(ex.objective)}</div>`:""}
             ${illusHTML(ex,300)}
+            ${ex&&(ex.desc||ex.material)?`<details class="idesc"><summary>Desarrollo</summary>${ex.desc?`<div class="idtxt">${esc(ex.desc)}</div>`:""}${ex.material?`<div class="muted small" style="margin-top:4px"><b>Material:</b> ${esc(ex.material)}</div>`:""}</details>`:""}
             ${ex?adaptHTML(ex,sessionCtxCount):""}
             <input class="inote" value="${esc(it.note||'')}" data-note="${it.id}" placeholder="ajuste / nota (opcional)">
             <button class="btn sm ghost teambtn" data-teams="${bl.id}|${it.id}">🎽 ${it.teams&&it.teams.length?"Equipos":"Hacer equipos"}</button>
