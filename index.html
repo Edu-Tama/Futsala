@@ -1521,9 +1521,11 @@ function claudeSeasonText(){
   const L=["TEMPORADA FUTSALA (para Claude)", `Liga: ${rec.pj} jugados · ${rec.v} ganados · ${rec.e} empatados · ${rec.d} perdidos · goles ${rec.gf}-${rec.gc} · últimos: ${rec.form.slice(-6).join(" ")||"—"}`, ""];
   L.push("Partidos:");
   playedMatches().slice().sort((a,b)=>matchWhen(a).localeCompare(matchWhen(b))).forEach(m=>L.push(`- ${(m.date||"").slice(0,10)} ${m.homeAway==="local"?"vs":"@"} ${m.opponent} ${m.score.us}-${m.score.them} (${compLabel(m.comp)})`));
-  L.push(""); L.push("Jugadoras (PJ · minutos · G · A · amarillas · rojas · asistencia a entrenos):");
-  S.roster.forEach(p=>{ const st=playerSeasonStats(p.id), at=playerAttendance(p.id);
-    L.push(`- ${p.name}: ${st.pj} PJ · ${fmt(st.min)} min · ${st.g} G · ${st.a} A · ${st.y} TA · ${st.r} TR · entrenos ${at.pct==null?"—":at.pct+"% ("+at.att+"/"+at.total+")"}`); });
+  const statsIn=(pid,ms)=>{ let pj=0,min=0,g=0,a=0,y=0,r=0; ms.forEach(m=>{ if(m.stints.some(s=>s.pid===pid)){pj++;min+=minutesFor(m,pid);} m.events.forEach(e=>{ if(e.type==="goal"&&e.pid===pid)g++; if(e.type==="goal"&&e.assist===pid)a++; if(e.type==="yellow"&&e.pid===pid)y++; if(e.type==="red"&&e.pid===pid)r++; }); }); return {pj,min,g,a,y,r}; };
+  const liga=playedMatches().filter(m=>m.comp==="liga");
+  L.push(""); L.push("Jugadoras en LIGA (PJ · minutos · G · A · amarillas · rojas) | total con amistosos y copa (PJ · minutos · G · A) | asistencia a entrenos:");
+  S.roster.forEach(p=>{ const st=statsIn(p.id,liga), tt=playerSeasonStats(p.id), at=playerAttendance(p.id);
+    L.push(`- ${p.name}: ${st.pj} PJ · ${fmt(st.min)} min · ${st.g} G · ${st.a} A · ${st.y} TA · ${st.r} TR | total ${tt.pj} PJ · ${fmt(tt.min)} min · ${tt.g} G · ${tt.a} A | entrenos ${at.pct==null?"—":at.pct+"% ("+at.att+"/"+at.total+")"}`); });
   return L.join("\n");
 }
 function copyForClaude(txt,title,hint){
