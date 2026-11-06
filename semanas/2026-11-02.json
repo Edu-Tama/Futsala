@@ -1,17 +1,17 @@
 {
  "semana": "2026-11-02",
- "generado": "2026-11-03T09:10:59Z",
- "briefGuardado": "2026-11-02T22:36:33.397Z",
+ "generado": "2026-11-06T07:41:19Z",
+ "briefGuardado": "2026-11-06T07:28:09.711Z",
  "ejercicios": [
   {
-   "id": "cl-gk-salida-pies-presion",
-   "name": "Porteras: salida con pies bajo presión y 1x1",
+   "id": "cl-gk-1x1-pivot-desvios-v6",
+   "name": "Portera: 1x1 contra pívot y desvíos",
    "category": "Portería",
-   "objective": "Temporizar la salida: conducir hasta fijar, decidir el pase y resolver el 1x1",
-   "desc": "Con Julia, en una portería, mientras el resto hace el rondo y la posesión. 1) Blocaje raso y salida con pie a uno de dos conos-diana a 15 m (6 repeticiones por lado). 2) Julia devuelve el balón y la otra portera sale a presionar desde el punto de penalti: conducir hasta que se comprometa y decidir entre el pase corto al apoyo y el envío largo a la lejana; la que conduce no suelta antes de fijar. 3) 1x1 desde 12 m con salida al pie. Se alternan papeles cada serie: 45\" de trabajo y 15\" de pausa.",
+   "objective": "Defender el giro de la pívot y los tiros cruzados a la salida del giro",
+   "desc": "Con Julia, en paralelo al rondo y la posesión (solo hay una portera). 1) Desvíos con mano y pie a tiros rasos desde 8 m a ambos palos, recolocándose entre tiro y tiro (3 x 6). 2) Julia de pívot de espaldas a 6 m: recibe, gira y tira; la portera achica el ángulo sin tirarse antes de tiempo (2 x 6 por lado). 3) 1x1 tras pase en profundidad desde 12 m: salir, cruzar el cuerpo y esperar. Momento: en paralelo al inicio.",
    "players": "",
    "duration": "15",
-   "material": "Balones, 4 conos, 2 miniporterías como dianas",
+   "material": "Balones, conos",
    "porN": [],
    "ilus": {
     "tokens": [
@@ -22,15 +22,15 @@
       "gk": true
      },
      {
-      "id": "b",
-      "kind": "ball",
-      "label": "",
+      "id": "j",
+      "kind": "away",
+      "label": "Pv",
       "gk": false
      },
      {
-      "id": "a1",
-      "kind": "away",
-      "label": "1",
+      "id": "b",
+      "kind": "ball",
+      "label": "",
       "gk": false
      }
     ],
@@ -41,12 +41,12 @@
         "x": 0.04,
         "y": 0.5
        },
-       "b": {
-        "x": 0.2,
-        "y": 0.48
+       "j": {
+        "x": 0.14,
+        "y": 0.5
        },
-       "a1": {
-        "x": 0.2,
+       "b": {
+        "x": 0.3,
         "y": 0.5
        }
       }
@@ -54,107 +54,80 @@
      {
       "pos": {
        "g1": {
-        "x": 0.04,
-        "y": 0.5
+        "x": 0.06,
+        "y": 0.44
+       },
+       "j": {
+        "x": 0.12,
+        "y": 0.38
        },
        "b": {
-        "x": 0.35,
-        "y": 0.2
-       },
-       "a1": {
-        "x": 0.08,
-        "y": 0.55
+        "x": 0.14,
+        "y": 0.5
        }
       }
-     }
-    ],
-    "conos": [
-     {
-      "x": 0.36,
-      "y": 0.2
-     },
-     {
-      "x": 0.36,
-      "y": 0.8
      }
     ]
    }
   },
   {
-   "id": "cl-salida-2p2-dos-campos",
-   "name": "Dualidades de salida P+2 contra 2 ante presión alta",
-   "category": "Táctica of.",
-   "objective": "Salir de la presión en pareja: arrastrar, ofrecer apoyo y usar a la portera de +1",
-   "desc": "Dos campos a la vez, uno en cada media pista, con una portera en cada uno. Campo 1: portera + 2 contra 2. Campo 2: portera + 1 contra 1, y la sobrante entra en cada cambio. Marcan en individual desde el saque y cambian si se cruzan, cantado por la de atrás. Si me siguen, arrastro; si no, ofrezco apoyo. Corte por delante si cambian y por detrás si siguen en individual. La portera conduce hasta fijar a una rival y solo entonces suelta. Punto si conducen o pasan a una de las 2 miniporterías del medio campo. Si la defensa roba, tiene 3\" para marcar en la portería grande. Series de 40\" de trabajo y 20\" de pausa; cambio de papeles y de campo cada 2 series.",
-   "players": "9",
-   "duration": "12",
-   "material": "4 miniporterías, petos",
+   "id": "cl-posesion-2x2c-v6",
+   "name": "Posesión 2x2 + comodina con 4 porterías de pase",
+   "category": "Posesión",
+   "objective": "Activar con pase tenso, perfil abierto y desmarque de apoyo",
+   "desc": "Cuadrado de 15x15 con una portería de 2 m en cada lado. 2x2 + comodina que juega con quien tiene el balón. Punto al pasar por cualquier portería a una compañera. Máximo 3 toques. Al robar, el equipo que roba juega con la comodina. 3 bloques de 2' con 20\" de pausa.",
+   "players": "5",
+   "duration": "7",
+   "material": "8 conos, petos",
+   "porteras": false,
    "porN": [
     {
      "rango": "6-7",
-     "txt": "Un solo campo P+2 contra 2; la sobrante entra en cada cambio."
+     "txt": "2x2 + comodina (con 6-7, dos comodinas)."
     },
     {
      "rango": "8-9",
-     "txt": "P+2 contra 2 en un campo y P+1 contra 1 en el otro; con 9, la sobrante entra en cada cambio."
+     "txt": "3x3 + comodina o 3x2 + 2 comodinas."
     },
     {
      "rango": "10-11",
-     "txt": "Dos campos P+2 contra 2; con 11, P+3 contra 3 en uno."
+     "txt": "4x4 + comodina en media pista."
     },
     {
      "rango": "12-14",
-     "txt": "Dos campos P+3 contra 3."
+     "txt": "Dos grupos 4x4 en paralelo."
     }
    ],
    "ilus": {
     "tokens": [
      {
-      "id": "P1",
-      "kind": "home",
-      "label": "P",
-      "gk": true
-     },
-     {
       "id": "h1",
       "kind": "home",
-      "label": "1",
+      "label": "",
       "gk": false
      },
      {
       "id": "h2",
       "kind": "home",
-      "label": "2",
-      "gk": false
-     },
-     {
-      "id": "P2",
-      "kind": "home",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "h3",
-      "kind": "home",
-      "label": "3",
+      "label": "",
       "gk": false
      },
      {
       "id": "a1",
       "kind": "away",
-      "label": "1",
+      "label": "",
       "gk": false
      },
      {
       "id": "a2",
       "kind": "away",
-      "label": "2",
+      "label": "",
       "gk": false
      },
      {
-      "id": "a3",
-      "kind": "away",
-      "label": "3",
+      "id": "c",
+      "kind": "home",
+      "label": "C",
       "gk": false
      },
      {
@@ -162,926 +135,300 @@
       "kind": "ball",
       "label": "",
       "gk": false
+     }
+    ],
+    "steps": [
+     {
+      "pos": {
+       "h1": {
+        "x": 0.62,
+        "y": 0.3
+       },
+       "h2": {
+        "x": 0.8,
+        "y": 0.65
+       },
+       "a1": {
+        "x": 0.68,
+        "y": 0.55
+       },
+       "a2": {
+        "x": 0.78,
+        "y": 0.35
+       },
+       "c": {
+        "x": 0.72,
+        "y": 0.18
+       },
+       "b": {
+        "x": 0.62,
+        "y": 0.32
+       }
+      }
      },
      {
-      "id": "s",
+      "pos": {
+       "h1": {
+        "x": 0.62,
+        "y": 0.3
+       },
+       "h2": {
+        "x": 0.86,
+        "y": 0.5
+       },
+       "a1": {
+        "x": 0.68,
+        "y": 0.55
+       },
+       "a2": {
+        "x": 0.78,
+        "y": 0.35
+       },
+       "c": {
+        "x": 0.72,
+        "y": 0.18
+       },
+       "b": {
+        "x": 0.72,
+        "y": 0.2
+       }
+      }
+     }
+    ],
+    "zonas": [
+     {
+      "x": 0.58,
+      "y": 0.12,
+      "w": 0.3,
+      "h": 0.76,
+      "label": "15x15"
+     }
+    ],
+    "conos": [
+     {
+      "x": 0.58,
+      "y": 0.45
+     },
+     {
+      "x": 0.58,
+      "y": 0.55
+     },
+     {
+      "x": 0.88,
+      "y": 0.45
+     },
+     {
+      "x": 0.88,
+      "y": 0.55
+     },
+     {
+      "x": 0.7,
+      "y": 0.12
+     },
+     {
+      "x": 0.76,
+      "y": 0.12
+     },
+     {
+      "x": 0.7,
+      "y": 0.88
+     },
+     {
+      "x": 0.76,
+      "y": 0.88
+     }
+    ]
+   }
+  },
+  {
+   "id": "cl-presion-alta-2-vs-p2-v6",
+   "name": "Presión alta 2 contra P+2: orientar a banda y robar",
+   "category": "Táctica def.",
+   "objective": "Presionar la salida rival: la primera orienta a banda y la segunda cierra el pase interior",
+   "desc": "Media pista con portería y portera. Ellas salen con portera + 2 (cierre y ala); nosotras presionamos con 2. La primera salta a la poseedora cerrando el pase interior y la lleva a banda; la segunda vigila el pase por dentro y salta si el balón va a banda. Si salen conduciendo o pasan a una de las 2 miniporterías del medio campo, punto para ellas. Si robamos, 4\" para marcar en la portería grande. La quinta jugadora entra en cada serie por la que defendía (todas rotan por los dos papeles). Series de 40\" y 20\" de pausa.",
+   "players": "6",
+   "duration": "12",
+   "material": "2 miniporterías, petos",
+   "porN": [
+    {
+     "rango": "6-7",
+     "txt": "2 contra P+2 y la sobrante rota cada serie."
+    },
+    {
+     "rango": "8-9",
+     "txt": "Dos campos: 2 contra P+2 en cada mitad (con 9, rota una)."
+    },
+    {
+     "rango": "10-11",
+     "txt": "2 contra P+2 en un campo y 3 contra P+3 en el otro."
+    },
+    {
+     "rango": "12-14",
+     "txt": "3 contra P+3 en las dos mitades."
+    }
+   ],
+   "ilus": {
+    "tokens": [
+     {
+      "id": "g1",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
+      "id": "a1",
+      "kind": "away",
+      "label": "C",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "A",
+      "gk": false
+     },
+     {
+      "id": "h1",
       "kind": "home",
-      "label": "S",
+      "label": "",
+      "gk": false
+     },
+     {
+      "id": "h2",
+      "kind": "home",
+      "label": "",
+      "gk": false
+     },
+     {
+      "id": "b",
+      "kind": "ball",
+      "label": "",
       "gk": false
      }
     ],
     "steps": [
      {
       "pos": {
-       "P1": {
+       "g1": {
         "x": 0.04,
         "y": 0.5
        },
-       "h1": {
-        "x": 0.14,
-        "y": 0.25
-       },
-       "h2": {
-        "x": 0.14,
-        "y": 0.75
-       },
-       "P2": {
-        "x": 0.96,
-        "y": 0.5
-       },
-       "h3": {
-        "x": 0.84,
-        "y": 0.42
-       },
        "a1": {
-        "x": 0.18,
+        "x": 0.14,
         "y": 0.3
        },
        "a2": {
-        "x": 0.18,
-        "y": 0.7
+        "x": 0.2,
+        "y": 0.78
        },
-       "a3": {
-        "x": 0.8,
-        "y": 0.46
+       "h1": {
+        "x": 0.3,
+        "y": 0.4
+       },
+       "h2": {
+        "x": 0.32,
+        "y": 0.66
        },
        "b": {
-        "x": 0.06,
+        "x": 0.05,
         "y": 0.5
-       },
-       "s": {
-        "x": 0.5,
-        "y": 0.04
        }
       }
      },
      {
       "pos": {
-       "P1": {
-        "x": 0.15,
+       "g1": {
+        "x": 0.04,
         "y": 0.5
-       },
-       "h1": {
-        "x": 0.3,
-        "y": 0.12
-       },
-       "h2": {
-        "x": 0.14,
-        "y": 0.75
-       },
-       "P2": {
-        "x": 0.96,
-        "y": 0.5
-       },
-       "h3": {
-        "x": 0.84,
-        "y": 0.42
        },
        "a1": {
-        "x": 0.17,
-        "y": 0.45
+        "x": 0.14,
+        "y": 0.3
        },
        "a2": {
-        "x": 0.18,
-        "y": 0.7
+        "x": 0.2,
+        "y": 0.78
        },
-       "a3": {
-        "x": 0.8,
-        "y": 0.46
+       "h1": {
+        "x": 0.18,
+        "y": 0.34
+       },
+       "h2": {
+        "x": 0.24,
+        "y": 0.6
        },
        "b": {
-        "x": 0.3,
-        "y": 0.15
-       },
-       "s": {
-        "x": 0.5,
-        "y": 0.04
+        "x": 0.14,
+        "y": 0.32
        }
       }
      }
     ],
     "miniporterias": [
      {
-      "x": 0.49,
-      "y": 0.2,
+      "x": 0.48,
+      "y": 0.3,
       "vertical": true
      },
      {
-      "x": 0.49,
-      "y": 0.8,
-      "vertical": true
-     },
-     {
-      "x": 0.51,
-      "y": 0.2,
-      "vertical": true
-     },
-     {
-      "x": 0.51,
-      "y": 0.8,
+      "x": 0.48,
+      "y": 0.7,
       "vertical": true
      }
     ]
    }
   },
   {
-   "id": "cl-salida-3x3-pivot-continua",
-   "name": "Salida 3x3+1 contra presión alta: atraer y lanzar a la pívot",
-   "category": "Táctica of.",
-   "objective": "Atraer la presión alta, fijar y lanzar a la pívot cuando se abre la línea de pase",
-   "desc": "Pista entera con las dos porteras. Portera + 3 salen contra 3 que presionan alto en individual, con cambios cantados. Una pívot comodín, en campo rival, juega siempre con el equipo que ataca (+1). Corte por un lado o corte doble para abrir el pase a la pívot; ella descarga de cara. Gol tras pared = 2, otro gol = 1. Si la defensa roba, tiene 5\" para marcar en la portería contraria. Al acabar la acción, sale el otro equipo desde su portera, sin pausa. 3 bloques de 3' con 45\" de pausa; la pívot rota en cada bloque.",
-   "players": "9",
-   "duration": "12",
-   "material": "Petos",
-   "porN": [
-    {
-     "rango": "6-7",
-     "txt": "P+2 contra 2 + pívot comodín, en 3/4 de pista."
-    },
-    {
-     "rango": "8-9",
-     "txt": "P+3 contra 3 + pívot; con 9, las dos sobrantes rotan de pívot."
-    },
-    {
-     "rango": "10-11",
-     "txt": "P+3 contra 3 + pívot; la sobrante entra en cada bloque."
-    },
-    {
-     "rango": "12-14",
-     "txt": "P+4 contra 4 + pívot y tercer grupo que entra por la que pierde."
-    }
-   ],
-   "ilus": {
-    "tokens": [
-     {
-      "id": "P1",
-      "kind": "home",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "h1",
-      "kind": "home",
-      "label": "1",
-      "gk": false
-     },
-     {
-      "id": "h2",
-      "kind": "home",
-      "label": "2",
-      "gk": false
-     },
-     {
-      "id": "h3",
-      "kind": "home",
-      "label": "3",
-      "gk": false
-     },
-     {
-      "id": "Q2",
-      "kind": "away",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "a1",
-      "kind": "away",
-      "label": "1",
-      "gk": false
-     },
-     {
-      "id": "a2",
-      "kind": "away",
-      "label": "2",
-      "gk": false
-     },
-     {
-      "id": "a3",
-      "kind": "away",
-      "label": "3",
-      "gk": false
-     },
-     {
-      "id": "a4",
-      "kind": "away",
-      "label": "C",
-      "gk": false
-     },
-     {
-      "id": "b",
-      "kind": "ball",
-      "label": "",
-      "gk": false
-     }
-    ],
-    "steps": [
-     {
-      "pos": {
-       "P1": {
-        "x": 0.04,
-        "y": 0.5
-       },
-       "h1": {
-        "x": 0.16,
-        "y": 0.2
-       },
-       "h2": {
-        "x": 0.16,
-        "y": 0.8
-       },
-       "h3": {
-        "x": 0.28,
-        "y": 0.5
-       },
-       "Q2": {
-        "x": 0.96,
-        "y": 0.5
-       },
-       "a1": {
-        "x": 0.2,
-        "y": 0.27
-       },
-       "a2": {
-        "x": 0.2,
-        "y": 0.73
-       },
-       "a3": {
-        "x": 0.32,
-        "y": 0.5
-       },
-       "a4": {
-        "x": 0.72,
-        "y": 0.5
-       },
-       "b": {
-        "x": 0.28,
-        "y": 0.5
-       }
-      }
-     },
-     {
-      "pos": {
-       "P1": {
-        "x": 0.04,
-        "y": 0.5
-       },
-       "h1": {
-        "x": 0.36,
-        "y": 0.12
-       },
-       "h2": {
-        "x": 0.16,
-        "y": 0.8
-       },
-       "h3": {
-        "x": 0.5,
-        "y": 0.5
-       },
-       "Q2": {
-        "x": 0.96,
-        "y": 0.5
-       },
-       "a1": {
-        "x": 0.32,
-        "y": 0.15
-       },
-       "a2": {
-        "x": 0.2,
-        "y": 0.73
-       },
-       "a3": {
-        "x": 0.32,
-        "y": 0.5
-       },
-       "a4": {
-        "x": 0.72,
-        "y": 0.5
-       },
-       "b": {
-        "x": 0.72,
-        "y": 0.48
-       }
-      }
-     }
-    ]
-   }
-  },
-  {
-   "id": "cl-salida-40-presion-media",
-   "name": "Salida 4-0 contra presión alta mixta (4+P contra 3+P)",
-   "category": "Táctica of.",
-   "objective": "Salir en 4-0 temporizando ante una presión alta que mezcla individual y cambios",
-   "desc": "Pista entera con las dos porteras, 4 contra 3. El equipo B presiona alto como el Leganés: individual orientada a banda y, en cada cruce, puede cambiar; queda libre la más lejana al balón, y B salta a ella si llega el pase. El equipo A sale con portera y libre elección: corte por un lado, corte doble o ala que divide y poste que amplía. Si cambian, corte por delante y continuación del bloqueo; si siguen en individual, corte por detrás. La portera conduce hasta fijar y suelta. Cruzar media pista con el balón controlado = 1; gol = 2; superar la presión sin perder y marcar en 6\" = 3. Si B roba, tiene 5\" para marcar en la portería de A. Consigna: «fijar antes de soltar» y, tras perder, presión inmediata a la poseedora. Bloques de 2' con 20\" de pausa; una jugadora de A pasa a B en cada bloque, para que todas salgan y todas presionen.",
-   "players": "9",
-   "duration": "12",
-   "material": "Petos",
-   "porN": [
-    {
-     "rango": "6-7",
-     "txt": "3+P contra 3+P en 3/4 de pista."
-    },
-    {
-     "rango": "8-9",
-     "txt": "4+P contra 3+P; rota una jugadora de equipo en cada bloque. Con 8, 3+P contra 3+P."
-    },
-    {
-     "rango": "10-11",
-     "txt": "4+P contra 4+P; con 11, la sobrante entra cada bloque."
-    },
-    {
-     "rango": "12-14",
-     "txt": "4+P contra 4+P; tercer equipo entra por el que pierde."
-    }
-   ],
-   "ilus": {
-    "tokens": [
-     {
-      "id": "P1",
-      "kind": "home",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "h1",
-      "kind": "home",
-      "label": "1",
-      "gk": false
-     },
-     {
-      "id": "h2",
-      "kind": "home",
-      "label": "2",
-      "gk": false
-     },
-     {
-      "id": "h3",
-      "kind": "home",
-      "label": "3",
-      "gk": false
-     },
-     {
-      "id": "h4",
-      "kind": "home",
-      "label": "4",
-      "gk": false
-     },
-     {
-      "id": "Q2",
-      "kind": "away",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "a1",
-      "kind": "away",
-      "label": "1",
-      "gk": false
-     },
-     {
-      "id": "a2",
-      "kind": "away",
-      "label": "2",
-      "gk": false
-     },
-     {
-      "id": "a3",
-      "kind": "away",
-      "label": "3",
-      "gk": false
-     },
-     {
-      "id": "b",
-      "kind": "ball",
-      "label": "",
-      "gk": false
-     }
-    ],
-    "steps": [
-     {
-      "pos": {
-       "P1": {
-        "x": 0.04,
-        "y": 0.5
-       },
-       "h1": {
-        "x": 0.16,
-        "y": 0.2
-       },
-       "h2": {
-        "x": 0.16,
-        "y": 0.8
-       },
-       "h3": {
-        "x": 0.3,
-        "y": 0.3
-       },
-       "h4": {
-        "x": 0.3,
-        "y": 0.7
-       },
-       "Q2": {
-        "x": 0.96,
-        "y": 0.5
-       },
-       "a1": {
-        "x": 0.2,
-        "y": 0.26
-       },
-       "a2": {
-        "x": 0.2,
-        "y": 0.74
-       },
-       "a3": {
-        "x": 0.34,
-        "y": 0.34
-       },
-       "b": {
-        "x": 0.05,
-        "y": 0.5
-       }
-      }
-     },
-     {
-      "pos": {
-       "P1": {
-        "x": 0.14,
-        "y": 0.5
-       },
-       "h1": {
-        "x": 0.34,
-        "y": 0.12
-       },
-       "h2": {
-        "x": 0.16,
-        "y": 0.8
-       },
-       "h3": {
-        "x": 0.5,
-        "y": 0.45
-       },
-       "h4": {
-        "x": 0.3,
-        "y": 0.7
-       },
-       "Q2": {
-        "x": 0.96,
-        "y": 0.5
-       },
-       "a1": {
-        "x": 0.17,
-        "y": 0.42
-       },
-       "a2": {
-        "x": 0.2,
-        "y": 0.74
-       },
-       "a3": {
-        "x": 0.36,
-        "y": 0.22
-       },
-       "b": {
-        "x": 0.5,
-        "y": 0.43
-       }
-      }
-     }
-    ]
-   }
-  },
-  {
-   "id": "cl-presion-poseedora-2x2-duelos",
-   "name": "Presión a la poseedora: duelos 2x2 en dos cuadrados",
+   "id": "cl-presion-alta-3-vs-p2-v6",
+   "name": "Presión alta 3 contra P+2: saltar a la portera y cambios",
    "category": "Táctica def.",
-   "objective": "Corregir la presión a la jugadora con balón: llegar en el pase, perfil y no dejar girar",
-   "desc": "Dos cuadrados de 15x15, cada uno con una portera de pasadora. Cuadrado 1: 2x2. Cuadrado 2: 1x1, con la sobrante de segunda pasadora. La pasadora mete el balón a una atacante de espaldas; la defensora más cercana llega mientras viaja el balón, a un brazo, cerrando el lado fuerte, y en el 2x2 la segunda tapa el pase interior. Atacantes: punto si giran y conducen por la línea contraria. Defensoras: punto si roban o si la poseedora no gira en 4\"; tras robo, conducir a la línea de salida = punto doble. Series de 30\" y 15\" de pausa, con cambio de papeles y de cuadrado.",
-   "players": "9",
-   "duration": "10",
-   "material": "Conos, balones, petos",
-   "porN": [
-    {
-     "rango": "6-7",
-     "txt": "Un cuadrado 2x2 y un 1x1 al lado, con portera pasadora."
-    },
-    {
-     "rango": "8-9",
-     "txt": "2x2 en un cuadrado y 1x1 en el otro; con 9, la sobrante hace de segunda pasadora."
-    },
-    {
-     "rango": "10-11",
-     "txt": "Dos cuadrados 2x2; con 11, tres cuadrados con 1x1."
-    },
-    {
-     "rango": "12-14",
-     "txt": "Tres cuadrados 2x2."
-    }
-   ],
-   "ilus": {
-    "tokens": [
-     {
-      "id": "h1",
-      "kind": "home",
-      "label": "1",
-      "gk": false
-     },
-     {
-      "id": "h2",
-      "kind": "home",
-      "label": "2",
-      "gk": false
-     },
-     {
-      "id": "a1",
-      "kind": "away",
-      "label": "1",
-      "gk": false
-     },
-     {
-      "id": "a2",
-      "kind": "away",
-      "label": "2",
-      "gk": false
-     },
-     {
-      "id": "P1",
-      "kind": "home",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "b",
-      "kind": "ball",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "h3",
-      "kind": "home",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "a3",
-      "kind": "away",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "P2",
-      "kind": "home",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "s",
-      "kind": "home",
-      "label": "S",
-      "gk": false
-     }
-    ],
-    "steps": [
-     {
-      "pos": {
-       "h1": {
-        "x": 0.25,
-        "y": 0.3
-       },
-       "h2": {
-        "x": 0.35,
-        "y": 0.65
-       },
-       "a1": {
-        "x": 0.18,
-        "y": 0.2
-       },
-       "a2": {
-        "x": 0.4,
-        "y": 0.75
-       },
-       "P1": {
-        "x": 0.08,
-        "y": 0.45
-       },
-       "b": {
-        "x": 0.08,
-        "y": 0.45
-       },
-       "h3": {
-        "x": 0.72,
-        "y": 0.5
-       },
-       "a3": {
-        "x": 0.66,
-        "y": 0.38
-       },
-       "P2": {
-        "x": 0.93,
-        "y": 0.5
-       },
-       "s": {
-        "x": 0.72,
-        "y": 0.05
-       }
-      }
-     },
-     {
-      "pos": {
-       "h1": {
-        "x": 0.25,
-        "y": 0.3
-       },
-       "h2": {
-        "x": 0.35,
-        "y": 0.65
-       },
-       "a1": {
-        "x": 0.24,
-        "y": 0.33
-       },
-       "a2": {
-        "x": 0.33,
-        "y": 0.5
-       },
-       "P1": {
-        "x": 0.08,
-        "y": 0.45
-       },
-       "b": {
-        "x": 0.25,
-        "y": 0.3
-       },
-       "h3": {
-        "x": 0.72,
-        "y": 0.5
-       },
-       "a3": {
-        "x": 0.7,
-        "y": 0.45
-       },
-       "P2": {
-        "x": 0.93,
-        "y": 0.5
-       },
-       "s": {
-        "x": 0.72,
-        "y": 0.05
-       }
-      }
-     }
-    ],
-    "zonas": [
-     {
-      "x": 0.1,
-      "y": 0.1,
-      "w": 0.35,
-      "h": 0.8,
-      "label": "2x2"
-     },
-     {
-      "x": 0.55,
-      "y": 0.1,
-      "w": 0.35,
-      "h": 0.8,
-      "label": "1x1"
-     }
-    ]
-   }
-  },
-  {
-   "id": "cl-presion-tras-perdida-4x4",
-   "name": "Presión tras pérdida 3x3 + comodina con porteras objetivo",
-   "category": "Transiciones",
-   "objective": "Presionar alto los 5 segundos tras perder, con la más cercana a la poseedora y balance al eje",
-   "desc": "Zona central de 25x20, 3x3 + una comodina que juega con quien tiene el balón, y una portera objetivo en cada lado. Con balón: 4 pases y pase a la portera del lado que ataca = punto. Al perder, el equipo tiene 5\" para recuperar, contados en voz alta: si recupera, 2 puntos. Si la poseedora sale conduciendo por la línea contraria, punto para ella. Prioridad: la más cercana presiona, el ala contraria se cierra al eje. La comodina cambia en cada serie. Series de 1' 30\" y 30\" de pausa.",
-   "players": "9",
-   "duration": "10",
-   "material": "Conos, petos",
-   "porN": [
-    {
-     "rango": "6-7",
-     "txt": "3x3 con porteras objetivo."
-    },
-    {
-     "rango": "8-9",
-     "txt": "3x3 + comodina con porteras objetivo; con 8, 3x3 y sin comodina."
-    },
-    {
-     "rango": "10-11",
-     "txt": "4x4 con porteras objetivo; con 11, la sobrante entra en cada serie."
-    },
-    {
-     "rango": "12-14",
-     "txt": "Dos zonas 4x4 en paralelo."
-    }
-   ],
-   "ilus": {
-    "tokens": [
-     {
-      "id": "P1",
-      "kind": "home",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "h1",
-      "kind": "home",
-      "label": "1",
-      "gk": false
-     },
-     {
-      "id": "h2",
-      "kind": "home",
-      "label": "2",
-      "gk": false
-     },
-     {
-      "id": "h3",
-      "kind": "home",
-      "label": "3",
-      "gk": false
-     },
-     {
-      "id": "h4",
-      "kind": "home",
-      "label": "C",
-      "gk": false
-     },
-     {
-      "id": "Q2",
-      "kind": "away",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "a1",
-      "kind": "away",
-      "label": "1",
-      "gk": false
-     },
-     {
-      "id": "a2",
-      "kind": "away",
-      "label": "2",
-      "gk": false
-     },
-     {
-      "id": "a3",
-      "kind": "away",
-      "label": "3",
-      "gk": false
-     },
-     {
-      "id": "b",
-      "kind": "ball",
-      "label": "",
-      "gk": false
-     }
-    ],
-    "steps": [
-     {
-      "pos": {
-       "P1": {
-        "x": 0.1,
-        "y": 0.5
-       },
-       "h1": {
-        "x": 0.3,
-        "y": 0.25
-       },
-       "h2": {
-        "x": 0.3,
-        "y": 0.75
-       },
-       "h3": {
-        "x": 0.45,
-        "y": 0.4
-       },
-       "h4": {
-        "x": 0.45,
-        "y": 0.65
-       },
-       "Q2": {
-        "x": 0.9,
-        "y": 0.5
-       },
-       "a1": {
-        "x": 0.52,
-        "y": 0.3
-       },
-       "a2": {
-        "x": 0.52,
-        "y": 0.7
-       },
-       "a3": {
-        "x": 0.65,
-        "y": 0.25
-       },
-       "b": {
-        "x": 0.5,
-        "y": 0.33
-       }
-      }
-     },
-     {
-      "pos": {
-       "P1": {
-        "x": 0.1,
-        "y": 0.5
-       },
-       "h1": {
-        "x": 0.42,
-        "y": 0.3
-       },
-       "h2": {
-        "x": 0.3,
-        "y": 0.75
-       },
-       "h3": {
-        "x": 0.5,
-        "y": 0.33
-       },
-       "h4": {
-        "x": 0.5,
-        "y": 0.55
-       },
-       "Q2": {
-        "x": 0.9,
-        "y": 0.5
-       },
-       "a1": {
-        "x": 0.52,
-        "y": 0.3
-       },
-       "a2": {
-        "x": 0.52,
-        "y": 0.7
-       },
-       "a3": {
-        "x": 0.65,
-        "y": 0.25
-       },
-       "b": {
-        "x": 0.6,
-        "y": 0.25
-       }
-      }
-     }
-    ],
-    "zonas": [
-     {
-      "x": 0.2,
-      "y": 0.1,
-      "w": 0.6,
-      "h": 0.8,
-      "label": "25x20"
-     }
-    ]
-   }
-  },
-  {
-   "id": "cl-partido-salida-limpia",
-   "name": "Partido 3x3 + comodina + porteras: salida limpia vale doble",
-   "category": "Juego",
-   "objective": "Aplicar la salida temporizada y la presión a la poseedora en juego real",
-   "desc": "Pista entera, 3x3 + porteras + una comodina que ataca con quien tiene el balón. Gol tras salida limpia desde la portera (sin perder antes de media pista) = 2. Gol tras recuperar en campo rival = 2 (premia presionar). Otro gol = 1. La comodina cambia cada 2'. 2 x 7' con 1' de pausa y cambio de campo.",
-   "players": "9",
-   "duration": "15",
+   "objective": "Presión completa en individual con cambios, saltando a la portera tras pase atrás",
+   "desc": "Media pista. Ellas salen con portera + 2; nosotras presionamos con 3 en individual y con cambios (los canta la de atrás). La tercera vigila el pase largo y salta a la portera cuando le devuelven el balón. Punto para ellas si superan la línea de medio campo conduciendo o con pase. Si robamos, 4\" para marcar. Igualdad 3 contra 3 contando a la portera. Series de 40\" / 20\"; cada 3 series cambian los papeles (nuestras 3 pasan a salir con la portera).",
+   "players": "6",
+   "duration": "12",
    "material": "Petos",
    "porN": [
     {
      "rango": "6-7",
-     "txt": "3x3 + porteras en 3/4 de pista."
+     "txt": "3 contra P+2."
     },
     {
      "rango": "8-9",
-     "txt": "3x3 + porteras; con 9, comodina que ataca con quien tiene el balón."
+     "txt": "3 contra P+3 (con 8-9, la sobrante rota por serie)."
     },
     {
      "rango": "10-11",
-     "txt": "4x4 + porteras tal cual."
+     "txt": "Dos campos: 3 contra P+2 y 2 contra P+2."
     },
     {
      "rango": "12-14",
-     "txt": "Tres equipos de 4: el que encaja sale."
+     "txt": "Dos campos 3 contra P+3."
     }
    ],
    "ilus": {
     "tokens": [
      {
       "id": "g1",
-      "kind": "home",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "g2",
       "kind": "away",
       "label": "P",
       "gk": true
      },
      {
+      "id": "a1",
+      "kind": "away",
+      "label": "C",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "A",
+      "gk": false
+     },
+     {
       "id": "h1",
       "kind": "home",
-      "label": "C",
+      "label": "",
       "gk": false
      },
      {
@@ -1093,30 +440,6 @@
      {
       "id": "h3",
       "kind": "home",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "h4",
-      "kind": "home",
-      "label": "C",
-      "gk": false
-     },
-     {
-      "id": "a1",
-      "kind": "away",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "a2",
-      "kind": "away",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "a3",
-      "kind": "away",
       "label": "",
       "gk": false
      },
@@ -1134,36 +457,56 @@
         "x": 0.04,
         "y": 0.5
        },
-       "g2": {
-        "x": 0.96,
-        "y": 0.5
+       "a1": {
+        "x": 0.14,
+        "y": 0.28
+       },
+       "a2": {
+        "x": 0.2,
+        "y": 0.75
        },
        "h1": {
-        "x": 0.15,
-        "y": 0.5
+        "x": 0.22,
+        "y": 0.36
        },
        "h2": {
-        "x": 0.3,
-        "y": 0.2
+        "x": 0.28,
+        "y": 0.66
        },
        "h3": {
-        "x": 0.3,
-        "y": 0.8
+        "x": 0.36,
+        "y": 0.5
        },
-       "h4": {
-        "x": 0.48,
+       "b": {
+        "x": 0.14,
+        "y": 0.3
+       }
+      }
+     },
+     {
+      "pos": {
+       "g1": {
+        "x": 0.04,
         "y": 0.5
        },
        "a1": {
-        "x": 0.45,
-        "y": 0.35
+        "x": 0.14,
+        "y": 0.28
        },
        "a2": {
-        "x": 0.45,
-        "y": 0.65
+        "x": 0.2,
+        "y": 0.75
        },
-       "a3": {
-        "x": 0.6,
+       "h1": {
+        "x": 0.16,
+        "y": 0.3
+       },
+       "h2": {
+        "x": 0.28,
+        "y": 0.66
+       },
+       "h3": {
+        "x": 0.1,
         "y": 0.5
        },
        "b": {
@@ -1171,712 +514,35 @@
         "y": 0.5
        }
       }
-     },
-     {
-      "pos": {
-       "g1": {
-        "x": 0.04,
-        "y": 0.5
-       },
-       "g2": {
-        "x": 0.96,
-        "y": 0.5
-       },
-       "h1": {
-        "x": 0.15,
-        "y": 0.5
-       },
-       "h2": {
-        "x": 0.3,
-        "y": 0.2
-       },
-       "h3": {
-        "x": 0.3,
-        "y": 0.8
-       },
-       "h4": {
-        "x": 0.48,
-        "y": 0.5
-       },
-       "a1": {
-        "x": 0.45,
-        "y": 0.35
-       },
-       "a2": {
-        "x": 0.45,
-        "y": 0.65
-       },
-       "a3": {
-        "x": 0.6,
-        "y": 0.5
-       },
-       "b": {
-        "x": 0.3,
-        "y": 0.22
-       }
-      }
      }
     ]
    }
   },
   {
-   "id": "cl-gk-tiro-lejano-pj",
-   "name": "Porteras: tiros desde fuera y colocación ante 5x4",
-   "category": "Portería",
-   "objective": "Posición base y blocaje ante tiros lejanos y segundas jugadas del 5x4",
-   "desc": "Con Julia, en paralelo al rondo y la posesión. 1) Desplazamiento lateral y blocaje de tiros desde 12-15 m por los dos lados (2 x 6 por portera). 2) Tiro + rechace: la portera bloca o desvía fuera y se recoloca para el segundo balón. 3) Colocación ante circulación 5x4 simulada con 5 balones en semicírculo: Julia señala el balón y la portera ajusta posición. Momento: en paralelo al inicio.",
-   "players": "",
-   "duration": "15",
-   "material": "10 balones, conos",
-   "porN": [],
-   "ilus": {
-    "tokens": [
-     {
-      "id": "g1",
-      "kind": "home",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "b1",
-      "kind": "ball",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "b2",
-      "kind": "ball",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "b3",
-      "kind": "ball",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "b4",
-      "kind": "ball",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "b5",
-      "kind": "ball",
-      "label": "",
-      "gk": false
-     }
-    ],
-    "steps": [
-     {
-      "pos": {
-       "g1": {
-        "x": 0.04,
-        "y": 0.5
-       },
-       "b1": {
-        "x": 0.25,
-        "y": 0.2
-       },
-       "b2": {
-        "x": 0.3,
-        "y": 0.4
-       },
-       "b3": {
-        "x": 0.3,
-        "y": 0.6
-       },
-       "b4": {
-        "x": 0.25,
-        "y": 0.8
-       },
-       "b5": {
-        "x": 0.38,
-        "y": 0.5
-       }
-      }
-     },
-     {
-      "pos": {
-       "g1": {
-        "x": 0.06,
-        "y": 0.42
-       },
-       "b1": {
-        "x": 0.25,
-        "y": 0.2
-       },
-       "b2": {
-        "x": 0.3,
-        "y": 0.4
-       },
-       "b3": {
-        "x": 0.3,
-        "y": 0.6
-       },
-       "b4": {
-        "x": 0.25,
-        "y": 0.8
-       },
-       "b5": {
-        "x": 0.38,
-        "y": 0.5
-       }
-      }
-     }
-    ]
-   }
-  },
-  {
-   "id": "cl-posesion-activacion-4x3",
-   "name": "Posesión de activación 4x3 con cambio de rol",
-   "category": "Posesión",
-   "objective": "Activar con posesión rápida en inferioridad y superioridad",
-   "desc": "Media pista, sin porteras. 4 contra 3: 6 pases = punto. Al robar, las 3 suman a la que perdió el balón y pasan a atacar 4x3; quien roba y suma 3 pases seguidos gana 2 puntos. 3 bloques de 2' con 30\" de pausa.",
-   "players": "7",
-   "duration": "7",
-   "material": "Petos, conos",
-   "porN": [
-    {
-     "rango": "6-7",
-     "txt": "4x3 sin cambios o 3x3 con comodina."
-    },
-    {
-     "rango": "8-9",
-     "txt": "4x3; con 8-9, comodina que juega con quien tiene balón."
-    },
-    {
-     "rango": "10-11",
-     "txt": "5x4 en 3/4 de pista."
-    },
-    {
-     "rango": "12-14",
-     "txt": "Dos grupos 4x3 o 6x5."
-    }
-   ],
-   "ilus": {
-    "tokens": [
-     {
-      "id": "h1",
-      "kind": "home",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "h2",
-      "kind": "home",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "h3",
-      "kind": "home",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "h4",
-      "kind": "home",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "a1",
-      "kind": "away",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "a2",
-      "kind": "away",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "a3",
-      "kind": "away",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "b",
-      "kind": "ball",
-      "label": "",
-      "gk": false
-     }
-    ],
-    "steps": [
-     {
-      "pos": {
-       "h1": {
-        "x": 0.6,
-        "y": 0.2
-       },
-       "h2": {
-        "x": 0.9,
-        "y": 0.2
-       },
-       "h3": {
-        "x": 0.6,
-        "y": 0.8
-       },
-       "h4": {
-        "x": 0.9,
-        "y": 0.8
-       },
-       "a1": {
-        "x": 0.72,
-        "y": 0.4
-       },
-       "a2": {
-        "x": 0.78,
-        "y": 0.6
-       },
-       "a3": {
-        "x": 0.68,
-        "y": 0.6
-       },
-       "b": {
-        "x": 0.6,
-        "y": 0.22
-       }
-      }
-     },
-     {
-      "pos": {
-       "h1": {
-        "x": 0.6,
-        "y": 0.2
-       },
-       "h2": {
-        "x": 0.9,
-        "y": 0.2
-       },
-       "h3": {
-        "x": 0.6,
-        "y": 0.8
-       },
-       "h4": {
-        "x": 0.9,
-        "y": 0.8
-       },
-       "a1": {
-        "x": 0.72,
-        "y": 0.4
-       },
-       "a2": {
-        "x": 0.78,
-        "y": 0.6
-       },
-       "a3": {
-        "x": 0.68,
-        "y": 0.6
-       },
-       "b": {
-        "x": 0.88,
-        "y": 0.22
-       }
-      }
-     }
-    ],
-    "zonas": [
-     {
-      "x": 0.52,
-      "y": 0.05,
-      "w": 0.45,
-      "h": 0.9,
-      "label": "Media pista"
-     }
-    ]
-   },
-   "porteras": false
-  },
-  {
-   "id": "cl-presion-alta-3x3",
-   "name": "Presión alta 3x3: orientar a banda y cerrar el pase",
+   "id": "cl-defensa-pivot-detras-v6",
+   "name": "Defensa de la pívot por detrás: 1x1 + 3 apoyos",
    "category": "Táctica def.",
-   "objective": "Presionar alto en individual, orientar a banda y cambiar con la voz de la de atrás",
-   "desc": "3/4 de pista con las dos porteras. El equipo A sale desde su portera y el B presiona alto: 3x3 individual, orientando a banda; cuando una compañera es superada o ante un bloqueo se cambia, y lo canta la de atrás. Sin cambio, el bloqueo se pasa por delante. Si A cruza media pista con el balón controlado, ataca a la portería rival. Si B roba, tiene 5\" para marcar y 2 puntos si lo hace. Series de 40\" con 20\" de pausa; cambio de papeles cada 2 series. La sobrante entra en cada cambio.",
-   "players": "8",
+   "objective": "Defender a la pívot por detrás, sin dejarla girar ni recibir de cara",
+   "desc": "Frente a la portería con portera. Pívot de espaldas contra defensora; tres apoyos (dos en banda y uno en el centro a 12 m) le buscan el pase. La defensora va por detrás, con contacto y sin entrar a la primera; si la pívot descarga y vuelve a recibir, acompaña sin saltar. La pívot tiene 4\" para girar y tirar o descargar al apoyo que rompe. Si la defensora roba, pase a un apoyo = punto. Cambio de roles cada 4 acciones: todas pasan por pívot y por defensora.",
+   "players": "6",
    "duration": "12",
-   "material": "Petos, conos",
-   "porN": [
-    {
-     "rango": "6-7",
-     "txt": "2x2 + porteras en 3/4 de pista."
-    },
-    {
-     "rango": "8-9",
-     "txt": "3x3 + porteras; la sobrante entra en cada cambio."
-    },
-    {
-     "rango": "10-11",
-     "txt": "4x4 + porteras en 3/4 de pista."
-    },
-    {
-     "rango": "12-14",
-     "txt": "Dos grupos 3x3 + porteras alternando series."
-    }
-   ],
-   "ilus": {
-    "tokens": [
-     {
-      "id": "h1",
-      "kind": "home",
-      "label": "1",
-      "gk": false
-     },
-     {
-      "id": "h2",
-      "kind": "home",
-      "label": "2",
-      "gk": false
-     },
-     {
-      "id": "h3",
-      "kind": "home",
-      "label": "3",
-      "gk": false
-     },
-     {
-      "id": "Q1",
-      "kind": "home",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "P1",
-      "kind": "away",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "a1",
-      "kind": "away",
-      "label": "1",
-      "gk": false
-     },
-     {
-      "id": "a2",
-      "kind": "away",
-      "label": "2",
-      "gk": false
-     },
-     {
-      "id": "a3",
-      "kind": "away",
-      "label": "3",
-      "gk": false
-     },
-     {
-      "id": "b",
-      "kind": "ball",
-      "label": "",
-      "gk": false
-     }
-    ],
-    "steps": [
-     {
-      "pos": {
-       "h1": {
-        "x": 0.22,
-        "y": 0.28
-       },
-       "h2": {
-        "x": 0.22,
-        "y": 0.72
-       },
-       "h3": {
-        "x": 0.34,
-        "y": 0.5
-       },
-       "Q1": {
-        "x": 0.96,
-        "y": 0.5
-       },
-       "P1": {
-        "x": 0.04,
-        "y": 0.5
-       },
-       "a1": {
-        "x": 0.16,
-        "y": 0.22
-       },
-       "a2": {
-        "x": 0.16,
-        "y": 0.78
-       },
-       "a3": {
-        "x": 0.28,
-        "y": 0.5
-       },
-       "b": {
-        "x": 0.16,
-        "y": 0.78
-       }
-      }
-     },
-     {
-      "pos": {
-       "h1": {
-        "x": 0.22,
-        "y": 0.28
-       },
-       "h2": {
-        "x": 0.18,
-        "y": 0.84
-       },
-       "h3": {
-        "x": 0.24,
-        "y": 0.68
-       },
-       "Q1": {
-        "x": 0.96,
-        "y": 0.5
-       },
-       "P1": {
-        "x": 0.04,
-        "y": 0.5
-       },
-       "a1": {
-        "x": 0.16,
-        "y": 0.22
-       },
-       "a2": {
-        "x": 0.2,
-        "y": 0.9
-       },
-       "a3": {
-        "x": 0.28,
-        "y": 0.5
-       },
-       "b": {
-        "x": 0.2,
-        "y": 0.9
-       }
-      }
-     }
-    ],
-    "conos": [
-     {
-      "x": 0.5,
-      "y": 0.05
-     },
-     {
-      "x": 0.5,
-      "y": 0.95
-     }
-    ]
-   }
-  },
-  {
-   "id": "cl-presion-alta-4x4",
-   "name": "Presión alta 4x4: completa y gol tras robo",
-   "category": "Táctica def.",
-   "objective": "Ordenar la presión alta completa contra una salida con portera",
-   "desc": "Pista entera. Equipo A sale con portera + 3; equipo B presiona con 4 y su portera. Presión orientada a banda, con cambios cantados por la de atrás; si A supera la presión, repliegue al eje hasta unos 10 m. Si B roba, contraataque directo: gol en menos de 6\" = 2. Si A llega a portería rival, gol = 1. Bloques de 2' 30\" con 30\" de pausa; cambio de papeles entre bloques.",
-   "players": "9",
-   "duration": "12",
-   "material": "Petos",
-   "porN": [
-    {
-     "rango": "6-7",
-     "txt": "P+2 contra 3 + portera en 3/4 de pista."
-    },
-    {
-     "rango": "8-9",
-     "txt": "P+3 contra 4 + portera; con 9, la sobrante entra en cada cambio."
-    },
-    {
-     "rango": "10-11",
-     "txt": "P+4 contra 4 + portera."
-    },
-    {
-     "rango": "12-14",
-     "txt": "P+4 contra 4 + portera y tercer equipo que entra por el que pierde."
-    }
-   ],
-   "ilus": {
-    "tokens": [
-     {
-      "id": "h1",
-      "kind": "home",
-      "label": "1",
-      "gk": false
-     },
-     {
-      "id": "h2",
-      "kind": "home",
-      "label": "2",
-      "gk": false
-     },
-     {
-      "id": "h3",
-      "kind": "home",
-      "label": "3",
-      "gk": false
-     },
-     {
-      "id": "h4",
-      "kind": "home",
-      "label": "4",
-      "gk": false
-     },
-     {
-      "id": "Q1",
-      "kind": "home",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "P1",
-      "kind": "away",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "a1",
-      "kind": "away",
-      "label": "1",
-      "gk": false
-     },
-     {
-      "id": "a2",
-      "kind": "away",
-      "label": "2",
-      "gk": false
-     },
-     {
-      "id": "a3",
-      "kind": "away",
-      "label": "3",
-      "gk": false
-     },
-     {
-      "id": "b",
-      "kind": "ball",
-      "label": "",
-      "gk": false
-     }
-    ],
-    "steps": [
-     {
-      "pos": {
-       "h1": {
-        "x": 0.2,
-        "y": 0.25
-       },
-       "h2": {
-        "x": 0.2,
-        "y": 0.75
-       },
-       "h3": {
-        "x": 0.32,
-        "y": 0.4
-       },
-       "h4": {
-        "x": 0.32,
-        "y": 0.65
-       },
-       "Q1": {
-        "x": 0.96,
-        "y": 0.5
-       },
-       "P1": {
-        "x": 0.04,
-        "y": 0.5
-       },
-       "a1": {
-        "x": 0.14,
-        "y": 0.22
-       },
-       "a2": {
-        "x": 0.14,
-        "y": 0.78
-       },
-       "a3": {
-        "x": 0.25,
-        "y": 0.5
-       },
-       "b": {
-        "x": 0.04,
-        "y": 0.48
-       }
-      }
-     },
-     {
-      "pos": {
-       "h1": {
-        "x": 0.2,
-        "y": 0.25
-       },
-       "h2": {
-        "x": 0.16,
-        "y": 0.82
-       },
-       "h3": {
-        "x": 0.24,
-        "y": 0.68
-       },
-       "h4": {
-        "x": 0.3,
-        "y": 0.5
-       },
-       "Q1": {
-        "x": 0.96,
-        "y": 0.5
-       },
-       "P1": {
-        "x": 0.04,
-        "y": 0.5
-       },
-       "a1": {
-        "x": 0.14,
-        "y": 0.22
-       },
-       "a2": {
-        "x": 0.14,
-        "y": 0.78
-       },
-       "a3": {
-        "x": 0.25,
-        "y": 0.5
-       },
-       "b": {
-        "x": 0.14,
-        "y": 0.78
-       }
-      }
-     }
-    ]
-   }
-  },
-  {
-   "id": "cl-defensa-pivot-1x1",
-   "name": "Defensa del pívot 1x1 + apoyo",
-   "category": "Táctica def.",
-   "objective": "Defender a la pívot por detrás y salir rápido tras el robo",
-   "desc": "Dos porterías a la vez, una portera en cada una. Pívot de espaldas contra defensora, con 1-2 apoyos que lanzan desde banda. La defensora se coloca por detrás, con mano en la espalda, y llega al balón solo si el pase viene malo; si recibe, no entra a la primera y corta el giro. La pívot tiene 4\" para girar y tirar o descargar. Si la defensora roba, pase a un apoyo = punto. Cambio de papeles cada 4 acciones.",
-   "players": "9",
-   "duration": "10",
    "material": "Balones",
    "porN": [
     {
      "rango": "6-7",
-     "txt": "Un grupo de 4 y otro de 3, uno en cada portería."
+     "txt": "1x1 + 3 apoyos con la portera."
     },
     {
      "rango": "8-9",
-     "txt": "Dos grupos, uno en cada portería: con 9, de 4 y de 3 de campo."
+     "txt": "Dos grupos, uno en cada portería (con 8-9, uno de 4 y otro de 5)."
     },
     {
      "rango": "10-11",
-     "txt": "Dos grupos de 5 (dos apoyos)."
+     "txt": "Dos grupos de 5 con 2x2 (pívot y apoyo contra defensora y ayuda)."
     },
     {
      "rango": "12-14",
-     "txt": "Tres grupos; uno a miniporterías sin portera."
+     "txt": "Tres grupos; uno a miniportería sin portera."
     }
    ],
    "ilus": {
@@ -1912,32 +578,14 @@
       "gk": false
      },
      {
-      "id": "b",
-      "kind": "ball",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "g2",
-      "kind": "home",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "h2",
-      "kind": "home",
-      "label": "",
-      "gk": false
-     },
-     {
       "id": "a4",
       "kind": "away",
       "label": "",
       "gk": false
      },
      {
-      "id": "a5",
-      "kind": "away",
+      "id": "b",
+      "kind": "ball",
       "label": "",
       "gk": false
      }
@@ -1965,25 +613,13 @@
         "x": 0.3,
         "y": 0.85
        },
+       "a4": {
+        "x": 0.36,
+        "y": 0.5
+       },
        "b": {
         "x": 0.3,
         "y": 0.17
-       },
-       "g2": {
-        "x": 0.96,
-        "y": 0.5
-       },
-       "h2": {
-        "x": 0.84,
-        "y": 0.5
-       },
-       "a4": {
-        "x": 0.87,
-        "y": 0.5
-       },
-       "a5": {
-        "x": 0.7,
-        "y": 0.15
        }
       }
      },
@@ -1995,7 +631,7 @@
        },
        "h1": {
         "x": 0.15,
-        "y": 0.44
+        "y": 0.46
        },
        "a1": {
         "x": 0.13,
@@ -2009,25 +645,13 @@
         "x": 0.3,
         "y": 0.85
        },
+       "a4": {
+        "x": 0.36,
+        "y": 0.5
+       },
        "b": {
         "x": 0.14,
         "y": 0.47
-       },
-       "g2": {
-        "x": 0.96,
-        "y": 0.5
-       },
-       "h2": {
-        "x": 0.85,
-        "y": 0.44
-       },
-       "a4": {
-        "x": 0.87,
-        "y": 0.5
-       },
-       "a5": {
-        "x": 0.7,
-        "y": 0.15
        }
       }
      }
@@ -2035,26 +659,26 @@
    }
   },
   {
-   "id": "cl-abp-ofensivo-corner-banda",
-   "name": "Balón parado ofensivo: córner y saque de banda",
+   "id": "cl-abp-corner-derecha-v6",
+   "name": "Córner del lado derecho: Triángulo, Melilla y Leganés",
    "category": "Balón parado",
-   "objective": "Repasar nuestras familias de balón parado leyendo a la defensora clave",
-   "desc": "Sin jugadas marcadas en el brief: elige en la Pizarra 2 córners (uno de cada lado: Triángulo, Melilla o Leganés por la derecha; Villalba o Zurda por la izquierda) y 1 banda (Talavera, Segovia o Abantos; Línea, Roldán o Poio). Cada familia se resuelve leyendo a una defensora clave: se decide tras ver si se queda o salta. 4 contra 3 + portera (3 repeticiones de cada jugada). Si la defensa despeja, contraataca a la otra portería y hay que defender ese balón.",
-   "players": "9",
-   "duration": "12",
-   "material": "Balones, petos",
+   "objective": "Repasar las familias de córner del lado derecho leyendo a la defensora clave",
+   "desc": "Sacadora + 2 atacantes contra 2 defensoras + portera (igualdad). Se repasa cada familia del lado derecho (Triángulo, Melilla y Leganés): primero 2 repeticiones con defensa pasiva marcando cuál es la defensora clave y qué opción sale según lo que haga; luego 3 repeticiones con defensa activa. Si la defensa despeja, sale a una miniportería en el medio campo y las atacantes deben defender ese balón. La sacadora rota a atacante en la segunda vuelta.",
+   "players": "6",
+   "duration": "10",
+   "material": "Balones, miniportería",
    "porN": [
     {
      "rango": "6-7",
-     "txt": "Ataque 3 contra 2 + portera."
+     "txt": "Sacadora + 2 contra 2 + portera."
     },
     {
      "rango": "8-9",
-     "txt": "Ataque 4 contra 3 + portera; la otra portera en la portería contraria."
+     "txt": "Sacadora + 3 contra 3 + portera (con 9, rota una)."
     },
     {
      "rango": "10-11",
-     "txt": "Ataque 4 contra 3 + portera; con 11, 4 contra 4."
+     "txt": "Sacadora + 3 contra 3 + portera y la sobrante repasa banda."
     },
     {
      "rango": "12-14",
@@ -2064,57 +688,39 @@
    "ilus": {
     "tokens": [
      {
+      "id": "g2",
+      "kind": "away",
+      "label": "P",
+      "gk": true
+     },
+     {
       "id": "h1",
       "kind": "home",
-      "label": "1",
+      "label": "S",
       "gk": false
      },
      {
       "id": "h2",
       "kind": "home",
-      "label": "2",
+      "label": "",
       "gk": false
      },
      {
       "id": "h3",
       "kind": "home",
-      "label": "3",
+      "label": "",
       "gk": false
-     },
-     {
-      "id": "h4",
-      "kind": "home",
-      "label": "4",
-      "gk": false
-     },
-     {
-      "id": "P2",
-      "kind": "home",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "Q1",
-      "kind": "away",
-      "label": "P",
-      "gk": true
      },
      {
       "id": "a1",
       "kind": "away",
-      "label": "1",
+      "label": "",
       "gk": false
      },
      {
       "id": "a2",
       "kind": "away",
-      "label": "2",
-      "gk": false
-     },
-     {
-      "id": "a3",
-      "kind": "away",
-      "label": "3",
+      "label": "",
       "gk": false
      },
      {
@@ -2127,120 +733,103 @@
     "steps": [
      {
       "pos": {
-       "h1": {
-        "x": 0.72,
-        "y": 0.1
-       },
-       "h2": {
-        "x": 0.8,
-        "y": 0.35
-       },
-       "h3": {
-        "x": 0.8,
-        "y": 0.6
-       },
-       "h4": {
-        "x": 0.66,
-        "y": 0.55
-       },
-       "P2": {
-        "x": 0.04,
-        "y": 0.5
-       },
-       "Q1": {
+       "g2": {
         "x": 0.96,
         "y": 0.5
        },
+       "h1": {
+        "x": 0.97,
+        "y": 0.03
+       },
+       "h2": {
+        "x": 0.82,
+        "y": 0.35
+       },
+       "h3": {
+        "x": 0.84,
+        "y": 0.62
+       },
        "a1": {
-        "x": 0.86,
-        "y": 0.3
+        "x": 0.9,
+        "y": 0.42
        },
        "a2": {
         "x": 0.86,
         "y": 0.55
        },
-       "a3": {
-        "x": 0.76,
-        "y": 0.5
-       },
        "b": {
-        "x": 0.98,
-        "y": 0.05
+        "x": 0.96,
+        "y": 0.04
        }
       }
      },
      {
       "pos": {
-       "h1": {
-        "x": 0.72,
-        "y": 0.1
-       },
-       "h2": {
-        "x": 0.86,
-        "y": 0.45
-       },
-       "h3": {
-        "x": 0.8,
-        "y": 0.6
-       },
-       "h4": {
-        "x": 0.72,
-        "y": 0.45
-       },
-       "P2": {
-        "x": 0.04,
-        "y": 0.5
-       },
-       "Q1": {
+       "g2": {
         "x": 0.96,
         "y": 0.5
        },
+       "h1": {
+        "x": 0.97,
+        "y": 0.03
+       },
+       "h2": {
+        "x": 0.92,
+        "y": 0.4
+       },
+       "h3": {
+        "x": 0.84,
+        "y": 0.62
+       },
        "a1": {
-        "x": 0.86,
-        "y": 0.3
+        "x": 0.9,
+        "y": 0.42
        },
        "a2": {
         "x": 0.86,
         "y": 0.55
        },
-       "a3": {
-        "x": 0.76,
-        "y": 0.5
-       },
        "b": {
-        "x": 0.72,
-        "y": 0.1
+        "x": 0.91,
+        "y": 0.42
        }
       }
+     }
+    ],
+    "miniporterias": [
+     {
+      "x": 0.5,
+      "y": 0.5,
+      "vertical": true
      }
     ]
    }
   },
   {
-   "id": "cl-5x4-series-ida-vuelta",
-   "name": "Series 5x4 contra su portera-jugadora: defensa y portería vacía",
-   "category": "Táctica def.",
-   "objective": "Defender el 5x4 del Leganés en 1-2-1 y castigar con portería vacía",
-   "desc": "Media pista. Equipo A ataca con portera-jugadora (4+PJ), imitando al rival cuando va perdiendo; equipo B defiende en 1-2-1 + portera (con 3 de campo, 1-2 y la portera de vértice): saltar a la línea del pase de seguridad y cerrar el lado contrario. Serie de 20\" con 10\" de pausa: gol de A = 2, tiro entre palos = 1; robo de B y gol a portería vacía = 3. Cuatro series y se cambian los papeles; la jugadora que sobra cambia de equipo en cada cambio.",
-   "players": "9",
+   "id": "cl-contra-2x1-2x2-v6",
+   "name": "Contraataque 2x1 → 2x2 continuo",
+   "category": "Transiciones",
+   "objective": "Atacar rápido tras robo, fijar a la defensora y finalizar en pocos segundos",
+   "desc": "Pista entera con una portería y portera; en la otra, 2 miniporterías. Dos atacantes salen tras robo (pase de la entrenadora) contra una defensora; a los 2\" entra una segunda defensora desde el medio (2x2). Finalizar en 6\". Si la defensa roba, contraataca a las miniporterías. Rotación continua: atacan, pasan a defender y descansan una acción. 3 bloques de 3'.",
+   "players": "6",
    "duration": "10",
-   "material": "Petos, cronómetro",
+   "material": "Balones, 2 miniporterías, petos",
    "porN": [
     {
      "rango": "6-7",
-     "txt": "3+PJ contra 2+portera."
+     "txt": "2x1 → 2x2 continuo con portera."
     },
     {
      "rango": "8-9",
-     "txt": "4+PJ contra 3+portera."
+     "txt": "2x1 → 2x2 por los dos lados con las dos porteras."
     },
     {
      "rango": "10-11",
-     "txt": "4+PJ contra 4+portera, rotación por series."
+     "txt": "Oleadas 2x1 → 2x2 por los dos lados."
     },
     {
      "rango": "12-14",
-     "txt": "Dos medias pistas a la vez, 4+PJ contra 4+portera."
+     "txt": "3x2 → 3x3 en oleadas con tres equipos."
     }
    ],
    "ilus": {
@@ -2252,36 +841,6 @@
       "gk": true
      },
      {
-      "id": "a1",
-      "kind": "away",
-      "label": "PJ",
-      "gk": false
-     },
-     {
-      "id": "a2",
-      "kind": "away",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "a3",
-      "kind": "away",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "a4",
-      "kind": "away",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "a5",
-      "kind": "away",
-      "label": "",
-      "gk": false
-     },
-     {
       "id": "h1",
       "kind": "home",
       "label": "",
@@ -2294,9 +853,15 @@
       "gk": false
      },
      {
-      "id": "h3",
-      "kind": "home",
+      "id": "a1",
+      "kind": "away",
       "label": "",
+      "gk": false
+     },
+     {
+      "id": "a2",
+      "kind": "away",
+      "label": "2",
       "gk": false
      },
      {
@@ -2313,41 +878,25 @@
         "x": 0.04,
         "y": 0.5
        },
-       "a1": {
-        "x": 0.42,
-        "y": 0.38
-       },
-       "a2": {
-        "x": 0.4,
-        "y": 0.66
-       },
-       "a3": {
-        "x": 0.22,
-        "y": 0.12
-       },
-       "a4": {
-        "x": 0.2,
-        "y": 0.88
-       },
-       "a5": {
-        "x": 0.1,
-        "y": 0.4
-       },
        "h1": {
-        "x": 0.24,
-        "y": 0.5
-       },
-       "h2": {
-        "x": 0.16,
+        "x": 0.55,
         "y": 0.3
        },
-       "h3": {
-        "x": 0.16,
+       "h2": {
+        "x": 0.55,
         "y": 0.7
        },
+       "a1": {
+        "x": 0.3,
+        "y": 0.5
+       },
+       "a2": {
+        "x": 0.5,
+        "y": 0.5
+       },
        "b": {
-        "x": 0.4,
-        "y": 0.66
+        "x": 0.56,
+        "y": 0.3
        }
       }
      },
@@ -2357,99 +906,101 @@
         "x": 0.04,
         "y": 0.5
        },
-       "a1": {
-        "x": 0.42,
-        "y": 0.38
-       },
-       "a2": {
-        "x": 0.4,
-        "y": 0.66
-       },
-       "a3": {
-        "x": 0.22,
-        "y": 0.12
-       },
-       "a4": {
-        "x": 0.2,
-        "y": 0.88
-       },
-       "a5": {
-        "x": 0.1,
-        "y": 0.4
-       },
        "h1": {
-        "x": 0.26,
-        "y": 0.58
+        "x": 0.25,
+        "y": 0.35
        },
        "h2": {
-        "x": 0.16,
-        "y": 0.3
+        "x": 0.2,
+        "y": 0.65
        },
-       "h3": {
-        "x": 0.15,
-        "y": 0.78
+       "a1": {
+        "x": 0.3,
+        "y": 0.5
+       },
+       "a2": {
+        "x": 0.5,
+        "y": 0.5
        },
        "b": {
-        "x": 0.4,
-        "y": 0.66
+        "x": 0.2,
+        "y": 0.62
        }
       }
+     }
+    ],
+    "miniporterias": [
+     {
+      "x": 0.96,
+      "y": 0.35,
+      "vertical": true
+     },
+     {
+      "x": 0.96,
+      "y": 0.65,
+      "vertical": true
      }
     ]
    }
   },
   {
-   "id": "cl-partido-presion-marcador",
-   "name": "Partido: el robo alto vale doble y cierre 5x4",
+   "id": "cl-partido-presion-6-v6",
+   "name": "Partido 2x2 + comodina a una portería: el robo alto vale doble",
    "category": "Juego",
-   "objective": "Trasladar la presión alta al juego real y gestionar su portera-jugadora al final",
-   "desc": "Pista entera, 3x3 + porteras + una comodina que ataca con quien tiene el balón. Gol tras robar en campo rival = 2; otro gol = 1. En los 2 últimos minutos de cada parte, el equipo que va perdiendo ataca con portera-jugadora y el otro defiende en 1-2-1 y busca la portería vacía (= 2). 2 x 7' con 1' de pausa y cambio de campo.",
-   "players": "9",
+   "objective": "Aplicar la presión alta y la presión a la poseedora en juego real",
+   "desc": "Media pista larga (de portería al área contraria). Equipo A ataca la portería grande con la portera; equipo B defiende y, si roba, ataca 2 miniporterías en la otra punta. La comodina juega siempre con quien tiene el balón. Robo en campo contrario y gol = 2. Tras gol o robo cambian los papeles. 2 x 7' con 1' de pausa.",
+   "players": "6",
    "duration": "15",
-   "material": "Petos, marcador",
+   "material": "Petos, 2 miniporterías",
    "porN": [
     {
      "rango": "6-7",
-     "txt": "3x3 + porteras."
+     "txt": "2x2 + comodina + portera."
     },
     {
      "rango": "8-9",
-     "txt": "3x3 + porteras + comodina."
+     "txt": "3x3 + comodina + portera (con 9, 4x4)."
     },
     {
      "rango": "10-11",
-     "txt": "4x4 + porteras."
+     "txt": "4x4 + porteras en pista entera."
     },
     {
      "rango": "12-14",
-     "txt": "Tres equipos de 4: rota el que pierde."
+     "txt": "Tres equipos de 4: entra el que espera."
     }
    ],
    "ilus": {
     "tokens": [
      {
+      "id": "g1",
+      "kind": "home",
+      "label": "P",
+      "gk": true
+     },
+     {
       "id": "h1",
       "kind": "home",
-      "label": "1",
+      "label": "",
       "gk": false
      },
      {
       "id": "h2",
       "kind": "home",
-      "label": "2",
+      "label": "",
       "gk": false
      },
      {
-      "id": "h3",
-      "kind": "home",
-      "label": "3",
+      "id": "a1",
+      "kind": "away",
+      "label": "",
       "gk": false
      },
      {
-      "id": "P1",
-      "kind": "home",
-      "label": "P",
-      "gk": true
+      "id": "a2",
+      "kind": "away",
+      "label": "",
+      "gk": false
      },
      {
       "id": "c",
@@ -2458,30 +1009,6 @@
       "gk": false
      },
      {
-      "id": "Q2",
-      "kind": "away",
-      "label": "P",
-      "gk": true
-     },
-     {
-      "id": "a1",
-      "kind": "away",
-      "label": "1",
-      "gk": false
-     },
-     {
-      "id": "a2",
-      "kind": "away",
-      "label": "2",
-      "gk": false
-     },
-     {
-      "id": "a3",
-      "kind": "away",
-      "label": "3",
-      "gk": false
-     },
-     {
       "id": "b",
       "kind": "ball",
       "label": "",
@@ -2491,418 +1018,98 @@
     "steps": [
      {
       "pos": {
-       "h1": {
-        "x": 0.3,
-        "y": 0.3
-       },
-       "h2": {
-        "x": 0.3,
-        "y": 0.7
-       },
-       "h3": {
-        "x": 0.42,
-        "y": 0.5
-       },
-       "P1": {
+       "g1": {
         "x": 0.04,
         "y": 0.5
        },
-       "c": {
-        "x": 0.5,
-        "y": 0.2
+       "h1": {
+        "x": 0.3,
+        "y": 0.35
        },
-       "Q2": {
-        "x": 0.96,
-        "y": 0.5
+       "h2": {
+        "x": 0.28,
+        "y": 0.7
        },
        "a1": {
         "x": 0.2,
-        "y": 0.25
+        "y": 0.42
        },
        "a2": {
-        "x": 0.2,
-        "y": 0.75
+        "x": 0.18,
+        "y": 0.66
        },
-       "a3": {
-        "x": 0.33,
+       "c": {
+        "x": 0.38,
         "y": 0.5
        },
        "b": {
-        "x": 0.2,
-        "y": 0.75
+        "x": 0.3,
+        "y": 0.35
        }
       }
      },
      {
       "pos": {
-       "h1": {
-        "x": 0.3,
-        "y": 0.3
-       },
-       "h2": {
-        "x": 0.34,
-        "y": 0.72
-       },
-       "h3": {
-        "x": 0.42,
-        "y": 0.5
-       },
-       "P1": {
+       "g1": {
         "x": 0.04,
         "y": 0.5
        },
-       "c": {
-        "x": 0.5,
-        "y": 0.2
+       "h1": {
+        "x": 0.3,
+        "y": 0.35
        },
-       "Q2": {
-        "x": 0.96,
-        "y": 0.5
+       "h2": {
+        "x": 0.28,
+        "y": 0.7
        },
        "a1": {
-        "x": 0.2,
-        "y": 0.25
+        "x": 0.22,
+        "y": 0.38
        },
        "a2": {
-        "x": 0.3,
-        "y": 0.8
+        "x": 0.18,
+        "y": 0.66
        },
-       "a3": {
-        "x": 0.33,
+       "c": {
+        "x": 0.38,
         "y": 0.5
        },
        "b": {
-        "x": 0.34,
-        "y": 0.72
+        "x": 0.2,
+        "y": 0.4
        }
       }
+     }
+    ],
+    "miniporterias": [
+     {
+      "x": 0.62,
+      "y": 0.35,
+      "vertical": true
+     },
+     {
+      "x": 0.62,
+      "y": 0.65,
+      "vertical": true
      }
     ]
    }
-  },
-  {
-   "id": "cl-posesion-activacion-3x3c",
-   "name": "Posesión de activación 3x3 + comodina con 4 porterías de pase",
-   "category": "Posesión",
-   "objective": "Subir pulsaciones con perfil, pase tenso y desmarque de apoyo",
-   "desc": "Media pista, sin porteras (están con Julia). 3x3 + una comodina que juega con quien tiene el balón, con 4 porterías de pase de 2 m. Punto al pasar entre dos conos a una compañera; 2 puntos si son dos porterías distintas seguidas. Quien roba suma 2 si marca en una portería en los 5\" siguientes. La comodina cambia en cada bloque. 2 x 3' con 30\" de pausa.",
-   "players": "7",
-   "duration": "7",
-   "material": "8 conos, petos",
-   "porN": [
-    {
-     "rango": "6-7",
-     "txt": "3x3; con 7, comodina que juega con la poseedora."
-    },
-    {
-     "rango": "8-9",
-     "txt": "4x4; con 9, comodina que juega con la poseedora."
-    },
-    {
-     "rango": "10-11",
-     "txt": "5x5 en 3/4 de pista o 4x4 + 2 comodinas exteriores."
-    },
-    {
-     "rango": "12-14",
-     "txt": "Dos grupos 4x4 en paralelo o 6x6 en pista entera."
-    }
-   ],
-   "ilus": {
-    "tokens": [
-     {
-      "id": "h1",
-      "kind": "home",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "h2",
-      "kind": "home",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "h3",
-      "kind": "home",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "h4",
-      "kind": "home",
-      "label": "C",
-      "gk": false
-     },
-     {
-      "id": "a1",
-      "kind": "away",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "a2",
-      "kind": "away",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "a3",
-      "kind": "away",
-      "label": "",
-      "gk": false
-     },
-     {
-      "id": "b",
-      "kind": "ball",
-      "label": "",
-      "gk": false
-     }
-    ],
-    "steps": [
-     {
-      "pos": {
-       "h1": {
-        "x": 0.62,
-        "y": 0.25
-       },
-       "h2": {
-        "x": 0.85,
-        "y": 0.3
-       },
-       "h3": {
-        "x": 0.7,
-        "y": 0.7
-       },
-       "h4": {
-        "x": 0.9,
-        "y": 0.72
-       },
-       "a1": {
-        "x": 0.7,
-        "y": 0.4
-       },
-       "a2": {
-        "x": 0.8,
-        "y": 0.5
-       },
-       "a3": {
-        "x": 0.62,
-        "y": 0.55
-       },
-       "b": {
-        "x": 0.63,
-        "y": 0.27
-       }
-      }
-     },
-     {
-      "pos": {
-       "h1": {
-        "x": 0.66,
-        "y": 0.12
-       },
-       "h2": {
-        "x": 0.85,
-        "y": 0.3
-       },
-       "h3": {
-        "x": 0.7,
-        "y": 0.7
-       },
-       "h4": {
-        "x": 0.9,
-        "y": 0.72
-       },
-       "a1": {
-        "x": 0.7,
-        "y": 0.4
-       },
-       "a2": {
-        "x": 0.8,
-        "y": 0.5
-       },
-       "a3": {
-        "x": 0.62,
-        "y": 0.55
-       },
-       "b": {
-        "x": 0.84,
-        "y": 0.31
-       }
-      }
-     }
-    ],
-    "zonas": [
-     {
-      "x": 0.52,
-      "y": 0.05,
-      "w": 0.45,
-      "h": 0.9,
-      "label": "Media pista"
-     }
-    ],
-    "conos": [
-     {
-      "x": 0.6,
-      "y": 0.05
-     },
-     {
-      "x": 0.64,
-      "y": 0.05
-     },
-     {
-      "x": 0.6,
-      "y": 0.95
-     },
-     {
-      "x": 0.64,
-      "y": 0.95
-     },
-     {
-      "x": 0.9,
-      "y": 0.05
-     },
-     {
-      "x": 0.94,
-      "y": 0.05
-     },
-     {
-      "x": 0.9,
-      "y": 0.95
-     },
-     {
-      "x": 0.94,
-      "y": 0.95
-     }
-    ]
-   },
-   "porteras": false
   }
  ],
  "sesiones": [
   {
-   "date": "2026-11-04",
-   "title": "Salir de su presión alta: de la pareja al 4-0",
-   "focus": "Salida temporizada ante presión alta mixta: 2x2 → 3x3+1 → 4-0, y presión a la poseedora",
-   "targetMin": "90",
-   "notes": "Leganés: sistema mixto, presión alta, defensa mixta; portera-jugadora cuando va perdiendo. Previstas: 9 con 2 porteras; si sois 10, cada ficha trae la adaptación.",
-   "blocks": [
-    {
-     "name": "Portería (Julia)",
-     "paralelo": true,
-     "items": [
-      {
-       "exerciseId": "cl-gk-salida-pies-presion",
-       "minutes": 15,
-       "note": "En paralelo al rondo y la posesión · foco: temporizar la salida"
-      }
-     ]
-    },
-    {
-     "name": "Parte inicial",
-     "items": [
-      {
-       "exerciseId": "mqzriday1a8je",
-       "ref": "rondo área",
-       "fallback": {
-        "id": "cl-rondo-area",
-        "name": "Rondo en el área",
-        "category": "Posesión",
-        "objective": "Rondo de inicio dentro del área",
-        "desc": "Dentro del área. 5 contra 2 (o 4 contra 2) a 2 toques; 10 pases = punto. Si el balón pasa entre las dos defensoras, doble. Quien pierde entra a defender.",
-        "players": "6-10",
-        "duration": "8",
-        "material": "Balones",
-        "porN": []
-       },
-       "minutes": 8,
-       "note": "En paralelo a portería · con 7, 5 contra 2"
-      },
-      {
-       "exerciseId": "cl-posesion-activacion-3x3c",
-       "minutes": 7,
-       "note": "En paralelo a portería",
-       "equipos": {
-        "n": 2,
-        "porteras": false
-       }
-      }
-     ]
-    },
-    {
-     "name": "Parte central",
-     "items": [
-      {
-       "exerciseId": "cl-salida-2p2-dos-campos",
-       "minutes": 12,
-       "note": "Progresión 1/3: la pareja · consigna: temporizar, fijar antes de soltar",
-       "equipos": {
-        "n": 2
-       }
-      },
-      {
-       "exerciseId": "cl-salida-3x3-pivot-continua",
-       "minutes": 12,
-       "note": "Progresión 2/3: atraer y lanzar",
-       "equipos": {
-        "n": 2
-       }
-      },
-      {
-       "exerciseId": "cl-salida-40-presion-media",
-       "minutes": 12,
-       "note": "Progresión 3/3: el 4-0 completo · corrección del último partido: temporización en la salida",
-       "equipos": {
-        "n": 2
-       }
-      }
-     ]
-    },
-    {
-     "name": "Parte final",
-     "items": [
-      {
-       "exerciseId": "cl-presion-poseedora-2x2-duelos",
-       "minutes": 10,
-       "note": "Corrección del último partido: presión a la jugadora con balón",
-       "equipos": {
-        "n": 2,
-        "porteras": false
-       }
-      },
-      {
-       "exerciseId": "cl-presion-tras-perdida-4x4",
-       "minutes": 10,
-       "note": "La más cercana a la poseedora",
-       "equipos": {
-        "n": 2
-       }
-      },
-      {
-       "exerciseId": "cl-partido-salida-limpia",
-       "minutes": 15,
-       "note": "Consigna: salida temporizada y presión a la poseedora",
-       "equipos": {
-        "n": 2
-       }
-      }
-     ]
-    }
-   ]
-  },
-  {
    "date": "2026-11-06",
-   "title": "Presionar alto, su 5x4 y balón parado",
-   "focus": "Presión alta orientada a banda, defensa de su portera-jugadora y balón parado ofensivo",
+   "title": "Presionar alto con 6: orientar, saltar y robar",
+   "focus": "Presión alta orientada a banda e individual con cambios, presión a la poseedora y defensa de la pívot",
    "targetMin": "90",
-   "notes": "Previo al partido del domingo: volumen moderado, series cortas e intensas. Previstas: 9 con 2 porteras.",
+   "notes": "Sin partido este fin de semana (J5 aplazada): volumen normal, sin descarga previa. Previsto: 5 de campo y 1 portera.",
    "blocks": [
     {
      "name": "Portería (Julia)",
      "paralelo": true,
      "items": [
       {
-       "exerciseId": "cl-gk-tiro-lejano-pj",
+       "exerciseId": "cl-gk-1x1-pivot-desvios-v6",
        "minutes": 15,
        "note": "En paralelo al rondo y la posesión"
       }
@@ -2919,17 +1126,17 @@
         "name": "Rondo en el área",
         "category": "Posesión",
         "objective": "Rondo de inicio dentro del área",
-        "desc": "Dentro del área. 5 contra 2 (o 4 contra 2) a 2 toques; 10 pases = punto. Si el balón pasa entre las dos defensoras, doble. Quien pierde entra a defender.",
-        "players": "6-10",
+        "desc": "Dentro del área, 4 contra 1 o 3 contra 2 a dos toques; 10 pases = punto.",
+        "players": "5",
         "duration": "8",
         "material": "Balones",
         "porN": []
        },
        "minutes": 8,
-       "note": "En paralelo a portería · con 7, 5 contra 2"
+       "note": "En paralelo a portería · con 5, 4 contra 1 o 3 contra 2"
       },
       {
-       "exerciseId": "cl-posesion-activacion-4x3",
+       "exerciseId": "cl-posesion-2x2c-v6",
        "minutes": 7,
        "note": "En paralelo a portería",
        "equipos": {
@@ -2943,25 +1150,19 @@
      "name": "Parte central",
      "items": [
       {
-       "exerciseId": "cl-presion-alta-3x3",
+       "exerciseId": "cl-presion-alta-2-vs-p2-v6",
        "minutes": 12,
-       "note": "Progresión 1/2: 3x3 · consigna: presión a la jugadora con balón",
-       "equipos": {
-        "n": 2
-       }
+       "note": "Progresión 1/2: la pareja · corrección: presión a la jugadora con balón"
       },
       {
-       "exerciseId": "cl-presion-alta-4x4",
+       "exerciseId": "cl-presion-alta-3-vs-p2-v6",
        "minutes": 12,
-       "note": "Progresión 2/2: presión completa y contraataque tras robo",
-       "equipos": {
-        "n": 2
-       }
+       "note": "Progresión 2/2: presión completa con cambios · los cambios los canta la de atrás"
       },
       {
-       "exerciseId": "cl-defensa-pivot-1x1",
-       "minutes": 10,
-       "note": ""
+       "exerciseId": "cl-defensa-pivot-detras-v6",
+       "minutes": 12,
+       "note": "Defensa de la pívot por detrás"
       }
      ]
     },
@@ -2969,20 +1170,17 @@
      "name": "Parte final",
      "items": [
       {
-       "exerciseId": "cl-abp-ofensivo-corner-banda",
-       "minutes": 12,
-       "note": ""
-      },
-      {
-       "exerciseId": "cl-5x4-series-ida-vuelta",
+       "exerciseId": "cl-abp-corner-derecha-v6",
        "minutes": 10,
-       "note": "Su portera-jugadora cuando va perdiendo",
-       "equipos": {
-        "n": 2
-       }
+       "note": "La sacadora del viernes"
       },
       {
-       "exerciseId": "cl-partido-presion-marcador",
+       "exerciseId": "cl-contra-2x1-2x2-v6",
+       "minutes": 10,
+       "note": "Contraataque y finalización"
+      },
+      {
+       "exerciseId": "cl-partido-presion-6-v6",
        "minutes": 15,
        "note": "Consigna: presión a la jugadora con balón",
        "equipos": {

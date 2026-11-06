@@ -2685,7 +2685,9 @@ function prevWeekClose(w){
 function newBriefDraft(w){
   const old=(S.briefs||{})[w]||{}; const m=matchInWeek(w);
   const B=JSON.parse(JSON.stringify(old));
-  if(!old.semana){ B.semana=w; if(m){ B.rival=m.opponent; B.dia=m.date; B.hora=m.time||""; B.campo=m.homeAway==="local"?"En casa":"Fuera"; } }
+  B.semana=w;
+  if(m){ B.rival=m.opponent; B.dia=m.date; B.hora=m.time||""; B.campo=m.homeAway==="local"?"En casa":"Fuera"; }
+  else { B.rival=""; B.dia=""; B.hora=""; B.campo=""; }
   if(B.ultimo && !B.corregir) B.corregir=B.ultimo;
   B.objetivos=B.objetivos||[]; B.jugadas=B.jugadas||[]; B.carga=B.carga||"Normal";
   B.asistencia=B.asistencia||{}; B.porteria=B.porteria||{};
@@ -2845,6 +2847,7 @@ function saveBrief(){
   B.jugadasNombres=B.jugadas.map(id=>{ const pl=S.plays.find(x=>x.id===id); return pl?{id,name:pl.name||"Jugada"}:null; }).filter(Boolean);
   B.biblioteca=S.exercises.filter(e=>!/^cl-/.test(e.id)).slice(0,250).map(e=>({id:e.id,name:e.name,category:e.category||"",players:e.players||"",duration:e.duration||"",objective:e.objective||""}));
   B.ropa={}; ds.forEach(d=>{ B.ropa[d]=(S.ropaDia||{})[parseYmd(d).getDay()]||""; });
+  delete B.bajas; delete B.ultimo;
   B.guardado=new Date().toISOString();
   S.briefs=S.briefs||{}; S.briefs[w]=B;
   // asistencia prevista → sesiones
@@ -2905,19 +2908,21 @@ function importPack(pack,opts){
   opts=opts||{};
   if(!pack||!Array.isArray(pack.sesiones)){ if(!opts.auto) toast("Ese archivo no es una semana preparada"); return; }
   if(opts.auto){
-    const clash=pack.sesiones.some(ns=>{ const old=ns&&S.sessions.find(x=>x.date===ns.date); return old && sessionCount(old)>0 && old.fromClaude!==pack.semana; });
+    const clash=pack.sesiones.some(ns=>{ if(!ns||ns.date<ymd(new Date())) return false; const old=S.sessions.find(x=>x.date===ns.date); return old && sessionCount(old)>0 && old.fromClaude!==pack.semana; });
     if(clash) return "conflict";
   }
   (pack.ejercicios||[]).forEach(x=>{ if(!x||!x.id||!x.name) return;
     const clean=Object.assign({category:"Táctica of.",objective:"",desc:"",material:"",players:"",duration:"",variants:"",boardId:null},x);
     const i=S.exercises.findIndex(e=>e.id===x.id); if(i>=0) S.exercises[i]=Object.assign({},S.exercises[i],clean); else S.exercises.push(clean); });
   let added=0, skipped=0;
+  const hoy=ymd(new Date());
   pack.sesiones.forEach(ns=>{
     if(!ns||!ns.date) return;
+    if(opts.auto && ns.date<hoy) return;
     const old=S.sessions.find(x=>x.date===ns.date);
     if(!opts.auto && old && sessionCount(old)>0 && old.fromClaude!==pack.semana && !confirm(`Ya hay una sesión con ejercicios el ${ns.date}. ¿Sustituirla por la preparada?`)){ skipped++; return; }
-    if(old) S.sessions=S.sessions.filter(x=>x!==old);
-    S.sessions.push({id:uid(), fromClaude:pack.semana||null, date:ns.date, title:ns.title||"", focus:ns.focus||"", targetMin:String(ns.targetMin||scheduleMinutes()||""), notes:ns.notes||"", absent:(old&&old.absent&&old.absent.length)?old.absent.slice():((((S.briefs||{})[pack.semana]||{}).asistencia||{})[ns.date]||{}).fuera||[], rpe:{},
+    if(old) S.sessions=S.sessions.filter(x=>!(x.date===ns.date && (x===old || (pack.semana && x.fromClaude===pack.semana))));
+    S.sessions.push({id:pack.semana?("cw-"+pack.semana+"-"+ns.date):uid(), fromClaude:pack.semana||null, date:ns.date, title:ns.title||"", focus:ns.focus||"", targetMin:String(ns.targetMin||scheduleMinutes()||""), notes:ns.notes||"", absent:(old&&old.absent&&old.absent.length)?old.absent.slice():((((S.briefs||{})[pack.semana]||{}).asistencia||{})[ns.date]||{}).fuera||[], rpe:{},
       blocks:(ns.blocks||[]).map(b=>({id:uid(), name:b.name||"Bloque", paralelo:!!b.paralelo, items:(b.items||[]).map(it=>{ if(!S.exercises.find(e=>e.id===it.exerciseId) && it.ref){ let f=findExerciseRef(it.ref); if(!f && it.fallback && it.fallback.id){ f=S.exercises.find(e=>e.id===it.fallback.id); if(!f){ f=Object.assign({category:"Posesión",objective:"",desc:"",material:"",players:"",duration:"",variants:"",boardId:null},it.fallback); S.exercises.push(f); } } if(f) it=Object.assign({},it,{exerciseId:f.id}); } return it; }).filter(it=>S.exercises.find(e=>e.id===it.exerciseId)).map(it=>({id:uid(), exerciseId:it.exerciseId, minutes:String(it.minutes||""), note:it.note||"", equipos:it.equipos||null}))}))});
     { const ns2=S.sessions[S.sessions.length-1]; ns2.blocks.forEach(b=>b.items.forEach(it=>{ if(it.equipos){ const eq=typeof it.equipos==="object"?it.equipos:{n:+it.equipos}; it.teams=proposeTeams(ns2,+eq.n||2,eq.porteras!==false); } delete it.equipos; })); }
     if(S.trainSchedule && !isTrainingDay(ns.date)) S.calOverrides[ns.date]="on";
