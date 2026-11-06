@@ -2355,6 +2355,8 @@ function isTrainingDay(dateStr){
   if(ov==="on") return true;
   const s=S.trainSchedule; if(!s) return false;
   if(dateStr<s.start || dateStr>s.end) return false;
+  // Si ese día hay partido (p. ej. un aplazado entre semana), no se entrena salvo que se marque a mano
+  if((S.matches||[]).some(m=>m.date===dateStr)) return false;
   return s.weekdays.indexOf(parseYmd(dateStr).getDay())>=0;
 }
 function sessionForDate(d){ return S.sessions.find(x=>x.date===d); }

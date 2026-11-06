@@ -1,10 +1,10 @@
 {
  "semana": "2026-11-02",
- "generado": "2026-11-06T07:41:19Z",
- "briefGuardado": "2026-11-06T07:28:09.711Z",
+ "generado": "2026-11-06T07:46:59Z",
+ "briefGuardado": "2026-11-06T07:44:52.539Z",
  "ejercicios": [
   {
-   "id": "cl-gk-1x1-pivot-desvios-v6",
+   "id": "cl-gk-1x1-pivot-desvios-v7",
    "name": "Portera: 1x1 contra pívot y desvíos",
    "category": "Portería",
    "objective": "Defender el giro de la pívot y los tiros cruzados a la salida del giro",
@@ -71,12 +71,12 @@
    }
   },
   {
-   "id": "cl-posesion-2x2c-v6",
-   "name": "Posesión 2x2 + comodina con 4 porterías de pase",
+   "id": "cl-posesion-2x2c-v7",
+   "name": "Posesión 3x3 con 4 porterías de pase",
    "category": "Posesión",
    "objective": "Activar con pase tenso, perfil abierto y desmarque de apoyo",
-   "desc": "Cuadrado de 15x15 con una portería de 2 m en cada lado. 2x2 + comodina que juega con quien tiene el balón. Punto al pasar por cualquier portería a una compañera. Máximo 3 toques. Al robar, el equipo que roba juega con la comodina. 3 bloques de 2' con 20\" de pausa.",
-   "players": "5",
+   "desc": "Cuadrado de 18x18 con una portería de 2 m en cada lado. 3x3 sin comodinas. Punto al pasar por cualquier portería a una compañera; si se roba y se pasa por una portería en menos de 4\", punto doble. Máximo 3 toques. 3 bloques de 2' con 20\" de pausa.",
+   "players": "6",
    "duration": "7",
    "material": "8 conos, petos",
    "porteras": false,
@@ -125,9 +125,15 @@
       "gk": false
      },
      {
-      "id": "c",
+      "id": "h3",
       "kind": "home",
-      "label": "C",
+      "label": "",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "",
       "gk": false
      },
      {
@@ -156,9 +162,13 @@
         "x": 0.78,
         "y": 0.35
        },
-       "c": {
+       "h3": {
         "x": 0.72,
         "y": 0.18
+       },
+       "a3": {
+        "x": 0.7,
+        "y": 0.72
        },
        "b": {
         "x": 0.62,
@@ -184,9 +194,13 @@
         "x": 0.78,
         "y": 0.35
        },
-       "c": {
+       "h3": {
         "x": 0.72,
         "y": 0.18
+       },
+       "a3": {
+        "x": 0.7,
+        "y": 0.72
        },
        "b": {
         "x": 0.72,
@@ -201,7 +215,7 @@
       "y": 0.12,
       "w": 0.3,
       "h": 0.76,
-      "label": "15x15"
+      "label": "18x18"
      }
     ],
     "conos": [
@@ -241,11 +255,11 @@
    }
   },
   {
-   "id": "cl-presion-alta-2-vs-p2-v6",
-   "name": "Presión alta 2 contra P+2: orientar a banda y robar",
+   "id": "cl-presion-alta-2-vs-p2-v7",
+   "name": "Presión alta 3 contra P+2: orientar a banda y robar",
    "category": "Táctica def.",
-   "objective": "Presionar la salida rival: la primera orienta a banda y la segunda cierra el pase interior",
-   "desc": "Media pista con portería y portera. Ellas salen con portera + 2 (cierre y ala); nosotras presionamos con 2. La primera salta a la poseedora cerrando el pase interior y la lleva a banda; la segunda vigila el pase por dentro y salta si el balón va a banda. Si salen conduciendo o pasan a una de las 2 miniporterías del medio campo, punto para ellas. Si robamos, 4\" para marcar en la portería grande. La quinta jugadora entra en cada serie por la que defendía (todas rotan por los dos papeles). Series de 40\" y 20\" de pausa.",
+   "objective": "Presionar la salida rival: la primera orienta a banda, la segunda cierra el pase interior y la tercera vigila a la portera",
+   "desc": "Media pista con portería y portera. Ellas salen con portera + 2 (cierre y ala); nosotras presionamos con 3 (igualdad contando a la portera). La primera salta a la poseedora cerrando el pase interior y la lleva a banda; la segunda vigila el pase por dentro y salta si el balón va a banda; la tercera salta a la portera si le devuelven el balón. Si salen conduciendo o pasan a una de las 2 miniporterías del medio campo, punto para ellas. Si robamos, 4\" para marcar en la portería grande. La sexta jugadora entra en cada serie por una de las que salían (todas rotan por los dos papeles). Series de 40\" y 20\" de pausa.",
    "players": "6",
    "duration": "12",
    "material": "2 miniporterías, petos",
@@ -300,6 +314,12 @@
       "gk": false
      },
      {
+      "id": "h3",
+      "kind": "home",
+      "label": "",
+      "gk": false
+     },
+     {
       "id": "b",
       "kind": "ball",
       "label": "",
@@ -329,6 +349,10 @@
         "x": 0.32,
         "y": 0.66
        },
+       "h3": {
+        "x": 0.24,
+        "y": 0.52
+       },
        "b": {
         "x": 0.05,
         "y": 0.5
@@ -357,6 +381,10 @@
         "x": 0.24,
         "y": 0.6
        },
+       "h3": {
+        "x": 0.24,
+        "y": 0.52
+       },
        "b": {
         "x": 0.14,
         "y": 0.32
@@ -379,18 +407,18 @@
    }
   },
   {
-   "id": "cl-presion-alta-3-vs-p2-v6",
-   "name": "Presión alta 3 contra P+2: saltar a la portera y cambios",
+   "id": "cl-presion-alta-3-vs-p2-v7",
+   "name": "Presión alta 3 contra P+3: cambios y salida temporizada",
    "category": "Táctica def.",
-   "objective": "Presión completa en individual con cambios, saltando a la portera tras pase atrás",
-   "desc": "Media pista. Ellas salen con portera + 2; nosotras presionamos con 3 en individual y con cambios (los canta la de atrás). La tercera vigila el pase largo y salta a la portera cuando le devuelven el balón. Punto para ellas si superan la línea de medio campo conduciendo o con pase. Si robamos, 4\" para marcar. Igualdad 3 contra 3 contando a la portera. Series de 40\" / 20\"; cada 3 series cambian los papeles (nuestras 3 pasan a salir con la portera).",
+   "objective": "Presión en individual con cambios contra salida de 4, y salir de la presión temporizando el desmarque",
+   "desc": "Media pista. Un trío sale con la portera (P+3, como el rival en salida de 4); el otro presiona con 3 en individual y con cambios (los canta la de atrás) y salta a la portera tras pase atrás. Punto para la salida si supera la línea de medio campo conduciendo o con pase; si roba la presión, 4\" para marcar. Corrección de salida: no desmarcarse antes de que la poseedora levante la cabeza (temporizar), y desmarque de ruptura + apoyo siempre en pareja. Series de 40\" / 20\"; cada 3 series cambian los papeles.",
    "players": "6",
    "duration": "12",
    "material": "Petos",
    "porN": [
     {
      "rango": "6-7",
-     "txt": "3 contra P+2."
+     "txt": "3 contra P+3."
     },
     {
      "rango": "8-9",
@@ -444,6 +472,12 @@
       "gk": false
      },
      {
+      "id": "a3",
+      "kind": "away",
+      "label": "P",
+      "gk": false
+     },
+     {
       "id": "b",
       "kind": "ball",
       "label": "",
@@ -475,6 +509,10 @@
        },
        "h3": {
         "x": 0.36,
+        "y": 0.5
+       },
+       "a3": {
+        "x": 0.3,
         "y": 0.5
        },
        "b": {
@@ -509,6 +547,10 @@
         "x": 0.1,
         "y": 0.5
        },
+       "a3": {
+        "x": 0.3,
+        "y": 0.5
+       },
        "b": {
         "x": 0.05,
         "y": 0.5
@@ -519,11 +561,11 @@
    }
   },
   {
-   "id": "cl-defensa-pivot-detras-v6",
-   "name": "Defensa de la pívot por detrás: 1x1 + 3 apoyos",
+   "id": "cl-defensa-pivot-detras-v7",
+   "name": "Defensa de la pívot por detrás: 2x2 + 2 apoyos",
    "category": "Táctica def.",
    "objective": "Defender a la pívot por detrás, sin dejarla girar ni recibir de cara",
-   "desc": "Frente a la portería con portera. Pívot de espaldas contra defensora; tres apoyos (dos en banda y uno en el centro a 12 m) le buscan el pase. La defensora va por detrás, con contacto y sin entrar a la primera; si la pívot descarga y vuelve a recibir, acompaña sin saltar. La pívot tiene 4\" para girar y tirar o descargar al apoyo que rompe. Si la defensora roba, pase a un apoyo = punto. Cambio de roles cada 4 acciones: todas pasan por pívot y por defensora.",
+   "desc": "Frente a la portería con portera. Pívot de espaldas y un ala contra defensora de la pívot y una cierre que ayuda; dos apoyos en banda a 12 m le buscan el pase. La defensora va por detrás, con contacto y sin entrar a la primera; la cierre vigila al ala y ayuda en el giro. La pívot tiene 4\" para girar y tirar, o descargar y que el ala rompa. Si la defensa roba, pase a un apoyo = punto. Cambio de roles cada 4 acciones: todas pasan por pívot y por defensora.",
    "players": "6",
    "duration": "12",
    "material": "Balones",
@@ -578,9 +620,15 @@
       "gk": false
      },
      {
+      "id": "h2",
+      "kind": "home",
+      "label": "",
+      "gk": false
+     },
+     {
       "id": "a4",
       "kind": "away",
-      "label": "",
+      "label": "Al",
       "gk": false
      },
      {
@@ -613,9 +661,13 @@
         "x": 0.3,
         "y": 0.85
        },
+       "h2": {
+        "x": 0.28,
+        "y": 0.4
+       },
        "a4": {
-        "x": 0.36,
-        "y": 0.5
+        "x": 0.32,
+        "y": 0.42
        },
        "b": {
         "x": 0.3,
@@ -645,9 +697,13 @@
         "x": 0.3,
         "y": 0.85
        },
+       "h2": {
+        "x": 0.28,
+        "y": 0.4
+       },
        "a4": {
-        "x": 0.36,
-        "y": 0.5
+        "x": 0.32,
+        "y": 0.42
        },
        "b": {
         "x": 0.14,
@@ -659,18 +715,18 @@
    }
   },
   {
-   "id": "cl-abp-corner-derecha-v6",
+   "id": "cl-abp-corner-derecha-v7",
    "name": "Córner del lado derecho: Triángulo, Melilla y Leganés",
    "category": "Balón parado",
    "objective": "Repasar las familias de córner del lado derecho leyendo a la defensora clave",
-   "desc": "Sacadora + 2 atacantes contra 2 defensoras + portera (igualdad). Se repasa cada familia del lado derecho (Triángulo, Melilla y Leganés): primero 2 repeticiones con defensa pasiva marcando cuál es la defensora clave y qué opción sale según lo que haga; luego 3 repeticiones con defensa activa. Si la defensa despeja, sale a una miniportería en el medio campo y las atacantes deben defender ese balón. La sacadora rota a atacante en la segunda vuelta.",
+   "desc": "Sacadora + 3 atacantes contra 2 defensoras + portera (igualdad dentro). Se repasa cada familia del lado derecho (Triángulo, Melilla y Leganés): primero 2 repeticiones con defensa pasiva marcando cuál es la defensora clave y qué opción sale según lo que haga; luego 3 repeticiones con defensa activa. Si la defensa despeja, sale a una miniportería en el medio campo y las atacantes deben defender ese balón. La sacadora rota a atacante en la segunda vuelta.",
    "players": "6",
    "duration": "10",
    "material": "Balones, miniportería",
    "porN": [
     {
      "rango": "6-7",
-     "txt": "Sacadora + 2 contra 2 + portera."
+     "txt": "Sacadora + 3 contra 2 + portera."
     },
     {
      "rango": "8-9",
@@ -707,6 +763,12 @@
      },
      {
       "id": "h3",
+      "kind": "home",
+      "label": "",
+      "gk": false
+     },
+     {
+      "id": "h4",
       "kind": "home",
       "label": "",
       "gk": false
@@ -749,6 +811,10 @@
         "x": 0.84,
         "y": 0.62
        },
+       "h4": {
+        "x": 0.74,
+        "y": 0.5
+       },
        "a1": {
         "x": 0.9,
         "y": 0.42
@@ -781,6 +847,10 @@
         "x": 0.84,
         "y": 0.62
        },
+       "h4": {
+        "x": 0.74,
+        "y": 0.5
+       },
        "a1": {
         "x": 0.9,
         "y": 0.42
@@ -806,18 +876,18 @@
    }
   },
   {
-   "id": "cl-contra-2x1-2x2-v6",
-   "name": "Contraataque 2x1 → 2x2 continuo",
+   "id": "cl-contra-2x1-2x2-v7",
+   "name": "Contraataque 3x2 → 3x3 continuo",
    "category": "Transiciones",
    "objective": "Atacar rápido tras robo, fijar a la defensora y finalizar en pocos segundos",
-   "desc": "Pista entera con una portería y portera; en la otra, 2 miniporterías. Dos atacantes salen tras robo (pase de la entrenadora) contra una defensora; a los 2\" entra una segunda defensora desde el medio (2x2). Finalizar en 6\". Si la defensa roba, contraataca a las miniporterías. Rotación continua: atacan, pasan a defender y descansan una acción. 3 bloques de 3'.",
+   "desc": "Pista entera con una portería y portera; en la otra, 2 miniporterías. Tres atacantes salen tras robo (pase de la entrenadora) contra dos defensoras; a los 2\" entra la tercera defensora desde el medio (3x3). Finalizar en 6\". Si la defensa roba, contraataca a las miniporterías. Al acabar la acción, el trío que defendía recibe el siguiente balón y ataca. 3 bloques de 2'30\" con 40\" de pausa.",
    "players": "6",
    "duration": "10",
    "material": "Balones, 2 miniporterías, petos",
    "porN": [
     {
      "rango": "6-7",
-     "txt": "2x1 → 2x2 continuo con portera."
+     "txt": "3x2 → 3x3 continuo con portera."
     },
     {
      "rango": "8-9",
@@ -861,7 +931,19 @@
      {
       "id": "a2",
       "kind": "away",
-      "label": "2",
+      "label": "3",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "",
+      "gk": false
+     },
+     {
+      "id": "h3",
+      "kind": "home",
+      "label": "",
       "gk": false
      },
      {
@@ -894,6 +976,14 @@
         "x": 0.5,
         "y": 0.5
        },
+       "a3": {
+        "x": 0.35,
+        "y": 0.3
+       },
+       "h3": {
+        "x": 0.6,
+        "y": 0.5
+       },
        "b": {
         "x": 0.56,
         "y": 0.3
@@ -922,6 +1012,14 @@
         "x": 0.5,
         "y": 0.5
        },
+       "a3": {
+        "x": 0.35,
+        "y": 0.3
+       },
+       "h3": {
+        "x": 0.6,
+        "y": 0.5
+       },
        "b": {
         "x": 0.2,
         "y": 0.62
@@ -944,18 +1042,18 @@
    }
   },
   {
-   "id": "cl-partido-presion-6-v6",
-   "name": "Partido 2x2 + comodina a una portería: el robo alto vale doble",
+   "id": "cl-partido-presion-6-v7",
+   "name": "Partido 3x3 a una portería: el robo alto vale doble",
    "category": "Juego",
    "objective": "Aplicar la presión alta y la presión a la poseedora en juego real",
-   "desc": "Media pista larga (de portería al área contraria). Equipo A ataca la portería grande con la portera; equipo B defiende y, si roba, ataca 2 miniporterías en la otra punta. La comodina juega siempre con quien tiene el balón. Robo en campo contrario y gol = 2. Tras gol o robo cambian los papeles. 2 x 7' con 1' de pausa.",
+   "desc": "Media pista larga (de portería al área contraria). Equipo A ataca la portería grande con la portera; equipo B defiende y, si roba, ataca 2 miniporterías en la otra punta. Quien ataca la portería grande sale desde su portera con salida temporizada. Robo en campo contrario y gol = 2. Tras gol o robo cambian los papeles. 2 x 7' con 1' de pausa.",
    "players": "6",
    "duration": "15",
    "material": "Petos, 2 miniporterías",
    "porN": [
     {
      "rango": "6-7",
-     "txt": "2x2 + comodina + portera."
+     "txt": "3x3 + portera."
     },
     {
      "rango": "8-9",
@@ -1003,9 +1101,15 @@
       "gk": false
      },
      {
-      "id": "c",
+      "id": "h3",
       "kind": "home",
-      "label": "C",
+      "label": "",
+      "gk": false
+     },
+     {
+      "id": "a3",
+      "kind": "away",
+      "label": "",
       "gk": false
      },
      {
@@ -1038,9 +1142,13 @@
         "x": 0.18,
         "y": 0.66
        },
-       "c": {
+       "h3": {
         "x": 0.38,
         "y": 0.5
+       },
+       "a3": {
+        "x": 0.3,
+        "y": 0.55
        },
        "b": {
         "x": 0.3,
@@ -1070,9 +1178,13 @@
         "x": 0.18,
         "y": 0.66
        },
-       "c": {
+       "h3": {
         "x": 0.38,
         "y": 0.5
+       },
+       "a3": {
+        "x": 0.3,
+        "y": 0.55
        },
        "b": {
         "x": 0.2,
@@ -1099,17 +1211,17 @@
  "sesiones": [
   {
    "date": "2026-11-06",
-   "title": "Presionar alto con 6: orientar, saltar y robar",
-   "focus": "Presión alta orientada a banda e individual con cambios, presión a la poseedora y defensa de la pívot",
+   "title": "Presionar alto y salir de la presión: 6 + portera",
+   "focus": "Presión alta orientada a banda e individual con cambios, presión a la poseedora, salida temporizada, defensa de la pívot y finalización",
    "targetMin": "90",
-   "notes": "Sin partido este fin de semana (J5 aplazada): volumen normal, sin descarga previa. Previsto: 5 de campo y 1 portera.",
+   "notes": "Sin partido este fin de semana (J5 aplazada): volumen normal, sin descarga previa. Previsto: 6 de campo y 1 portera. J5 contra Leganés se juega el miércoles 2 dic.",
    "blocks": [
     {
      "name": "Portería (Julia)",
      "paralelo": true,
      "items": [
       {
-       "exerciseId": "cl-gk-1x1-pivot-desvios-v6",
+       "exerciseId": "cl-gk-1x1-pivot-desvios-v7",
        "minutes": 15,
        "note": "En paralelo al rondo y la posesión"
       }
@@ -1133,10 +1245,10 @@
         "porN": []
        },
        "minutes": 8,
-       "note": "En paralelo a portería · con 5, 4 contra 1 o 3 contra 2"
+       "note": "En paralelo a portería · con 6, 4 contra 2"
       },
       {
-       "exerciseId": "cl-posesion-2x2c-v6",
+       "exerciseId": "cl-posesion-2x2c-v7",
        "minutes": 7,
        "note": "En paralelo a portería",
        "equipos": {
@@ -1150,17 +1262,20 @@
      "name": "Parte central",
      "items": [
       {
-       "exerciseId": "cl-presion-alta-2-vs-p2-v6",
+       "exerciseId": "cl-presion-alta-2-vs-p2-v7",
        "minutes": 12,
        "note": "Progresión 1/2: la pareja · corrección: presión a la jugadora con balón"
       },
       {
-       "exerciseId": "cl-presion-alta-3-vs-p2-v6",
+       "exerciseId": "cl-presion-alta-3-vs-p2-v7",
        "minutes": 12,
-       "note": "Progresión 2/2: presión completa con cambios · los cambios los canta la de atrás"
+       "note": "Progresión 2/2: contra salida de 4 · corrección: temporizar en nuestra salida",
+       "equipos": {
+        "n": 2
+       }
       },
       {
-       "exerciseId": "cl-defensa-pivot-detras-v6",
+       "exerciseId": "cl-defensa-pivot-detras-v7",
        "minutes": 12,
        "note": "Defensa de la pívot por detrás"
       }
@@ -1170,17 +1285,17 @@
      "name": "Parte final",
      "items": [
       {
-       "exerciseId": "cl-abp-corner-derecha-v6",
+       "exerciseId": "cl-abp-corner-derecha-v7",
        "minutes": 10,
        "note": "La sacadora del viernes"
       },
       {
-       "exerciseId": "cl-contra-2x1-2x2-v6",
+       "exerciseId": "cl-contra-2x1-2x2-v7",
        "minutes": 10,
        "note": "Contraataque y finalización"
       },
       {
-       "exerciseId": "cl-partido-presion-6-v6",
+       "exerciseId": "cl-partido-presion-6-v7",
        "minutes": 15,
        "note": "Consigna: presión a la jugadora con balón",
        "equipos": {
