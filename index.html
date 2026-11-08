@@ -67,6 +67,15 @@
   .shortcuts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
   .shortcuts button{min-height:58px;border-radius:13px;border:1px solid var(--line);background:var(--surface);font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--text)}
   .shortcuts button .ic{font-size:20px}
+  .shortcuts button:last-child:nth-child(odd){grid-column:1/-1}
+  .rvrow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
+  .rvrow:last-child{border-bottom:0}
+  .tagrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .tagbtn{padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:transparent;color:inherit;font:inherit;font-size:13px;cursor:pointer}
+  .tagbtn.on{background:var(--brand);border-color:var(--brand);color:#06202c;font-weight:700}
+  .tagro{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid var(--line);font-size:12px;margin:2px 4px 2px 0}
+  .obsq{border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:8px}
+  .pend{font-size:11px;font-weight:700;color:var(--foul);text-transform:uppercase;letter-spacing:.05em}
   .hl-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
   .hl-row:last-child{border-bottom:0}
   .hl-row .pl-dot{width:10px;height:10px;border-radius:50%;flex:none}
@@ -634,15 +643,16 @@ function stateToDocs(s){
   (s.sessions||[]).forEach(x=>{ const k=docId("session",x.id); d[k]={id:k,tipo:"session",datos:x}; });
   (s.exercises||[]).forEach(x=>{ const k=docId("exercise",x.id); d[k]={id:k,tipo:"exercise",datos:x}; });
   (s.plays||[]).forEach(x=>{ const k=docId("play",x.id); d[k]={id:k,tipo:"play",datos:x}; });
+  (s.scouts||[]).forEach(x=>{ const k=docId("scout",x.id); d[k]={id:k,tipo:"scout",datos:x}; });
   Object.keys(s.briefs||{}).forEach(w=>{ const k=docId("brief",w); d[k]={id:k,tipo:"brief",datos:s.briefs[w]}; });
   d["ajustes"]={id:"ajustes",tipo:"ajustes",datos:{season:s.season,live:s.live,trainTodayCount:s.trainTodayCount,trainSchedule:s.trainSchedule,calOverrides:s.calOverrides,cardLimit:s.cardLimit,draftCall:s.draftCall,videoCats:s.videoCats||{},claudeImports:s.claudeImports||{},ropaDia:s.ropaDia||{},limpiezas:s.limpiezas||[]}};
   return d;
 }
 function docsToState(map){
-  const st={season:"Temporada 2025–2026 · 1ª Autonómica",roster:[],matches:[],live:null,exercises:[],sessions:[],trainTodayCount:null,plays:[],trainSchedule:null,calOverrides:{},cardLimit:5,draftCall:null,videoCats:{},claudeImports:{},briefs:{}};
+  const st={season:"Temporada 2025–2026 · 1ª Autonómica",scouts:[],roster:[],matches:[],live:null,exercises:[],sessions:[],trainTodayCount:null,plays:[],trainSchedule:null,calOverrides:{},cardLimit:5,draftCall:null,videoCats:{},claudeImports:{},briefs:{}};
   Object.keys(map).forEach(k=>{ const doc=map[k]; if(!doc) return; const t=doc.tipo, dt=doc.datos;
     if(t==="player")st.roster.push(dt); else if(t==="match")st.matches.push(dt); else if(t==="session")st.sessions.push(dt);
-    else if(t==="exercise")st.exercises.push(dt); else if(t==="play")st.plays.push(dt); else if(t==="brief"&&dt&&dt.semana)st.briefs[dt.semana]=dt; else if(t==="ajustes")Object.assign(st,dt); });
+    else if(t==="exercise")st.exercises.push(dt); else if(t==="play")st.plays.push(dt); else if(t==="scout")st.scouts.push(dt); else if(t==="brief"&&dt&&dt.semana)st.briefs[dt.semana]=dt; else if(t==="ajustes")Object.assign(st,dt); });
   st.roster.sort((a,b)=>(parseInt(a.number)||999)-(parseInt(b.number)||999));
   if(!st.ropaDia || (st.ropaDia[1]==="Amarillo" && st.ropaDia[5]==="Rosa" && !st.ropaDia[3] && Object.keys(st.ropaDia).length===2)) st.ropaDia={3:"Amarillo",5:"Rosa"};
   return st;
@@ -1036,6 +1046,7 @@ function teamStatusCardHTML(){
 function renderHome(){
   const el=document.getElementById("view-home");
   if(briefOpen){ el.style.setProperty("--nd",trainDatesOf(briefOpen).length); renderBrief(el); return; }
+  if(rivalOpen){ renderRivals(el); return; }
   S.roster.forEach(ensurePlayer);
   const now=new Date(), hi=now.getHours();
   const saludo = hi<12?"Buenos días":(hi<20.5?"Buenas tardes":"Buenas noches");
@@ -1063,6 +1074,7 @@ function renderHome(){
     <button id="hTrain"><span class="ic">📅</span>Calendario</button>
     <button id="hBoard"><span class="ic">📋</span>Pizarra</button>
     <button id="hSeason"><span class="ic">📊</span>Temporada</button>
+    <button id="hRivals"><span class="ic">🔭</span>Rivales</button>
   </div>`;
 
   const parte=teamStatusCardHTML();
@@ -1086,7 +1098,7 @@ function renderHome(){
     <div class="big" style="text-transform:none">${nm.homeAway==="local"?"vs":"@"} ${esc(nm.opponent)}</div>
     <div class="hrs">${esc(fmtMatchDate(nm))}${nm.time?" · "+esc(nm.time):""}</div>
     ${planFor(nm.id)?`<div class="muted small" style="margin-top:10px">${esc(planFor(nm.id).idea||"")}</div>`:""}
-    <div class="row" style="gap:8px;margin-top:12px"><button class="btn primary grow" id="hPrepMatch">📋 Preparar convocatoria</button>${planFor(nm.id)?`<button class="btn ghost" id="hPlan">Ver plan</button>`:""}</div>
+    <div class="row" style="gap:8px;margin-top:12px"><button class="btn primary grow" id="hPrepMatch">📋 Preparar convocatoria</button>${planFor(nm.id)?`<button class="btn ghost" id="hPlan">Ver plan</button>`:""}<button class="btn ghost" id="hRival" title="Ficha del rival">🔭</button></div>
   </div>` : "";
 
   el.innerHTML=`
@@ -1103,6 +1115,7 @@ function renderHome(){
   bindBriefCard(el);
   const pm=el.querySelector("#hPrepMatch"); if(pm) pm.onclick=()=>{ tab="match"; renderTabs(); prepareFixture(nm.id); };
   const hp=el.querySelector("#hPlan"); if(hp) hp.onclick=()=>{ const P=planFor(nm.id); if(P) planSheet(P); };
+  const hr=el.querySelector("#hRival"); if(hr) hr.onclick=()=>{ const R=rivalList().find(R=>rivalMatchesFor(R).some(m=>m.id===nm.id)); openRivals(R?R.slug:null); };
   const hlo=el.querySelector("#hLogout"); if(hlo) hlo.onclick=()=>{ if(confirm("¿Cerrar sesión en este dispositivo? Los datos siguen en la nube; para volver a sincronizar tendrás que iniciar sesión de nuevo.")){ cloudLogout(); } };
 
   const cfg=el.querySelector("#hCfg"); if(cfg) cfg.onclick=()=>{ openSessionId=null; trainTab="sessions"; tab="train"; renderTabs(); renderTrain(); calConfig(); };
@@ -1111,6 +1124,7 @@ function renderHome(){
   el.querySelector("#hTrain").onclick=()=>{ openSessionId=null; trainTab="sessions"; tab="train"; renderTabs(); renderTrain(); };
   el.querySelector("#hBoard").onclick=()=>{ openPlayId=null; tab="board"; renderTabs(); renderBoard(); };
   el.querySelector("#hSeason").onclick=()=>{ tab="season"; renderTabs(); renderSeason(); };
+  el.querySelector("#hRivals").onclick=()=>openRivals();
   el.querySelectorAll("[data-pl]").forEach(r=>r.onclick=()=>{ openPlayerId=r.dataset.pl; rosterEdit=false; tab="roster"; renderTabs(); renderRoster(); });
   el.querySelectorAll("[data-pend]").forEach(r=>r.onclick=()=>{ const p=pend[+r.dataset.pend]; if(p&&p.action) p.action(); });
 }
@@ -2824,6 +2838,110 @@ function findExerciseRef(ref){
 
 /* ================= Brief profesional de la semana ================= */
 let briefOpen=null, BR=null;
+
+/* ======== Rivales: fichas (las escribe Claude en el buzón: rival:<slug>) y observaciones (documentos tipo scout) ======== */
+let rivalOpen=null, rivalSlug=null, scoutDraft=null;
+const SC_MOM=[["ataque","Ataque"],["defensa","Defensa y presión"],["transiciones","Transiciones"],["abp","Balón parado"],["cinco","5x4 / portera-jugadora"]];
+const SC_TAGS={
+  ataque:["4-0","3-1 con pívot","Busca pívot","Corte de ala","Paralela","Bloqueos","Diagonal","Tiro exterior","1x1","Juego directo"],
+  defensa:["Presión alta","Presión 3/4","Media pista","Individual","Zonal","Con cambios","Lejos de la marca","Defensa en Y","Flotan","Repliegue rápido"],
+  transiciones:["Contraataque rápido","Desorden tras pérdida","Repliegue lento","Presión tras pérdida","Buen balance"],
+  abp:["Córner por arriba","Córner a tiro exterior","Bloqueos en córner","Banda tipo Segovia","Señales de la sacadora","Defienden ABP en Y","Defienden ABP en zona","Defienden ABP individual"],
+  cinco:["Usan portera-jugadora","PJ alta en banda","PJ atrás","2-2-1","3-2","Defienden 5x4 en rombo","Defienden 5x4 en cuadrado"]};
+const SC_JTAGS=["Zurda","Tiro exterior","Pívot","1x1","Rápida","Diferencial","Portera"];
+function rvNorm(x){ return String(x||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim(); }
+function rivalDocs(){ return Object.keys(BZ).filter(k=>k.indexOf("rival:")===0).map(k=>Object.assign({slug:k.slice(6)},BZ[k].datos||{})); }
+function rivalMatchesFor(R){
+  const al=(R.alias||[]).concat([R.nombre]).map(rvNorm).filter(Boolean);
+  return S.matches.filter(m=>{ const o=rvNorm(m.opponent); return al.some(a=>o.indexOf(a)>=0||a.indexOf(o)>=0); });
+}
+function rivalList(){
+  const docs=rivalDocs();
+  if(docs.length) return docs;
+  const seen={}, out=[]; S.matches.filter(m=>m.comp==="liga").forEach(m=>{ const k=rvNorm(m.opponent); if(!seen[k]){ seen[k]=1; out.push({slug:k.replace(/ /g,"-"),nombre:m.opponent,alias:[m.opponent]}); } });
+  return out;
+}
+function scoutsFor(slug){ return (S.scouts||[]).filter(x=>x.rival===slug).sort((a,b)=>(b.fecha||"").localeCompare(a.fecha||"")); }
+function openRivals(slug){ rivalOpen=true; rivalSlug=slug||null; scoutDraft=null; tab="home"; renderTabs(); renderHome(); window.scrollTo(0,0); }
+function closeRivals(){ rivalOpen=null; rivalSlug=null; scoutDraft=null; renderHome(); window.scrollTo(0,0); }
+function renderRivals(el){
+  if(scoutDraft) return renderScoutForm(el);
+  const L=rivalList(); const today=ymd(new Date());
+  if(!rivalSlug){
+    const rows=L.map(R=>{ const ms=rivalMatchesFor(R).filter(m=>!m.finished&&m.date&&m.date>=today).sort((a,b)=>a.date.localeCompare(b.date)); const nx=ms[0];
+      const sc=scoutsFor(R.slug); const pend=sc.filter(x=>(R.procesadas||[]).indexOf(x.id)<0).length;
+      return {R,nx,sc,pend}; }).sort((a,b)=>((a.nx&&a.nx.date)||"9999").localeCompare((b.nx&&b.nx.date)||"9999"));
+    el.innerHTML=`<div class="row" style="margin-bottom:10px"><button class="btn sm ghost" id="rvBack">← Banquillo</button></div>
+      <div class="card"><h2>Rivales</h2>
+      ${rows.map(x=>`<div class="rvrow" data-rv="${esc(x.R.slug)}"><div class="grow"><b>${esc(x.R.nombre)}</b>
+        <div class="muted small">${x.nx?`Próximo: ${esc(fmtMatchDay(x.nx))} · ${x.nx.homeAway==="local"?"en casa":"fuera"}`:"Sin partidos pendientes"}${x.sc.length?` · ${x.sc.length} observación${x.sc.length>1?"es":""}`:""}</div>
+        ${x.pend?`<span class="pend">${x.pend} pendiente${x.pend>1?"s":""} de procesar</span>`:""}</div><span class="muted">›</span></div>`).join("")||'<div class="muted small">Sincroniza la app para cargar las fichas.</div>'}
+      </div>`;
+    el.querySelector("#rvBack").onclick=closeRivals;
+    el.querySelectorAll("[data-rv]").forEach(r=>r.onclick=()=>{ rivalSlug=r.dataset.rv; renderRivals(el); window.scrollTo(0,0); });
+    return;
+  }
+  const R=L.find(x=>x.slug===rivalSlug)||{slug:rivalSlug,nombre:rivalSlug};
+  const ms=rivalMatchesFor(R).sort((a,b)=>(a.date||"").localeCompare(b.date||""));
+  const M=R.momentos||{}; const sc=scoutsFor(R.slug);
+  const sec=(t,a)=>(a&&a.length)?`<div class="psec"><div class="eyebrow">${t}</div><ul class="plist">${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:"";
+  el.innerHTML=`<div class="row" style="margin-bottom:10px"><button class="btn sm ghost" id="rvBack">← Rivales</button><div class="grow"></div><button class="btn sm primary" id="rvNew">+ Observación</button></div>
+    <div class="card"><div style="font-size:20px;font-weight:800">${esc(R.nombre)}</div>
+      <div class="muted small">${ms.map(m=>`${m.finished?"✓ ":""}${esc(fmtMatchDay(m))} ${m.homeAway==="local"?"en casa":"fuera"}${m.finished&&m.score?` (${m.score.us}-${m.score.them})`:""}`).join(" · ")}</div>
+      ${R.nivel?`<div class="muted small" style="margin-top:4px">Nivel: ${esc(R.nivel)}${R.resumen?" · "+esc(R.resumen):""}</div>`:""}
+      ${R.actualizado?`<div class="muted small">Ficha actualizada el ${esc(new Date(R.actualizado).toLocaleDateString("es-ES"))}</div>`:""}
+    </div>
+    ${(R.paraNosotras||[]).length?`<div class="card plancard"><h2>Para nosotras</h2><ul class="plist">${R.paraNosotras.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}
+    ${(M.ataque||M.defensa||M.transiciones||M.abpFavor||M.abpContra||M.cinco)?`<div class="card"><h2>Cómo juegan</h2>
+      ${sec("Ataque",M.ataque)}${sec("Defensa y presión",M.defensa)}${sec("Transiciones",M.transiciones)}${sec("Su balón parado (en contra nuestra)",M.abpContra)}${sec("Cuando defienden balón parado",M.abpFavor)}${sec("5x4",M.cinco)}</div>`:""}
+    ${(R.jugadoras||[]).length?`<div class="card"><h2>Jugadoras clave</h2>${R.jugadoras.map(j=>`<div class="pq"><b>${j.dorsal?"nº "+esc(j.dorsal):""}${j.nombre?" "+esc(j.nombre):""}</b> ${esc(j.txt||"")}</div>`).join("")}</div>`:""}
+    <div class="card"><h2>Observaciones</h2>
+      ${sc.length? sc.map(x=>`<div class="obsq"><div class="row"><b class="grow">${esc(new Date((x.fecha||"")+"T00:00").toLocaleDateString("es-ES",{day:"numeric",month:"short"}))}${x.vs?` · vs ${esc(x.vs)}`:""}${x.resultado?` (${esc(x.resultado)})`:""}</b>
+          ${(R.procesadas||[]).indexOf(x.id)<0?'<span class="pend">pendiente</span>':'<span class="muted small">procesada</span>'}
+          <button class="btn sm ghost" data-sced="${x.id}" style="margin-left:6px">✎</button></div>
+        <div>${SC_MOM.map(([k])=>((x.tags||{})[k]||[]).map(t=>`<span class="tagro">${esc(t)}</span>`).join("")).join("")}</div>
+        ${(x.jugadoras||[]).filter(j=>j.dorsal||j.nombre).map(j=>`<div class="small">nº ${esc(j.dorsal||"?")}${j.nombre?" "+esc(j.nombre):""}: ${esc((j.tags||[]).join(", "))}${j.nota?" · "+esc(j.nota):""}</div>`).join("")}
+        ${SC_MOM.map(([k,l])=>((x.notas||{})[k])?`<div class="small muted">${esc(l)}: ${esc(x.notas[k])}</div>`:"").join("")}
+      </div>`).join("") : '<div class="muted small">Sin observaciones todavía.</div>'}
+      <div class="muted small" style="margin-top:8px">Claude las procesa una vez por semana (domingo por la noche) y actualiza esta ficha. Los vídeos, mándaselos por el chat.</div>
+    </div>`;
+  el.querySelector("#rvBack").onclick=()=>{ rivalSlug=null; renderRivals(el); window.scrollTo(0,0); };
+  el.querySelector("#rvNew").onclick=()=>{ scoutDraft={id:uid(),rival:R.slug,rivalNombre:R.nombre,fecha:ymd(new Date()),vs:"",resultado:"",tags:{},notas:{},jugadoras:[{dorsal:"",nombre:"",tags:[],nota:""}],nuevo:true}; renderRivals(el); window.scrollTo(0,0); };
+  el.querySelectorAll("[data-sced]").forEach(b=>b.onclick=()=>{ const x=(S.scouts||[]).find(y=>y.id===b.dataset.sced); if(x){ scoutDraft=JSON.parse(JSON.stringify(x)); renderRivals(el); window.scrollTo(0,0); } });
+}
+function renderScoutForm(el){
+  const D=scoutDraft; D.tags=D.tags||{}; D.notas=D.notas||{}; D.jugadoras=D.jugadoras||[];
+  el.innerHTML=`<div class="row" style="margin-bottom:10px"><button class="btn sm ghost" id="scCancel">← Cancelar</button><div class="grow"></div><button class="btn sm primary" id="scSave">Guardar</button></div>
+    <div class="card"><h2>Observación · ${esc(D.rivalNombre||D.rival)}</h2>
+      <div class="row" style="gap:8px"><label class="grow small muted">Fecha<input type="date" id="scDate" value="${esc(D.fecha)}"></label></div>
+      <div class="row" style="gap:8px;margin-top:8px"><label class="grow small muted">Partido contra<input id="scVs" value="${esc(D.vs)}" placeholder="p. ej. San Fernando"></label><label class="small muted" style="width:100px">Resultado<input id="scRes" value="${esc(D.resultado)}" placeholder="0-3"></label></div>
+    </div>
+    ${SC_MOM.map(([k,l])=>`<div class="card"><h2>${l}</h2><div class="tagrow">${SC_TAGS[k].map(t=>`<button class="tagbtn ${((D.tags[k]||[]).indexOf(t)>=0)?"on":""}" data-tg="${k}" data-tv="${esc(t)}">${esc(t)}</button>`).join("")}</div>
+      <textarea data-nt="${k}" placeholder="Nota (opcional)" style="margin-top:8px;min-height:48px">${esc(D.notas[k]||"")}</textarea></div>`).join("")}
+    <div class="card"><h2>Jugadoras</h2>
+      ${D.jugadoras.map((j,i)=>`<div class="obsq"><div class="row" style="gap:8px"><input data-jd="${i}" value="${esc(j.dorsal)}" placeholder="Dorsal" inputmode="numeric" style="width:80px"><input data-jn="${i}" value="${esc(j.nombre)}" placeholder="Nombre (si lo sabes)" class="grow"></div>
+        <div class="tagrow">${SC_JTAGS.map(t=>`<button class="tagbtn ${(j.tags||[]).indexOf(t)>=0?"on":""}" data-jt="${i}" data-tv="${esc(t)}">${esc(t)}</button>`).join("")}</div>
+        <input data-jo="${i}" value="${esc(j.nota||"")}" placeholder="Nota" style="margin-top:6px"></div>`).join("")}
+      <button class="btn ghost block" id="scAddJ" style="margin-top:8px">+ Otra jugadora</button>
+    </div>
+    <button class="btn primary block" id="scSave2" style="margin-bottom:20px">Guardar observación</button>`;
+  const grab=()=>{ D.fecha=el.querySelector("#scDate").value||D.fecha; D.vs=el.querySelector("#scVs").value.trim(); D.resultado=el.querySelector("#scRes").value.trim();
+    el.querySelectorAll("[data-nt]").forEach(t=>{ D.notas[t.dataset.nt]=t.value.trim(); });
+    el.querySelectorAll("[data-jd]").forEach(t=>{ D.jugadoras[+t.dataset.jd].dorsal=t.value.trim(); });
+    el.querySelectorAll("[data-jn]").forEach(t=>{ D.jugadoras[+t.dataset.jn].nombre=t.value.trim(); });
+    el.querySelectorAll("[data-jo]").forEach(t=>{ D.jugadoras[+t.dataset.jo].nota=t.value.trim(); }); };
+  el.querySelectorAll("[data-tg]").forEach(b=>b.onclick=()=>{ grab(); const k=b.dataset.tg, v=b.dataset.tv; const a=D.tags[k]=D.tags[k]||[]; const i=a.indexOf(v); if(i>=0) a.splice(i,1); else a.push(v); b.classList.toggle("on"); });
+  el.querySelectorAll("[data-jt]").forEach(b=>b.onclick=()=>{ grab(); const j=D.jugadoras[+b.dataset.jt]; j.tags=j.tags||[]; const v=b.dataset.tv; const i=j.tags.indexOf(v); if(i>=0) j.tags.splice(i,1); else j.tags.push(v); b.classList.toggle("on"); });
+  el.querySelector("#scAddJ").onclick=()=>{ grab(); D.jugadoras.push({dorsal:"",nombre:"",tags:[],nota:""}); renderScoutForm(el); };
+  el.querySelector("#scCancel").onclick=()=>{ scoutDraft=null; renderRivals(el); window.scrollTo(0,0); };
+  const doSave=()=>{ grab(); D.jugadoras=D.jugadoras.filter(j=>j.dorsal||j.nombre||(j.tags||[]).length||j.nota);
+    const any=SC_MOM.some(([k])=>(D.tags[k]||[]).length||D.notas[k]) || D.jugadoras.length;
+    if(!any){ toast("Marca o escribe algo antes de guardar"); return; }
+    delete D.nuevo; D.guardado=new Date().toISOString();
+    S.scouts=(S.scouts||[]).filter(x=>x.id!==D.id); S.scouts.push(D); save(); toast("Observación guardada");
+    scoutDraft=null; renderRivals(el); window.scrollTo(0,0); };
+  el.querySelector("#scSave").onclick=doSave; el.querySelector("#scSave2").onclick=doSave;
+}
 const RIVAL_OPC={
   rivalSis:["Sistema habitual",["4-0","3-1","2-2","Mixto"]],
   rivalPres:["Su presión",["Alta","Media","Baja","Cambia según marcador"]],
