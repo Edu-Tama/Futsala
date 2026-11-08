@@ -1,6 +1,14 @@
 {
  "semanas": [
   {
+   "semana": "2026-11-09",
+   "titulo": "Semana del 9 al 15 nov · @ AD Collado Villalba Cobiosa A",
+   "resumen": "Miércoles: ataque a zona (2x2 → 4-0 contra rombo → zona baja con pívot), defensa de la pívot y transición tras pérdida. Viernes: finalización con decisión, defensa del 5x4, balón parado del lado izquierdo y partido con el plan.",
+   "archivo": "semanas/2026-11-09.json",
+   "generado": "2026-11-08T16:12:44Z",
+   "briefGuardado": "2026-11-08T11:06:39.627Z"
+  },
+  {
    "semana": "2026-11-02-banco",
    "titulo": "Banco de tareas · 20 ejercicios nuevos para la biblioteca",
    "resumen": "Defensa de la pívot, bloqueo y continuación, diagonal y toma de decisiones (5 de cada). No trae sesiones: solo añade ejercicios a la biblioteca.",
