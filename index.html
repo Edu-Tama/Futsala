@@ -295,6 +295,14 @@
   .pl-row:last-child{border-bottom:0}
   .pl-dot{width:11px;height:11px;border-radius:50%;flex:none}
   .plancard{border-color:var(--brand)}
+  .tramos{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;align-items:end;margin-top:8px}
+  .tr-col{display:flex;flex-direction:column;align-items:center;gap:3px;position:relative}
+  .tr-sep{position:absolute;left:-3px;top:0;bottom:0;border-left:1px dashed var(--line)}
+  .tr-bars{height:70px;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px}
+  .tr-bars i{width:40%;min-height:2px;border-radius:3px 3px 0 0} .tr-bars i.f,.lg.f{background:var(--goal)} .tr-bars i.c,.lg.c{background:var(--red)}
+  .tr-n{font-size:11px} .tr-l{font-size:10px;color:var(--muted)}
+  .lg{display:inline-block;width:9px;height:9px;border-radius:2px;margin:0 3px 0 8px}
+  .bl-bar.stack{display:flex;overflow:hidden} .bl-bar.stack i{display:block;height:100%}
   .pnow{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,var(--brand) 14%,transparent);margin-top:6px}
   .pnow b{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--brand)}
   .psec{margin-top:14px} .psec .eyebrow{margin-bottom:4px}
@@ -1186,6 +1194,7 @@ function renderMatch(){
         <button class="act rival" id="aGoalR">⚽ Gol<small>rival</small></button>
         <button class="act foul" id="aFoul">✋ Falta<small>de equipo</small></button>
         <button class="act card" id="aCard">🟨 Tarjeta<small>amarilla / roja</small></button>
+        <button class="act" id="aAbp" style="grid-column:1/-1">🎯 Estrategia<small>jugada de ABP sin gol</small></button>
       </div>
     </div>
 
@@ -1212,7 +1221,8 @@ function renderMatch(){
   el.querySelector("#btnClock").onclick=toggleClock;
   el.querySelector("#btnHalf").onclick=()=>{ if(m.half===1) endHalf(); };
   el.querySelector("#aGoal").onclick=()=>goalFlow();
-  el.querySelector("#aGoalR").onclick=()=>addEvent("goal_rival");
+  el.querySelector("#aGoalR").onclick=()=>{ addEvent("goal_rival"); originPicker(S.live.events[0], ORIG_CON); };
+  el.querySelector("#aAbp").onclick=()=>abpFlow();
   el.querySelector("#aFoul").onclick=()=>addEvent("foul");
   el.querySelector("#aCard").onclick=()=>cardFlow();
   el.querySelector("#btnFinish").onclick=()=>confirmFinish();
@@ -1285,7 +1295,7 @@ function planSheet(P){
     <button class="btn block" style="margin-top:12px" onclick="closeModal()">Cerrar</button>`);
 }
 function feedItem(e){
-  const tagMap={goal:["goal","GOL"],goal_rival:["rival","GOL RIVAL"],foul:["foul","FALTA"],yellow:["card","AMARILLA"],red:["card","ROJA"]};
+  const tagMap={goal:["goal","GOL"],goal_rival:["rival","GOL RIVAL"],foul:["foul","FALTA"],yellow:["card","AMARILLA"],red:["card","ROJA"],abp:["","ESTRATEGIA"]};
   const [cls,label]=tagMap[e.type]||["","?"];
   const who = e.pid?esc(playerById(e.pid)?.name||"—"):"";
   const ast = e.assist?` · asist. ${esc(playerById(e.assist)?.name||"")}` :"";
@@ -1568,9 +1578,31 @@ function goalFlow(){
   pickPlayer("¿Quién marca?", order, (scorerId)=>{
     const others=order.filter(id=>id!==scorerId);
     pickPlayer("Asistencia (opcional)", others, (assistId)=>{
-      addEvent("goal", scorerId, assistId); closeModal();
+      addEvent("goal", scorerId, assistId);
+      originPicker(S.live.events[0], ORIG_FAV);
     }, true);
   });
+}
+function originPicker(ev, L){
+  if(!ev){ closeModal(); return; }
+  modal(`<h3>${ev.type==="goal"?"¿Cómo llegó el gol?":"¿Cómo nos han marcado?"}</h3><div class="pick-grid">${L.map(([k,l])=>`<button class="pick" data-or="${k}"><span class="nm">${esc(l)}</span></button>`).join("")}</div>
+    <div class="foot"><button class="btn ghost grow" id="orSkip">Saltar</button></div>`);
+  document.getElementById("orSkip").onclick=()=>closeModal();
+  document.querySelectorAll("[data-or]").forEach(b=>b.onclick=()=>{ ev.origen=b.dataset.or; save();
+    if(ev.type==="goal" && ev.origen==="estrategia") abpPicker(fam=>{ ev.abp=fam; save(); closeModal(); renderMatch(); });
+    else { closeModal(); renderMatch(); } });
+}
+function abpPicker(cb, title){
+  modal(`<h3>${title||"¿Qué jugada?"}</h3><div class="pick-grid">${ABP_FAM.map(a=>`<button class="pick" data-fam="${esc(a)}"><span class="nm">${esc(a)}</span></button>`).join("")}</div>`);
+  document.querySelectorAll("[data-fam]").forEach(b=>b.onclick=()=>cb(b.dataset.fam));
+}
+function abpFlow(){
+  abpPicker(fam=>{
+    modal(`<h3>${esc(fam)}: ¿cómo acabó?</h3><div class="row" style="gap:8px"><button class="btn block" id="abT">Tiro</button><button class="btn block" id="abN">Sin tiro</button></div>
+      <p class="muted small" style="margin-top:8px">Si acabó en gol, regístralo con ⚽ Gol y elige «Estrategia».</p>`);
+    const go=res=>{ const m=S.live; if(!m) return; m.events.unshift({id:uid(),type:"abp",half:m.half,sec:m.elapsed,abp:fam,res}); save(); closeModal(); renderMatch(); };
+    document.getElementById("abT").onclick=()=>go("tiro"); document.getElementById("abN").onclick=()=>go("nada");
+  }, "Jugada de estrategia");
 }
 function cardFlow(){
   const m=S.live;
@@ -1677,6 +1709,90 @@ function recalcScore(m){
   m.score.them=m.events.filter(e=>e.type==="goal_rival").length;
 }
 
+/* ===== Análisis de partidos (sale de los cambios y sucesos que ya se registran) ===== */
+const ABP_FAM=["Talavera","Segovia","Abantos","Triángulo","Melilla","Leganés","Línea","Roldán","Poio","Villalba","Villalba variante","Zurda","Otra"];
+const ORIG_FAV=[["organizado","Ataque organizado"],["transicion","Transición / contra"],["estrategia","Estrategia"],["5x4","5x4 / portera-jugadora"],["otro","Otro (error rival, penalti…)"]];
+const ORIG_CON=[["pivot","Su pívot"],["transicion","Transición / contra"],["estrategia","Estrategia"],["exterior","Tiro exterior"],["5x4","5x4 / portera-jugadora"],["otro","Otro"]];
+function halfEnd(m,h){ let e=HALF_SEC; (m.stints||[]).forEach(s=>{ if(s.half===h){ e=Math.max(e,s.inSec||0,s.outSec||0); } }); (m.events||[]).forEach(x=>{ if(x.half===h) e=Math.max(e,x.sec||0); }); return e; }
+function onCourtAt(m,h,sec){ return (m.stints||[]).filter(s=>s.half===h && (s.inSec||0)<=sec && (s.outSec==null? true : sec<s.outSec)).map(s=>s.pid); }
+function matchSegments(m){ // tramos con el mismo grupo en pista
+  const out=[]; [1,2].forEach(h=>{ const end=halfEnd(m,h); const pts=new Set([0,end]);
+    (m.stints||[]).forEach(s=>{ if(s.half===h){ pts.add(s.inSec||0); if(s.outSec!=null) pts.add(s.outSec); } });
+    const P=[...pts].filter(x=>x<=end).sort((a,b)=>a-b);
+    for(let i=0;i<P.length-1;i++){ const a=P[i], b=P[i+1]; if(b-a<=0) continue; out.push({h,a,b,ids:onCourtAt(m,h,(a+b)/2)}); } });
+  return out;
+}
+function seasonAnalysis(ms){
+  const tram={f:Array(8).fill(0),c:Array(8).fill(0)}; const pm={}; const q={};
+  ms.forEach(m=>{
+    (m.events||[]).forEach(e=>{ if(e.type!=="goal"&&e.type!=="goal_rival") return; if(e.sec==null||!e.half) return;
+      const i=(e.half-1)*4+Math.min(3,Math.floor(e.sec/300)); (e.type==="goal"?tram.f:tram.c)[i]++;
+      onCourtAt(m,e.half,e.sec).forEach(id=>{ const x=pm[id]=pm[id]||{gf:0,gc:0}; if(e.type==="goal") x.gf++; else x.gc++; }); });
+    matchSegments(m).forEach(sg=>{ const field=sg.ids.filter(id=>{ const p=playerById(id); return p && !isGK(p); }).sort(); if(field.length!==4) return;
+      const k=field.join(","); const x=q[k]=q[k]||{ids:field,sec:0,gf:0,gc:0}; x.sec+=sg.b-sg.a;
+      (m.events||[]).forEach(e=>{ if(e.half===sg.h && e.sec>=sg.a && e.sec<sg.b){ if(e.type==="goal") x.gf++; if(e.type==="goal_rival") x.gc++; } }); });
+  });
+  return {tram, pm, q:Object.values(q)};
+}
+function originCounts(ms){
+  const f={}, c={}; const fam={}; let conDato=0;
+  const oz=(BZ["temporada:origenes"]||{}).datos||{}; const por=oz.porPartido||{};
+  ms.forEach(m=>{ const ev=(m.events||[]).filter(e=>(e.type==="goal"||e.type==="goal_rival")&&e.origen);
+    if(ev.length){ conDato++; ev.forEach(e=>{ const t=e.type==="goal"?f:c; t[e.origen]=(t[e.origen]||0)+1; if(e.type==="goal"&&e.abp) fam[e.abp]=(fam[e.abp]||0)+1; }); }
+    else if(por[m.id]){ conDato++; const P=por[m.id]; Object.keys(P.favor||{}).forEach(k=>f[k]=(f[k]||0)+P.favor[k]); Object.keys(P.contra||{}).forEach(k=>c[k]=(c[k]||0)+P.contra[k]); } });
+  return {f,c,fam,conDato,patrones:oz.patrones||[]};
+}
+function abpStats(){
+  const st={}; ABP_FAM.forEach(a=>st[a]={usos:0,tiros:0,goles:0});
+  S.matches.concat(S.live?[S.live]:[]).forEach(m=>(m.events||[]).forEach(e=>{
+    if(e.type==="abp" && e.abp && st[e.abp]){ st[e.abp].usos++; if(e.res==="tiro") st[e.abp].tiros++; }
+    if(e.type==="goal" && e.abp && st[e.abp]){ st[e.abp].usos++; st[e.abp].tiros++; st[e.abp].goles++; } }));
+  return st;
+}
+function famOfFile(name){ const n=rvNorm(name); const fams=ABP_FAM.slice().sort((a,b)=>b.length-a.length); return fams.find(a=>a!=="Otra" && n.indexOf(rvNorm(a))>=0)||null; }
+function jugadaFicha(fam){ const x=BZ["jugada:"+rvNorm(fam).replace(/ /g,"-")]; return x&&x.datos||null; }
+function seasonExtraHTML(ms){
+  const A=seasonAnalysis(ms);
+  const lbl=["0-5'","5-10'","10-15'","15-20'","0-5'","5-10'","10-15'","15-20'"];
+  const mx=Math.max(1,...A.tram.f,...A.tram.c);
+  const tramos=`<div class="card"><h2>Cuándo marcamos y encajamos</h2>
+    <div class="tramos">${lbl.map((l,i)=>`<div class="tr-col">${i===4?'<div class="tr-sep"></div>':""}<div class="tr-bars"><i class="f" style="height:${Math.round(A.tram.f[i]/mx*100)}%"></i><i class="c" style="height:${Math.round(A.tram.c[i]/mx*100)}%"></i></div><div class="tr-n"><b style="color:var(--goal)">${A.tram.f[i]}</b>·<b style="color:var(--red)">${A.tram.c[i]}</b></div><div class="tr-l">${l}</div></div>`).join("")}</div>
+    <div class="row muted small" style="justify-content:space-between;margin-top:6px"><span>1ª parte</span><span><i class="lg f"></i>a favor <i class="lg c"></i>en contra</span><span>2ª parte</span></div>
+  </div>`;
+  const agg={}; ms.forEach(m=>S.roster.forEach(p=>{ const s=minutesFor(m,p.id); if(s>0) agg[p.id]=(agg[p.id]||0)+s; }));
+  const rows=Object.keys(agg).map(id=>{ const x=A.pm[id]||{gf:0,gc:0}; const p=playerById(id); return {p,min:agg[id],gf:x.gf,gc:x.gc,d:x.gf-x.gc}; }).filter(r=>r.p).sort((a,b)=>b.d-a.d||b.gf-a.gf);
+  const pmCard=`<div class="card"><h2>+/- con cada una en pista</h2>
+    <div style="overflow-x:auto"><table><thead><tr><th>Jugadora</th><th class="n">Min</th><th class="n">GF</th><th class="n">GC</th><th class="n">+/-</th><th class="n">+/- ×20'</th></tr></thead><tbody>
+    ${rows.map(r=>`<tr><td>#${esc(r.p.number)} ${esc(r.p.name)}</td><td class="n">${fmt(r.min)}</td><td class="n">${r.gf}</td><td class="n">${r.gc}</td><td class="n" style="color:${r.d>0?"var(--goal)":(r.d<0?"var(--red)":"inherit")}"><b>${r.d>0?"+":""}${r.d}</b></td><td class="n">${r.min>=300?((r.d/(r.min/1200))>0?"+":"")+(r.d/(r.min/1200)).toFixed(1):"—"}</td></tr>`).join("")}
+    </tbody></table></div><div class="muted small" style="margin-top:6px">Goles a favor y en contra mientras estaba en pista. ×20' solo con 5' jugados o más.</div></div>`;
+  const qs=A.q.filter(x=>x.sec>=180).sort((a,b)=>b.sec-a.sec).slice(0,8);
+  const qCard=qs.length?`<div class="card"><h2>Cuartetos de campo</h2>
+    ${qs.map(x=>{ const d=x.gf-x.gc; return `<div class="pq"><div class="row"><span class="grow small">${esc(x.ids.map(pname).join(" · "))}</span><b style="color:${d>0?"var(--goal)":(d<0?"var(--red)":"inherit")}">${d>0?"+":""}${d}</b></div><div class="muted small">${fmt(x.sec)} juntas · ${x.gf} a favor · ${x.gc} en contra</div></div>`; }).join("")}
+    <div class="muted small" style="margin-top:6px">Las cuatro de campo que más tiempo han coincidido (3' o más), sin contar la portera.</div></div>`:"";
+  const O=originCounts(ms);
+  const bars=(map,L,col)=>{ const t=Object.values(map).reduce((a,b)=>a+b,0); return t? L.filter(([k])=>map[k]).map(([k,l])=>`<div class="balrow"><span class="bl-lbl">${esc(l)}</span><div class="bl-bar"><i style="width:${Math.round(map[k]/t*100)}%;background:${col}"></i></div><span class="bl-min">${map[k]}</span></div>`).join("") : '<div class="muted small">Sin datos todavía.</div>'; };
+  const famTxt=Object.keys(O.fam).length?`<div class="muted small" style="margin-top:4px">Estrategia: ${esc(Object.keys(O.fam).map(k=>k+" "+O.fam[k]).join(" · "))}</div>`:"";
+  const orCard=`<div class="card"><h2>Cómo llegan los goles</h2>
+    <div class="eyebrow" style="margin-top:4px">A favor</div>${bars(O.f,ORIG_FAV,"var(--goal)")}${famTxt}
+    <div class="eyebrow" style="margin-top:10px">En contra</div>${bars(O.c,ORIG_CON,"var(--red)")}
+    ${O.patrones.length?`<div class="eyebrow" style="margin-top:10px">Patrones que se repiten</div><ul class="plist">${O.patrones.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}
+    <div class="muted small" style="margin-top:6px">${O.conDato} de ${ms.length} partidos con origen de los goles: se marca al registrar cada gol o sale del registro post-partido con Claude.</div></div>`;
+  const obj={}; S.roster.forEach(p=>{ const fi=fichaOf(p.id); if(!fi||!fi.objetivo) return; const k=fi.objetivo; const o=obj[k]=obj[k]||{B:0,R:0,M:0,n:0}; o.n++; (fi.valoraciones||[]).forEach(v=>{ if(o[v.v]!=null) o[v.v]++; }); });
+  const objKeys=Object.keys(obj).sort((a,b)=>obj[b].n-obj[a].n);
+  const objCard=objKeys.length?`<div class="card"><h2>Objetivos individuales · equipo</h2>
+    ${objKeys.map(k=>{ const o=obj[k], t=o.B+o.R+o.M; return `<div class="balrow"><span class="bl-lbl">${esc(k)} <span class="muted">(${o.n})</span></span>
+      <div class="bl-bar stack">${t?`<i style="width:${o.B/t*100}%;background:var(--goal)"></i><i style="width:${o.R/t*100}%;background:var(--foul)"></i><i style="width:${o.M/t*100}%;background:var(--red)"></i>`:""}</div>
+      <span class="bl-min">${t?`${o.B}·${o.R}·${o.M}`:"—"}</span></div>`; }).join("")}
+    <div class="muted small" style="margin-top:6px">Valoraciones de partido B·R·M sumadas por objetivo (entre paréntesis, cuántas jugadoras lo tienen).</div></div>`:"";
+  const C=(BZ["clasificacion"]||{}).datos;
+  const clCard=C&&C.tabla?`<div class="card"><h2>Clasificación${C.jornada?" · tras la "+esc(C.jornada):""}</h2>
+    <div style="overflow-x:auto"><table><thead><tr><th class="n">#</th><th>Equipo</th><th class="n">Pts</th><th class="n">PJ</th><th class="n">G-E-P</th><th class="n">GF:GC</th></tr></thead><tbody>
+    ${C.tabla.map(r=>`<tr${r.nosotras?' style="background:color-mix(in srgb,var(--brand) 18%,transparent);font-weight:700"':""}><td class="n">${r.pos}</td><td>${esc(r.equipo)}</td><td class="n"><b>${r.pts}</b></td><td class="n">${r.pj}</td><td class="n">${r.g}-${r.e}-${r.p}</td><td class="n">${r.gf}:${r.gc}</td></tr>`).join("")}
+    </tbody></table></div>
+    ${(C.resultados||[]).length?`<div class="eyebrow" style="margin-top:10px">Últimos resultados</div><ul class="plist">${C.resultados.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}
+    <div class="muted small" style="margin-top:6px">${C.fuente?"Fuente: "+esc(C.fuente)+" · ":""}actualizada ${C.actualizado?esc(new Date(C.actualizado).toLocaleDateString("es-ES")):""}</div></div>`:"";
+  return {top: clCard, mid: orCard + tramos + pmCard + qCard + objCard};
+}
 function renderSeason(){
   const el=document.getElementById("view-season");
   const played=playedMatches();
@@ -1783,7 +1899,8 @@ function renderSeason(){
       </div>`;}).join("")}
   </div>`;
 
-  el.innerHTML = filterBar + balance + loadCard + minutesCard + tableCard + matchesCard + dataCard();
+  const X=seasonExtraHTML(ms);
+  el.innerHTML = filterBar + X.top + balance + X.mid + minutesCard + tableCard + matchesCard + dataCard();
 
   // binds
   if(comps.length>1) el.querySelectorAll("#compFilter button").forEach(b=>b.onclick=()=>{ seasonComp=b.dataset.c; renderSeason(); });
@@ -3615,6 +3732,13 @@ async function renderBoardLibrary(body){
   l.className="";
   if(!files.length){ l.innerHTML=`<div class="empty">No hay vídeos en el almacén todavía.<br>Súbelos en Supabase → Storage → jugadas.</div>`; return; }
   const cats=S.videoCats||{};
+  const ST=abpStats(); const used=ABP_FAM.filter(a=>ST[a].usos||jugadaFicha(a));
+  l.insertAdjacentHTML("beforebegin", `<div class="card" id="abpCard"><h2>Jugadas de estrategia</h2>
+    <div class="muted small">Toca una para ver su ficha. Usos, tiros y goles salen de lo que registráis en el partido.</div>
+    ${ABP_FAM.filter(a=>a!=="Otra").map(a=>{ const x=ST[a]; const fi=jugadaFicha(a); return `<div class="rvrow" data-jf="${esc(a)}"><div class="grow"><b>${esc(a)}</b> <span class="muted small">${fi?esc((fi.lado||"")+" · "+(fi.tipo||"")):"sin ficha todavía"}</span></div>
+      <span class="small">${x.usos?`${x.usos} uso${x.usos>1?"s":""} · ${x.tiros} tiro${x.tiros!==1?"s":""} · <b style="color:var(--goal)">${x.goles} gol${x.goles!==1?"es":""}</b>`:'<span class="muted">sin usos</span>'}</span></div>`; }).join("")}
+  </div>`);
+  body.querySelectorAll("[data-jf]").forEach(r=>r.onclick=()=>jugadaSheet(r.dataset.jf));
   let shown=files;
   if(boardCat==="sinclas") shown=files.filter(f=>!cats[f.name]);
   else if(boardCat!=="todas") shown=files.filter(f=>cats[f.name]===boardCat);
@@ -3628,10 +3752,25 @@ async function renderBoardLibrary(body){
     if(boardCat!=="todas") renderBoardLibrary(body);
   });
 }
+function jugadaSheet(fam){
+  const fi=jugadaFicha(fam); const x=abpStats()[fam]||{usos:0,tiros:0,goles:0};
+  const disp=S.roster.filter(p=>p.status!=="lesionada"&&p.status!=="baja");
+  const rolesTxt=(fi&&fi.roles)||"";
+  modal(`<h3>${esc(fam)}</h3>
+    ${fi?`<div class="muted small">${esc((fi.lado||"")+" · "+(fi.tipo||""))}</div>
+      ${fi.puesta?`<div class="psec"><div class="eyebrow">Puesta en escena</div><div>${esc(fi.puesta)}</div></div>`:""}
+      ${fi.clave?`<div class="psec"><div class="eyebrow">Qué lee la sacadora</div><div>${esc(fi.clave)}</div></div>`:""}
+      ${(fi.variantes||[]).length?`<div class="psec"><div class="eyebrow">Opciones</div><ul class="plist">${fi.variantes.map(v=>`<li><b>${esc(v.nombre)}:</b> ${esc(v.txt)}</li>`).join("")}</ul></div>`:""}
+      ${(fi.contra||[]).length?`<div class="psec"><div class="eyebrow">Funciona contra</div><ul class="plist">${fi.contra.map(v=>`<li>${esc(v)}</li>`).join("")}</ul></div>`:""}
+      ${rolesTxt?`<div class="psec"><div class="eyebrow">Quién</div><div>${esc(rolesTxt)}</div></div>`:""}`
+      :`<p class="muted">Aún no hay ficha de esta jugada. Cuando haya vídeo o descripción, Claude la escribe.</p>`}
+    <div class="psec"><div class="eyebrow">Efectividad</div><div>${x.usos} usos · ${x.tiros} tiros · ${x.goles} goles${x.usos?` · ${Math.round(x.goles/x.usos*100)}% acaba en gol`:""}</div></div>
+    <button class="btn block" style="margin-top:12px" onclick="closeModal()">Cerrar</button>`);
+}
 function libRowHTML(f, cat){
   return `<div class="card" style="padding:12px;margin-bottom:8px">
     <div class="row" style="align-items:center;gap:8px">
-      <b class="small grow">${esc(f.name)}</b>
+      <b class="small grow">${esc(f.name)}${famOfFile(f.name)?` <button class="btn sm ghost" data-jf2="${esc(famOfFile(f.name))}" onclick="event.stopPropagation();jugadaSheet(this.dataset.jf2)">Ficha</button>`:""}</b>
       <button class="btn sm ghost" data-vplay="${esc(f.name)}">▶ Ver</button>
     </div>
     <div class="libplayer"></div>
