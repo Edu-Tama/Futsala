@@ -285,6 +285,12 @@
   .pl-row{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--line)}
   .pl-row:last-child{border-bottom:0}
   .pl-dot{width:11px;height:11px;border-radius:50%;flex:none}
+  .plancard{border-color:var(--brand)}
+  .pnow{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,var(--brand) 14%,transparent);margin-top:6px}
+  .pnow b{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--brand)}
+  .psec{margin-top:14px} .psec .eyebrow{margin-bottom:4px}
+  .plist{margin:4px 0 0;padding-left:18px} .plist li{margin:4px 0;line-height:1.35}
+  .pq{padding:6px 0;border-bottom:1px solid var(--line)}
   .semsum{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--muted);margin-bottom:6px}
   .semsum i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:0}
   .semok{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
@@ -564,6 +570,9 @@ async function loadBuzon(){
     const a=await r.json(); const m={}; a.forEach(x=>{ m[x.id]=x; }); BZ=m; localStorage.setItem(BZ_KEY, JSON.stringify(m)); }catch(e){}
 }
 function fichaOf(pid){ const x=BZ["ficha:"+pid]; return x&&x.datos||null; }
+function planFor(mid){ const x=BZ["plan:"+mid]; return x&&x.datos||null; }
+/* Jugadoras que solo pueden venir ciertos días (p. ej. Coro, solo viernes): p.diasEntreno = [5] */
+function trainsOn(p,ds){ return !p || !p.diasEntreno || !p.diasEntreno.length || p.diasEntreno.indexOf(parseYmd(ds).getDay())>=0; }
 let authToken = localStorage.getItem(TOK_KEY) || null;
 let refreshToken = localStorage.getItem(REF_KEY) || null;
 let syncState = "local";
@@ -695,6 +704,11 @@ function runCleanups(){
     S.sessions=S.sessions.filter(s=>del.indexOf(s.id)<0);
     const s16=S.sessions.find(s=>s.id==="mueip9n8v8vpe"); if(s16) s16.sinDatos=true; // hubo entreno, sin asistencia ni RPE
     S.limpiezas.push("sept-2026"); save();
+  }
+  if(S.limpiezas.indexOf("coro-viernes")<0){
+    const c=S.roster.find(p=>/^coro$/i.test((p.name||"").trim()));
+    if(c){ c.diasEntreno=[5]; }
+    S.limpiezas.push("coro-viernes"); save();
   }
 }
 function schedulePush(){ if(!authToken) return; clearTimeout(pushTimer); pushTimer=setTimeout(cloudPush, 2500); }
@@ -1071,7 +1085,8 @@ function renderHome(){
     <div class="lbl" style="color:#7dd3fc">Próximo partido${nm.comp!=="liga"?" · "+compLabel(nm.comp):""}</div>
     <div class="big" style="text-transform:none">${nm.homeAway==="local"?"vs":"@"} ${esc(nm.opponent)}</div>
     <div class="hrs">${esc(fmtMatchDate(nm))}${nm.time?" · "+esc(nm.time):""}</div>
-    <button class="btn primary block" id="hPrepMatch" style="margin-top:12px">📋 Preparar convocatoria</button>
+    ${planFor(nm.id)?`<div class="muted small" style="margin-top:10px">${esc(planFor(nm.id).idea||"")}</div>`:""}
+    <div class="row" style="gap:8px;margin-top:12px"><button class="btn primary grow" id="hPrepMatch">📋 Preparar convocatoria</button>${planFor(nm.id)?`<button class="btn ghost" id="hPlan">Ver plan</button>`:""}</div>
   </div>` : "";
 
   el.innerHTML=`
@@ -1087,6 +1102,7 @@ function renderHome(){
 
   bindBriefCard(el);
   const pm=el.querySelector("#hPrepMatch"); if(pm) pm.onclick=()=>{ tab="match"; renderTabs(); prepareFixture(nm.id); };
+  const hp=el.querySelector("#hPlan"); if(hp) hp.onclick=()=>{ const P=planFor(nm.id); if(P) planSheet(P); };
   const hlo=el.querySelector("#hLogout"); if(hlo) hlo.onclick=()=>{ if(confirm("¿Cerrar sesión en este dispositivo? Los datos siguen en la nube; para volver a sincronizar tendrás que iniciar sesión de nuevo.")){ cloudLogout(); } };
 
   const cfg=el.querySelector("#hCfg"); if(cfg) cfg.onclick=()=>{ openSessionId=null; trainTab="sessions"; tab="train"; renderTabs(); renderTrain(); calConfig(); };
@@ -1139,6 +1155,8 @@ function renderMatch(){
       </div>
     </div>
 
+    ${planCardLiveHTML(m)}
+
     <div class="card">
       <h2>En pista${m.onCourt.length<5?` · faltan ${5-m.onCourt.length}`:''}</h2>
       <div class="court-grid" id="courtGrid"></div>
@@ -1185,6 +1203,7 @@ function renderMatch(){
   el.querySelector("#aCard").onclick=()=>cardFlow();
   el.querySelector("#btnFinish").onclick=()=>confirmFinish();
   el.querySelector("#btnSummary").onclick=()=>matchSummarySheet(m);
+  const bp=el.querySelector("#btnPlan"); if(bp) bp.onclick=()=>{ const P=planFor(m.id); if(P) planSheet(P); };
   el.querySelectorAll(".feed .x").forEach(x=>x.onclick=()=>removeEvent(x.dataset.e));
 }
 
@@ -1205,6 +1224,52 @@ function chip(p, m, where){
   return d;
 }
 
+/* ---- Plan de partido (lo escribe Claude en el buzón: plan:<id del partido>) ---- */
+const MP_LBL={inicio:"Inicio",tras_marcar:"Tras marcar",tras_encajar:"Tras encajar",ganando_final:"Ganando al final",empate_final:"Empate al final",perdiendo_final:"Perdiendo al final",faltas:"Faltas acumuladas",expulsion:"Expulsión"};
+function pname(id){ const p=playerById(id); return p? p.name : id; }
+function planNowItems(m,P){
+  const mp=k=>(P.minipartidos||[]).find(x=>x.clave===k);
+  const out=[]; const add=(k,t)=>{ const x=mp(k); if(x) out.push({t:t||MP_LBL[k], txt:x.txt}); };
+  const f=(m.fouls||{})[m.half]||0;
+  if(m.half===1 && m.elapsed<90 && !(m.events||[]).length) add("inicio");
+  if(m.half===2 && m.elapsed===0 && !m.running && (P.descanso||[]).length) out.push({t:"Descanso", txt:P.descanso.join(" · ")});
+  const red=(m.events||[]).find(e=>e.type==="red" && e.half===m.half && m.elapsed-e.sec<=150); if(red) add("expulsion");
+  const g=(m.events||[]).find(e=>e.type==="goal"||e.type==="goal_rival");
+  if(g && g.half===m.half && m.elapsed-g.sec<=120) add(g.type==="goal"?"tras_marcar":"tras_encajar");
+  if(f>=4) add("faltas", `${f} faltas en esta parte`);
+  if(m.half===2 && m.elapsed>=HALF_SEC-300){ const d=m.score.us-m.score.them; add(d>0?"ganando_final":(d<0?"perdiendo_final":"empate_final")); }
+  const over=(m.onCourt||[]).filter(id=>P.minutos&&P.minutos[id]&&minutesFor(m,id)>P.minutos[id]*60);
+  if(over.length) out.push({t:"Minutos", txt:over.map(id=>`${pname(id)} lleva ${Math.floor(minutesFor(m,id)/60)}' (plan ${P.minutos[id]}')`).join(" · ")});
+  return out;
+}
+function planNowHTML(m,P){
+  const it=planNowItems(m,P);
+  return it.length? it.map(x=>`<div class="pnow"><b>${esc(x.t)}</b><span>${esc(x.txt)}</span></div>`).join("") : `<div class="muted small">${esc(P.idea||"")}</div>`;
+}
+function updatePlanNow(){ const el=document.getElementById("planNow"); const m=S.live; if(!el||!m) return; const P=planFor(m.id); if(P) el.innerHTML=planNowHTML(m,P); }
+function planCardLiveHTML(m){
+  const P=planFor(m.id); if(!P) return "";
+  return `<div class="card plancard"><div class="row" style="align-items:center"><h2 class="grow" style="margin:0">📋 Plan · ahora</h2><button class="btn sm ghost" id="btnPlan">Plan completo</button></div>
+    <div id="planNow" style="margin-top:8px">${planNowHTML(m,P)}</div></div>`;
+}
+function planSheet(P){
+  const sec=(t,h)=>h?`<div class="psec"><div class="eyebrow">${t}</div>${h}</div>`:"";
+  const list=a=>(a&&a.length)?`<ul class="plist">${a.map(x=>`<li>${typeof x==="string"?esc(x):`<b>${esc(x.t||x.cuando||"")}</b> ${esc(x.txt||x.msg||"")}`}</li>`).join("")}</ul>`:"";
+  modal(`<h3>Plan ${esc(P.jornada||"")} · ${esc(P.rival||"")}</h3>
+    ${P.idea?`<p style="font-size:16px;font-weight:700;margin:6px 0 10px">${esc(P.idea)}</p>`:""}
+    ${sec("Por momentos del juego", list((P.momentos||[]).map(x=>({t:x.t+":",txt:x.txt}))))}
+    ${sec("Estrategia a favor", list(P.abpFavor))}
+    ${sec("Estrategia en contra", list(P.abpContra))}
+    ${sec("Quintetos", (P.quintetos||[]).map(q=>`<div class="pq"><b>${esc(q.nombre||"")}</b> ${esc((q.ids||[]).map(pname).join(" · "))}${q.nota?`<div class="muted small">${esc(q.nota)}</div>`:""}</div>`).join("") + (P.rotacion?`<div class="muted small" style="margin-top:6px">${esc(P.rotacion)}</div>`:""))}
+    ${sec("Minipartidos", list((P.minipartidos||[]).map(x=>({t:(MP_LBL[x.clave]||x.clave)+":",txt:x.txt}))))}
+    ${sec("Tiempos muertos", list((P.tiemposMuertos||[]).map(x=>({t:x.cuando+":",txt:x.msg}))))}
+    ${sec("Tarea de cada jugadora", list((P.tareas||[]).map(x=>({t:pname(x.pid)+":",txt:x.txt}))))}
+    ${sec("Charla", list(P.charla))}
+    ${sec("Descanso: comprobar", list(P.descanso))}
+    ${P.notaPropuestas?`<p class="muted small">${esc(P.notaPropuestas)}</p>`:""}
+    ${(P.fuentes||[]).length?`<p class="muted small">Fuentes: ${esc(P.fuentes.join(" · "))}</p>`:""}
+    <button class="btn block" style="margin-top:12px" onclick="closeModal()">Cerrar</button>`);
+}
 function feedItem(e){
   const tagMap={goal:["goal","GOL"],goal_rival:["rival","GOL RIVAL"],foul:["foul","FALTA"],yellow:["card","AMARILLA"],red:["card","ROJA"]};
   const [cls,label]=tagMap[e.type]||["","?"];
@@ -1232,6 +1297,7 @@ function matchHomeHTML(){
       <div class="hrs">${esc(fmtMatchDate(next))}${next.time?" · "+esc(next.time):""}</div>
       <div class="row" style="gap:8px;margin-top:12px">
         <button class="btn primary grow" data-prep="${next.id}">📋 Preparar convocatoria</button>
+        ${planFor(next.id)?`<button class="btn ghost" data-plan="${next.id}">Plan</button>`:""}
         <button class="btn ghost" data-editfx="${next.id}">Editar</button>
       </div>
     </div>`;
@@ -1269,6 +1335,7 @@ function bindMatchHome(){
   const el=document.getElementById("view-match");
   el.querySelectorAll("[data-editfx]").forEach(b=>b.onclick=(e)=>{ e.stopPropagation(); const m=S.matches.find(x=>x.id===b.dataset.editfx); if(m) fixtureForm(m); });
   el.querySelectorAll("[data-prep]").forEach(b=>b.onclick=()=>prepareFixture(b.dataset.prep));
+  el.querySelectorAll("[data-plan]").forEach(b=>b.onclick=(e)=>{ e.stopPropagation(); const P=planFor(b.dataset.plan); if(P) planSheet(P); });
   const add=el.querySelector("#mhAdd"); if(add) add.onclick=()=>fixtureForm(null);
   const loose=el.querySelector("#mhLoose"); if(loose) loose.onclick=()=>{ S.draftCall=null; ensureDraft(); matchView="call"; renderMatch(); };
   const resume=el.querySelector("#mhResume"); if(resume) resume.onclick=(e)=>{ e.preventDefault(); matchView="call"; renderMatch(); };
@@ -1915,7 +1982,8 @@ function playerSeasonStats(pid){
 }
 function playerAttendance(pid){
   const today=ymd(new Date());
-  const past=S.sessions.filter(s=>s.date && s.date<=today && !s.sinDatos);
+  const pl=playerById(pid);
+  const past=S.sessions.filter(s=>s.date && s.date<=today && !s.sinDatos && trainsOn(pl,s.date));
   const total=past.length;
   const att=past.filter(s=>(s.absent||[]).indexOf(pid)<0).length;
   return {att,total,pct: total? Math.round(att/total*100):null};
@@ -1967,7 +2035,7 @@ function loadStatus(pid){
     if((p.injuries||[]).some(j=>j.altaDate && j.altaDate>=ymd(new Date(Date.now()-21*864e5)))) A.push("vuelve de lesión");
   }
   const seen={}, last=[];
-  S.sessions.filter(s=>s.date&&s.date<t0&&!s.sinDatos).sort((a,b)=>b.date.localeCompare(a.date)).forEach(s=>{ if(!seen[s.date]){ seen[s.date]=1; last.push(s); } });
+  S.sessions.filter(s=>s.date&&s.date<t0&&!s.sinDatos&&trainsOn(p,s.date)).sort((a,b)=>b.date.localeCompare(a.date)).forEach(s=>{ if(!seen[s.date]){ seen[s.date]=1; last.push(s); } });
   if(last.length>=2 && last.slice(0,2).every(s=>(s.absent||[]).indexOf(pid)>=0)) A.push("no ha venido a los 2 últimos entrenos");
   out.motivos=R.concat(A); out.nivel=R.length?"rojo":(A.length?"ambar":"verde");
   return out;
@@ -2787,7 +2855,7 @@ function newBriefDraft(w){
   trainDatesOf(w).forEach(ds=>{
     if(!B.asistencia[ds]){
       const s=sessionForDate(ds);
-      const fuera=s&&s.absent&&s.absent.length? s.absent.slice() : S.roster.filter(p=>p.status==="lesionada"||p.status==="baja").map(p=>p.id);
+      const fuera=s&&s.absent&&s.absent.length? s.absent.slice() : S.roster.filter(p=>p.status==="lesionada"||p.status==="baja"||!trainsOn(p,ds)).map(p=>p.id);
       const red=S.roster.filter(p=>fuera.indexOf(p.id)<0 && loadSignal(p.id).reasons.length).map(p=>p.id);
       B.asistencia[ds]={fuera, reducida:red};
     }
@@ -3885,8 +3953,10 @@ function toast(msg){
   const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show");
   clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),1800);
 }
+let _planTick=-1;
 function paintClock(){
   const c=document.getElementById("clockEl"); if(c && S.live) c.textContent=fmt(S.live.elapsed);
+  if(S.live){ const k=Math.floor(S.live.elapsed/5); if(k!==_planTick){ _planTick=k; updatePlanNow(); } }
 }
 function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m])); }
 
