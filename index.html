@@ -295,6 +295,13 @@
   .pl-row:last-child{border-bottom:0}
   .pl-dot{width:11px;height:11px;border-radius:50%;flex:none}
   .plancard{border-color:var(--brand)}
+  .jf-img{width:100%;max-width:340px;display:block;margin:6px auto;border-radius:10px}
+  .jf-clave{margin-top:6px;padding:6px 10px;border-radius:10px;background:color-mix(in srgb,#facc15 18%,transparent);font-weight:700;font-size:14px}
+  .jf-rol{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .jf-num{width:22px;height:22px;border-radius:50%;background:#3fa14e;color:#fff;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+  .jf-var{border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:8px}
+  .jf-si{font-size:12px;font-weight:800;color:#facc15;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+  .jf-riv{padding:8px 10px;border-radius:10px;background:color-mix(in srgb,var(--brand) 14%,transparent)}
   .tramos{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;align-items:end;margin-top:8px}
   .tr-col{display:flex;flex-direction:column;align-items:center;gap:3px;position:relative}
   .tr-sep{position:absolute;left:-3px;top:0;bottom:0;border-left:1px dashed var(--line)}
@@ -1589,20 +1596,27 @@ function originPicker(ev, L){
     <div class="foot"><button class="btn ghost grow" id="orSkip">Saltar</button></div>`);
   document.getElementById("orSkip").onclick=()=>closeModal();
   document.querySelectorAll("[data-or]").forEach(b=>b.onclick=()=>{ ev.origen=b.dataset.or; save();
-    if(ev.type==="goal" && ev.origen==="estrategia") abpPicker(fam=>{ ev.abp=fam; save(); closeModal(); renderMatch(); });
+    if(ev.type==="goal" && ev.origen==="estrategia") abpPicker(fam=>{ ev.abp=fam; save(); varPicker(fam, v=>{ if(v) ev.abpVar=v; save(); closeModal(); renderMatch(); }); });
     else { closeModal(); renderMatch(); } });
 }
 function abpPicker(cb, title){
   modal(`<h3>${title||"¿Qué jugada?"}</h3><div class="pick-grid">${ABP_FAM.map(a=>`<button class="pick" data-fam="${esc(a)}"><span class="nm">${esc(a)}</span></button>`).join("")}</div>`);
   document.querySelectorAll("[data-fam]").forEach(b=>b.onclick=()=>cb(b.dataset.fam));
 }
+function varPicker(fam, cb){
+  const fi=jugadaFicha(fam); const V=(fi&&fi.variantes)||[]; if(!V.length){ cb(null); return; }
+  modal(`<h3>${esc(fam)}: ¿qué opción salió?</h3><div class="pick-grid">${V.map(v=>`<button class="pick" data-var="${esc(v.id)}"><span class="dorsal">${esc(v.id)}</span><span class="nm">${esc(v.nombre)}</span></button>`).join("")}</div>
+    <div class="foot"><button class="btn ghost grow" id="vSkip">No lo sé</button></div>`);
+  document.getElementById("vSkip").onclick=()=>cb(null);
+  document.querySelectorAll("[data-var]").forEach(b=>b.onclick=()=>cb(b.dataset.var));
+}
 function abpFlow(){
-  abpPicker(fam=>{
+  abpPicker(fam=>varPicker(fam, vr=>{ const fam2=fam;
     modal(`<h3>${esc(fam)}: ¿cómo acabó?</h3><div class="row" style="gap:8px"><button class="btn block" id="abT">Tiro</button><button class="btn block" id="abN">Sin tiro</button></div>
       <p class="muted small" style="margin-top:8px">Si acabó en gol, regístralo con ⚽ Gol y elige «Estrategia».</p>`);
-    const go=res=>{ const m=S.live; if(!m) return; m.events.unshift({id:uid(),type:"abp",half:m.half,sec:m.elapsed,abp:fam,res}); save(); closeModal(); renderMatch(); };
+    const go=res=>{ const m=S.live; if(!m) return; const e={id:uid(),type:"abp",half:m.half,sec:m.elapsed,abp:fam2,res}; if(vr) e.abpVar=vr; m.events.unshift(e); save(); closeModal(); renderMatch(); };
     document.getElementById("abT").onclick=()=>go("tiro"); document.getElementById("abN").onclick=()=>go("nada");
-  }, "Jugada de estrategia");
+  }), "Jugada de estrategia");
 }
 function cardFlow(){
   const m=S.live;
@@ -2917,9 +2931,10 @@ const ILLUS_CACHE={};
 function illusDataURL(il, w){
   if(!il||!Array.isArray(il.tokens)||!il.tokens.length) return "";
   const key=w+"|"+JSON.stringify(il); if(ILLUS_CACHE[key]) return ILLUS_CACHE[key];
-  const W=w, H=w/2, dpr=2;
-  const cv=document.createElement("canvas"); cv.width=W*dpr; cv.height=H*dpr;
-  const ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  const half=!!il.mitad; // vista de media pista (la portería derecha)
+  const W=half?2*w:w, H=W/2, dpr=2;
+  const cv=document.createElement("canvas"); cv.width=w*dpr; cv.height=H*dpr;
+  const ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); if(half) ctx.translate(-w,0);
   const prev=pbCtx; pbCtx=ctx;
   try{
     pbDrawPitch(W,H);
@@ -2939,7 +2954,12 @@ function illusDataURL(il, w){
       const ang=Math.atan2((b.y-a.y)*H,(b.x-a.x)*W);
       ctx.beginPath(); ctx.moveTo(b.x*W,b.y*H); ctx.lineTo(b.x*W-9*Math.cos(ang-0.42), b.y*H-9*Math.sin(ang-0.42));
       ctx.moveTo(b.x*W,b.y*H); ctx.lineTo(b.x*W-9*Math.cos(ang+0.42), b.y*H-9*Math.sin(ang+0.42)); ctx.stroke(); });
-    il.tokens.forEach(t=>{ const p=s0[t.id]; if(p) pbDrawToken(t,p,W,H); });
+    (il.flechas||[]).forEach(fl=>{ const tiro=fl.tipo==="tiro"; ctx.strokeStyle=tiro?"#facc15":"rgba(255,255,255,.95)"; ctx.lineWidth=tiro?3:2; ctx.setLineDash(tiro?[]:[3,4]);
+      ctx.beginPath(); ctx.moveTo(fl.x1*W,fl.y1*H); ctx.lineTo(fl.x2*W,fl.y2*H); ctx.stroke(); ctx.setLineDash([]);
+      const ang=Math.atan2((fl.y2-fl.y1)*H,(fl.x2-fl.x1)*W), L=tiro?12:9;
+      ctx.beginPath(); ctx.moveTo(fl.x2*W,fl.y2*H); ctx.lineTo(fl.x2*W-L*Math.cos(ang-0.42), fl.y2*H-L*Math.sin(ang-0.42)); ctx.moveTo(fl.x2*W,fl.y2*H); ctx.lineTo(fl.x2*W-L*Math.cos(ang+0.42), fl.y2*H-L*Math.sin(ang+0.42)); ctx.stroke(); });
+    il.tokens.forEach(t=>{ const p=s0[t.id]; if(p) pbDrawToken(t,p,W,H,half?0.72:1); });
+    (il.destacar||[]).forEach(id=>{ const p=s0[id]; if(!p) return; ctx.strokeStyle="#facc15"; ctx.lineWidth=3; ctx.setLineDash([4,3]); ctx.beginPath(); ctx.arc(p.x*W,p.y*H,PB_R*W*(half?1.4:1.9),0,7); ctx.stroke(); ctx.setLineDash([]); });
   }catch(e){} finally{ pbCtx=prev; }
   try{ ILLUS_CACHE[key]=cv.toDataURL("image/png"); }catch(e){ return ""; }
   return ILLUS_CACHE[key];
@@ -3736,7 +3756,7 @@ async function renderBoardLibrary(body){
   l.insertAdjacentHTML("beforebegin", `<div class="card" id="abpCard"><h2>Jugadas de estrategia</h2>
     <div class="muted small">Toca una para ver su ficha. Usos, tiros y goles salen de lo que registráis en el partido.</div>
     ${ABP_FAM.filter(a=>a!=="Otra").map(a=>{ const x=ST[a]; const fi=jugadaFicha(a); return `<div class="rvrow" data-jf="${esc(a)}"><div class="grow"><b>${esc(a)}</b> <span class="muted small">${fi?esc((fi.lado||"")+" · "+(fi.tipo||"")):"sin ficha todavía"}</span></div>
-      <span class="small">${x.usos?`${x.usos} uso${x.usos>1?"s":""} · ${x.tiros} tiro${x.tiros!==1?"s":""} · <b style="color:var(--goal)">${x.goles} gol${x.goles!==1?"es":""}</b>`:'<span class="muted">sin usos</span>'}</span></div>`; }).join("")}
+      <span class="small" style="text-align:right">${x.usos?`${x.usos} uso${x.usos>1?"s":""} · ${x.tiros} tiro${x.tiros!==1?"s":""} · <b style="color:var(--goal)">${x.goles} gol${x.goles!==1?"es":""}</b>`:'<span class="muted">sin usos</span>'}${fi?(()=>{ const lt=lastTrained(a); const d=lt?Math.round((parseYmd(ymd(new Date()))-parseYmd(lt))/864e5):null; return (d==null||d>21)?'<br><span style="color:var(--foul)">⚠ '+(lt?d+" días sin entrenar":"sin entrenar")+'</span>':""; })():""}</span></div>`; }).join("")}
   </div>`);
   body.querySelectorAll("[data-jf]").forEach(r=>r.onclick=()=>jugadaSheet(r.dataset.jf));
   let shown=files;
@@ -3752,20 +3772,59 @@ async function renderBoardLibrary(body){
     if(boardCat!=="todas") renderBoardLibrary(body);
   });
 }
-function jugadaSheet(fam){
+/* ---- Ficha de jugada: árbol de decisión con esquemas, quién la ejecuta, próximo rival, efectividad y último entreno ---- */
+let LIB_FILES=null;
+async function libFiles(){ if(LIB_FILES) return LIB_FILES; try{ LIB_FILES=await storageList(); }catch(e){ LIB_FILES=[]; } return LIB_FILES; }
+function varFile(fam,vid){ const re=new RegExp("^"+String(vid).replace(/\./g,"\\.")+"\\.?\\s"); return (LIB_FILES||[]).find(f=>famOfFile(f.name)===fam && re.test(f.name.trim()))||null; }
+function abpVarStats(fam){ const st={}; S.matches.concat(S.live?[S.live]:[]).forEach(m=>(m.events||[]).forEach(e=>{ if(e.abp!==fam||!e.abpVar) return; const x=st[e.abpVar]=st[e.abpVar]||{usos:0,goles:0}; if(e.type==="abp"||e.type==="goal") x.usos++; if(e.type==="goal") x.goles++; })); return st; }
+function lastTrained(fam){ const k=rvNorm(fam), t=ymd(new Date()); let last=null;
+  S.sessions.forEach(s=>{ if(!s.date||s.date>t) return; (s.blocks||[]).forEach(b=>(b.items||[]).forEach(it=>{ const ex=S.exercises.find(e=>e.id===it.exerciseId)||it.fallback||{}; const txt=rvNorm((ex.name||"")+" "+(ex.desc||"")+" "+(it.note||"")); if(txt.indexOf(k)>=0 && (!last||s.date>last)) last=s.date; })); });
+  return last; }
+function availablePlayers(){ return S.roster.filter(p=>p.status!=="lesionada"&&p.status!=="baja"&&!isGK(p)); }
+function assignRoles(fi){
+  const av=availablePlayers(), used=new Set(), out=[];
+  Object.keys(fi.roles||{}).sort((a,b)=>((fi.roles[a].orden||9)-(fi.roles[b].orden||9))).forEach(num=>{ const R=fi.roles[num];
+    const cand=(R.pref||[]).map(n=>av.find(p=>rvNorm(p.name)===rvNorm(n))).filter(p=>p&&!used.has(p.id));
+    const pick=cand[0]; if(pick) used.add(pick.id);
+    out.push({num, rol:R.rol, quien:pick?pick.name:null, alt:cand[1]?cand[1].name:null}); });
+  return out;
+}
+function nextRivalDoc(){ const nm=nextMatch(); if(!nm) return null; const R=rivalList().find(R=>rivalMatchesFor(R).some(m=>m.id===nm.id)); return R?{R,m:nm}:null; }
+async function jugadaSheet(fam){
   const fi=jugadaFicha(fam); const x=abpStats()[fam]||{usos:0,tiros:0,goles:0};
-  const disp=S.roster.filter(p=>p.status!=="lesionada"&&p.status!=="baja");
-  const rolesTxt=(fi&&fi.roles)||"";
-  modal(`<h3>${esc(fam)}</h3>
-    ${fi?`<div class="muted small">${esc((fi.lado||"")+" · "+(fi.tipo||""))}</div>
-      ${fi.puesta?`<div class="psec"><div class="eyebrow">Puesta en escena</div><div>${esc(fi.puesta)}</div></div>`:""}
-      ${fi.clave?`<div class="psec"><div class="eyebrow">Qué lee la sacadora</div><div>${esc(fi.clave)}</div></div>`:""}
-      ${(fi.variantes||[]).length?`<div class="psec"><div class="eyebrow">Opciones</div><ul class="plist">${fi.variantes.map(v=>`<li><b>${esc(v.nombre)}:</b> ${esc(v.txt)}</li>`).join("")}</ul></div>`:""}
-      ${(fi.contra||[]).length?`<div class="psec"><div class="eyebrow">Funciona contra</div><ul class="plist">${fi.contra.map(v=>`<li>${esc(v)}</li>`).join("")}</ul></div>`:""}
-      ${rolesTxt?`<div class="psec"><div class="eyebrow">Quién</div><div>${esc(rolesTxt)}</div></div>`:""}`
-      :`<p class="muted">Aún no hay ficha de esta jugada. Cuando haya vídeo o descripción, Claude la escribe.</p>`}
-    <div class="psec"><div class="eyebrow">Efectividad</div><div>${x.usos} usos · ${x.tiros} tiros · ${x.goles} goles${x.usos?` · ${Math.round(x.goles/x.usos*100)}% acaba en gol`:""}</div></div>
+  const lt=lastTrained(fam); const dias=lt?Math.round((parseYmd(ymd(new Date()))-parseYmd(lt))/864e5):null;
+  const nr=nextRivalDoc();
+  if(!fi){ modal(`<h3>${esc(fam)}</h3><p class="muted">Aún no hay ficha de esta jugada. Mándale a Claude el vídeo o la explicación y la prepara.</p>
+    <div class="psec"><div class="eyebrow">Efectividad</div><div>${x.usos} usos · ${x.tiros} tiros · ${x.goles} goles</div></div><button class="btn block" style="margin-top:12px" onclick="closeModal()">Cerrar</button>`); return; }
+  const vs=abpVarStats(fam);
+  let rivHTML="";
+  if(nr){ const rec=(nr.R.abpRecomendado||[]).filter(r=>r.fam===fam);
+    rivHTML=`<div class="psec jf-riv"><div class="eyebrow">Contra ${esc(nr.R.nombre)} (${esc(fmtMatchDay(nr.m))})</div>${rec.length?rec.map(r=>`<div><b>${esc(r.var)}</b> · ${esc(r.porque)}</div>`).join(""):(((nr.R.momentos||{}).abpFavor||[]).length?`<div class="small">Cómo defienden el ABP: ${esc(nr.R.momentos.abpFavor.join(" · "))}</div>`:`<div class="muted small">Sin datos de cómo defienden el balón parado. Si los ves, apúntalo en Rivales.</div>`)}</div>`; }
+  const roles=assignRoles(fi);
+  modal(`<h3>${esc(fam)} <span class="muted small" style="font-weight:400">${esc((fi.lado||"")+" · "+(fi.tipo||""))}</span></h3>
+    <div class="row small" style="gap:10px;flex-wrap:wrap;margin-top:2px"><span>${x.usos} usos · ${x.tiros} tiros · <b style="color:var(--goal)">${x.goles} goles</b></span>
+      <span style="color:${dias==null||dias>21?"var(--foul)":"var(--muted)"}">${lt?`Entrenada hace ${dias} día${dias!==1?"s":""}`:"Sin entrenar esta temporada en la app"}${dias!=null&&dias>21?" ⚠":""}</span></div>
+    ${rivHTML}
+    <div class="psec"><div class="eyebrow">Puesta en escena</div>
+      ${fi.escena?`<img class="jf-img" src="${illusDataURL(fi.escena,340)}" alt="">`:""}
+      <div class="small">${esc(fi.puesta||"")}</div>
+      ${fi.clave?`<div class="jf-clave">👁 Lee a: ${esc(fi.clave)}</div>`:""}</div>
+    <div class="psec"><div class="eyebrow">Quién, con las disponibles</div>
+      ${roles.map(r=>`<div class="jf-rol"><span class="jf-num">${esc(r.num)}</span><span class="grow">${esc(r.rol)}</span><b>${esc(r.quien||"—")}</b>${r.alt?`<span class="muted small">&nbsp;· si no, ${esc(r.alt)}</span>`:""}</div>`).join("")}
+      <div class="muted small" style="margin-top:4px">Según roles de estrategia y quién está disponible (sin lesionadas ni bajas). Los números son los del dibujo.</div></div>
+    <div class="psec"><div class="eyebrow">Opciones según la lectura</div>
+      ${(fi.variantes||[]).map(v=>{ const st=vs[v.id]; return `<div class="jf-var">
+        <div class="jf-si">Si ${esc(v.si)} →</div>
+        <div class="row" style="align-items:baseline"><b class="grow">${esc(v.id)} · ${esc(v.nombre)}</b><span class="muted small">${st?`${st.usos} uso${st.usos!==1?"s":""} · ${st.goles} gol${st.goles!==1?"es":""}`:""}</span></div>
+        ${v.ilus?`<img class="jf-img" src="${illusDataURL(v.ilus,340)}" alt="">`:""}
+        <div class="small">${esc(v.txt)}</div>
+        <div class="jf-vid" data-vfam="${esc(fam)}" data-vid="${esc(v.id)}"></div></div>`; }).join("")}</div>
+    <div class="muted small">Esquemas orientativos (verde nosotras, rojo rivales; amarillo: la defensora que se lee y el tiro). El vídeo es la referencia.</div>
     <button class="btn block" style="margin-top:12px" onclick="closeModal()">Cerrar</button>`);
+  if(authToken){ await libFiles();
+    document.querySelectorAll(".jf-vid").forEach(h=>{ const fl=varFile(h.dataset.vfam,h.dataset.vid); if(!fl) return;
+      h.innerHTML=`<button class="btn sm ghost">▶ Vídeo</button>`; h.querySelector("button").onclick=async()=>{ h.innerHTML='<span class="muted small">Cargando…</span>';
+        try{ const url=await storageSignedUrl(fl.name); h.innerHTML=`<video src="${url}" controls autoplay playsinline style="width:100%;border-radius:10px;margin-top:6px;background:#000"></video>`; }catch(e){ h.innerHTML='<span class="small" style="color:var(--red)">No se pudo cargar el vídeo.</span>'; } }; }); }
 }
 function libRowHTML(f, cat){
   return `<div class="card" style="padding:12px;margin-bottom:8px">
@@ -4093,8 +4152,8 @@ function pbDrawPitch(W,H){
   };
   drawGoalArea(true); drawGoalArea(false);
 }
-function pbDrawToken(t,pos,W,H){
-  const c=pbCtx, x=pos.x*W, y=pos.y*H, R=PB_R*W;
+function pbDrawToken(t,pos,W,H,rs){
+  const c=pbCtx, x=pos.x*W, y=pos.y*H, R=PB_R*W*(rs||1);
   if(t.kind==="ball"){
     c.fillStyle="#fff"; c.strokeStyle="#111"; c.lineWidth=1.5;
     c.beginPath(); c.arc(x,y,R*0.62,0,7); c.fill(); c.stroke();
