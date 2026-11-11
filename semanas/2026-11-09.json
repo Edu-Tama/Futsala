@@ -1,6 +1,6 @@
 {
  "semana": "2026-11-09",
- "generado": "2026-11-08T16:12:44Z",
+ "generado": "2026-11-11T16:49:36Z",
  "briefGuardado": "2026-11-08T11:06:39.627Z",
  "ejercicios": [
   {
@@ -2290,107 +2290,11 @@
  ],
  "sesiones": [
   {
-   "date": "2026-11-11",
-   "title": "Atacar la zona: fijar, pasar y aparecer de pívot",
-   "focus": "Ataque 4-0 contra defensa zonal (progresión 2x2 → 4x4 → zona baja), defensa de la pívot contra 3-1, transición tras pérdida y presión alta",
-   "targetMin": "90",
-   "notes": "Partido el sábado 14 fuera contra AD Collado Villalba Cobiosa A (3-1, zona, presión media; saca portera-jugadora cuando va perdiendo). Previsto: 9 de campo y 2 porteras; una ala/pívot con carga reducida. Sin partido el fin de semana anterior: volumen normal. Camiseta amarilla.",
-   "blocks": [
-    {
-     "name": "Portería (Julia)",
-     "paralelo": true,
-     "items": [
-      {
-       "exerciseId": "cl-gk-pies-reflejos-v8",
-       "minutes": 15,
-       "note": "En paralelo al rondo y la posesión · juego con pies, salida y reflejos"
-      }
-     ]
-    },
-    {
-     "name": "Parte inicial",
-     "items": [
-      {
-       "exerciseId": "mqzriday1a8je",
-       "ref": "rondo área",
-       "fallback": {
-        "id": "cl-rondo-area",
-        "name": "Rondo en el área",
-        "category": "Posesión",
-        "objective": "Rondo de inicio dentro del área",
-        "desc": "Dentro del área, 4 contra 1 o 3 contra 2 a dos toques; 10 pases = punto.",
-        "players": "5",
-        "duration": "8",
-        "material": "Balones",
-        "porN": []
-       },
-       "minutes": 8,
-       "note": "En paralelo a portería · con 9, 6 contra 3 a dos toques; las tres de dentro salen al robar"
-      },
-      {
-       "exerciseId": "cl-posesion-4x4-linea-v8",
-       "minutes": 7,
-       "note": "En paralelo a portería",
-       "equipos": {
-        "n": 2,
-        "porteras": false
-       }
-      }
-     ]
-    },
-    {
-     "name": "Parte central",
-     "items": [
-      {
-       "exerciseId": "cl-zona-1-2x2-apoyo-v8",
-       "minutes": 10,
-       "note": "Progresión 1/3: la pareja contra dos en zona · carga reducida: hace de apoyo"
-      },
-      {
-       "exerciseId": "cl-zona-2-4x4-rombo-v8",
-       "minutes": 12,
-       "note": "Progresión 2/3: 4-0 contra su rombo · una por carril",
-       "equipos": 2
-      },
-      {
-       "exerciseId": "cl-zona-3-zona-baja-pivot-v8",
-       "minutes": 12,
-       "note": "Progresión 3/3: aparece la pívot ante la zona baja · carga reducida: series alternas",
-       "equipos": 2
-      },
-      {
-       "exerciseId": "bt-pivot-3-4x4-contra-31",
-       "minutes": 12,
-       "note": "Defensa de la pívot por detrás contra su 3-1; el cambio lo canta la de atrás",
-       "equipos": 2
-      }
-     ]
-    },
-    {
-     "name": "Parte final",
-     "items": [
-      {
-       "exerciseId": "cl-transicion-perdida-4x4-v8",
-       "minutes": 10,
-       "note": "Transición tras pérdida: la más cercana presiona, la ala contraria al eje",
-       "equipos": 2
-      },
-      {
-       "exerciseId": "cl-partido-zona-presion-v8",
-       "minutes": 15,
-       "note": "Consigna: presionar alto su salida y atravesar el eje · carga reducida: entra por cambios volantes",
-       "equipos": 2
-      }
-     ]
-    }
-   ]
-  },
-  {
    "date": "2026-11-13",
-   "title": "Finalizar y cerrar el plan del sábado",
-   "focus": "Finalización con decisión (oleadas, defensora clave, segundo palo), defensa del 5x4 en 1-2-1, balón parado del lado izquierdo y partido con el plan",
+   "title": "Atacar su media pista y defender a su pívot",
+   "focus": "Ataque 4-0 contra zona (rombo → zona baja con pívot), defensa de la pívot por detrás contra su 3-1, finalización leyendo a la defensora clave y balón parado",
    "targetMin": "90",
-   "notes": "Previo al partido del sábado 14 en Collado Villalba: menos volumen, pausas completas y sin cargas altas. Previsto: 10 de campo y 2 porteras; una ala/pívot con carga reducida. Hoy viene la sacadora: balón parado ofensivo. Camiseta rosa.",
+   "notes": "Rehecha tras suspenderse el miércoles 11 (huelga general): junta lo clave de los dos días para el sábado 14 en Collado Villalba. Previo al partido: pausas completas y sin cargas altas. Fuera la defensa del 5x4 (no prioritaria). Previsto: 10 de campo y 2 porteras; una ala/pívot con carga reducida. Hoy viene la sacadora. Camiseta rosa.",
    "blocks": [
     {
      "name": "Portería (Julia)",
@@ -2438,24 +2342,27 @@
      "name": "Parte central",
      "items": [
       {
-       "exerciseId": "bt-decision-1-oleadas-2x1-2x2",
-       "minutes": 10,
-       "note": "Progresión 1/3: finalizar antes de que llegue la segunda · contraataque directo"
+       "exerciseId": "cl-zona-2-4x4-rombo-v8",
+       "minutes": 12,
+       "note": "Progresión 1/2: 4-0 contra su rombo · una por carril; pausas completas",
+       "equipos": 2
+      },
+      {
+       "exerciseId": "cl-zona-3-zona-baja-pivot-v8",
+       "minutes": 12,
+       "note": "Progresión 2/2: aparece la pívot ante la zona baja y se finaliza · carga reducida: series alternas",
+       "equipos": 2
+      },
+      {
+       "exerciseId": "bt-pivot-3-4x4-contra-31",
+       "minutes": 12,
+       "note": "Defensa de su pívot por detrás (su referencia es diferencial): contacto, sin dejarla girar; el cambio lo canta la de atrás",
+       "equipos": 2
       },
       {
        "exerciseId": "bt-decision-2-defensora-clave",
        "minutes": 10,
-       "note": "Progresión 2/3: leer a la defensora clave de su zona · carga reducida: hace de pasadora"
-      },
-      {
-       "exerciseId": "bt-decision-3-segundo-palo",
-       "minutes": 10,
-       "note": "Progresión 3/3: segundo palo o pase atrás"
-      },
-      {
-       "exerciseId": "cl-pivot-recordatorio-v8",
-       "minutes": 8,
-       "note": "Recordatorio: su peligro es el pase a la pívot"
+       "note": "Finalización: leer a la defensora clave de su zona · carga reducida: hace de pasadora"
       }
      ]
     },
@@ -2463,19 +2370,14 @@
      "name": "Parte final",
      "items": [
       {
-       "exerciseId": "cl-5x4-1-2-1-porteria-vacia-v8",
-       "minutes": 10,
-       "note": "Saca portera-jugadora cuando va perdiendo"
-      },
-      {
        "exerciseId": "cl-abp-lado-izquierdo-v8",
        "minutes": 10,
-       "note": "La sacadora del viernes · lado izquierdo (el derecho se repasó la semana pasada)"
+       "note": "Balón parado breve con la sacadora del viernes"
       },
       {
        "exerciseId": "cl-partido-plan-sabado-v8",
        "minutes": 15,
-       "note": "Carga controlada: 3 x 4' · carga reducida: un tiempo sí y uno no",
+       "note": "Su 3-1 y su zona · carga controlada: 3 x 4' · carga reducida: un tiempo sí y uno no",
        "equipos": 2
       }
      ]
