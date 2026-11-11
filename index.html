@@ -279,6 +279,8 @@
   .cal .cell.train.has .dot{background:#04140a}
   .cal .cell.today{outline:2px solid var(--brand);outline-offset:-2px}
   .cal .cell.off{opacity:.5;text-decoration:line-through}
+  .cal .cell.susp{opacity:1;background:color-mix(in srgb,var(--red) 22%,transparent);text-decoration:line-through;cursor:pointer}
+  .suspban{border:1px solid var(--red);background:color-mix(in srgb,var(--red) 14%,transparent);border-radius:14px;padding:12px;margin-bottom:12px}
   .cal .cell .dot{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--club)}
   .callegend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:10px}
   .callegend i{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:4px}
@@ -730,6 +732,12 @@ function runCleanups(){
     const s16=S.sessions.find(s=>s.id==="mueip9n8v8vpe"); if(s16) s16.sinDatos=true; // hubo entreno, sin asistencia ni RPE
     S.limpiezas.push("sept-2026"); save();
   }
+  if(S.limpiezas.indexOf("huelga-2026-11-11")<0){
+    const h=S.sessions.find(x=>x.date==="2026-11-11") || ensureSession("2026-11-11");
+    if(h && !h.suspendida){ h.suspendida={motivo:"Huelga: huelga general", cuando:new Date().toISOString()}; }
+    S.calOverrides["2026-11-11"]="off";
+    S.limpiezas.push("huelga-2026-11-11"); save();
+  }
   if(S.limpiezas.indexOf("coro-viernes")<0){
     const c=S.roster.find(p=>/^coro$/i.test((p.name||"").trim()));
     if(c){ c.diasEntreno=[5]; }
@@ -1069,6 +1077,7 @@ function renderHome(){
 
   // próximo entreno
   const nd=nextTrainingDate();
+  const sHoy=sessionForDate(ymd(now)); const suspHoy=sHoy&&sHoy.suspendida;
   let nextHTML;
   if(!S.trainSchedule){
     nextHTML=`<div class="nextcard"><div class="lbl">Temporada</div><div class="big" style="text-transform:none">Aún sin calendario</div><div class="hrs">Programa las fechas y los días de entreno.</div><button class="btn primary block" id="hCfg" style="margin-top:12px">Configurar temporada</button></div>`;
@@ -1076,7 +1085,7 @@ function renderHome(){
     const isToday = nd===ymd(now);
     const dl=new Date(nd+'T00:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
     const sess=sessionForDate(nd); const prepared=sess&&sessionCount(sess)>0;
-    nextHTML=`<div class="nextcard"><div class="lbl">${isToday?"Hoy entrenáis":"Próximo entreno"}</div>
+    nextHTML=(suspHoy?`<div class="suspban"><b>Hoy no hay entreno</b> · suspendido (${esc(suspHoy.motivo||"")})</div>`:"")+`<div class="nextcard"><div class="lbl">${isToday?"Hoy entrenáis":"Próximo entreno"}</div>
       <div class="big">${esc(dl)}</div>
       <div class="hrs">${esc(S.trainSchedule.startTime)}–${esc(S.trainSchedule.endTime)} · ${prepared?"sesión preparada":"sin preparar"}</div>
       <button class="btn primary block" id="hPrep" style="margin-top:12px">${prepared?"Ver la sesión":"Preparar la sesión"}</button></div>`;
@@ -2128,7 +2137,7 @@ function playerSeasonStats(pid){
 function playerAttendance(pid){
   const today=ymd(new Date());
   const pl=playerById(pid);
-  const past=S.sessions.filter(s=>s.date && s.date<=today && !s.sinDatos && trainsOn(pl,s.date));
+  const past=S.sessions.filter(s=>s.date && s.date<=today && !s.sinDatos && !s.suspendida && trainsOn(pl,s.date));
   const total=past.length;
   const att=past.filter(s=>(s.absent||[]).indexOf(pid)<0).length;
   return {att,total,pct: total? Math.round(att/total*100):null};
@@ -2141,7 +2150,7 @@ function rpeMedian(pid){
 }
 /* Carga (RPE x min) de un entreno para una jugadora. Si vino y no hay RPE, se usa su RPE habitual. */
 function sessionLoadFor(s,pid){
-  if(!s.date || s.sinDatos || (s.absent||[]).indexOf(pid)>=0) return 0;
+  if(!s.date || s.sinDatos || s.suspendida || (s.absent||[]).indexOf(pid)>=0) return 0;
   const v=parseInt((s.rpe||{})[pid]);
   if(v) return v*sessionDuration(s);
   if(s.date>=ymd(new Date())) return 0;
@@ -2180,7 +2189,7 @@ function loadStatus(pid){
     if((p.injuries||[]).some(j=>j.altaDate && j.altaDate>=ymd(new Date(Date.now()-21*864e5)))) A.push("vuelve de lesión");
   }
   const seen={}, last=[];
-  S.sessions.filter(s=>s.date&&s.date<t0&&!s.sinDatos&&trainsOn(p,s.date)).sort((a,b)=>b.date.localeCompare(a.date)).forEach(s=>{ if(!seen[s.date]){ seen[s.date]=1; last.push(s); } });
+  S.sessions.filter(s=>s.date&&s.date<t0&&!s.sinDatos&&!s.suspendida&&trainsOn(p,s.date)).sort((a,b)=>b.date.localeCompare(a.date)).forEach(s=>{ if(!seen[s.date]){ seen[s.date]=1; last.push(s); } });
   if(last.length>=2 && last.slice(0,2).every(s=>(s.absent||[]).indexOf(pid)>=0)) A.push("no ha venido a los 2 últimos entrenos");
   out.motivos=R.concat(A); out.nivel=R.length?"rojo":(A.length?"ambar":"verde");
   return out;
@@ -2623,8 +2632,22 @@ function editExercise(id){
 function sessionMinutes(s){ return (s.blocks||[]).reduce((t,b)=>t+(b.paralelo?0:b.items.reduce((u,i)=>u+(parseInt(i.minutes)||0),0)),0); }
 function sessionCount(s){ return (s.blocks||[]).reduce((t,b)=>t+b.items.length,0); }
 
+const SUSP_MOT=["Huelga","Festivo","Pista no disponible","Climatología","Pocas jugadoras","Otro"];
+function suspendSheet(s, after){
+  modal(`<h3>Suspender el entreno del ${esc(new Date(s.date+"T00:00").toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"}))}</h3>
+    <p class="muted small">No contará para asistencia, carga, semáforo ni estadísticas. La sesión preparada se conserva.</p>
+    <div class="tagrow">${SUSP_MOT.map(m=>`<button class="tagbtn" data-mot="${esc(m)}">${esc(m)}</button>`).join("")}</div>
+    <label class="fld" style="margin-top:10px"><span>Detalle (opcional)</span><input id="suDet" placeholder="p. ej. huelga general"></label>
+    <div class="foot"><button class="btn ghost grow" onclick="closeModal()">Cancelar</button><button class="btn primary grow" id="suOk">Suspender</button></div>`);
+  let mot="";
+  document.querySelectorAll("[data-mot]").forEach(b=>b.onclick=()=>{ mot=b.dataset.mot; document.querySelectorAll("[data-mot]").forEach(x=>x.classList.toggle("on",x===b)); });
+  document.getElementById("suOk").onclick=()=>{ const det=document.getElementById("suDet").value.trim();
+    if(!mot&&!det){ toast("Elige un motivo"); return; }
+    s.suspendida={motivo:[mot,det].filter(Boolean).join(": "), cuando:new Date().toISOString()};
+    S.calOverrides[s.date]="off"; save(); closeModal(); toast("Entreno suspendido"); if(after) after(); };
+}
 function balanceCard(){
-  const withItems=S.sessions.filter(s=>sessionCount(s)>0);
+  const withItems=S.sessions.filter(s=>sessionCount(s)>0 && !s.suspendida);
   if(withItems.length<2) return "";
   const cutoff=Date.now()-28*864e5;
   const recent=withItems.filter(s=>s.date && new Date(s.date+'T00:00').getTime()>=cutoff);
@@ -2762,8 +2785,9 @@ function renderCalendar(body){
     const sess=sessionForDate(ds);
     const has=sess && sessionCount(sess)>0;
     const off=(inRange && S.trainSchedule.weekdays.indexOf(parseYmd(ds).getDay())>=0 && S.calOverrides[ds]==="off");
-    const cls=["cell", inRange?"in":"", train?"train":"", has?"has":"", ds===todayStr?"today":"", off?"off":""].filter(Boolean).join(" ");
-    cells+=`<div class="${cls}" data-day="${ds}" data-train="${train?1:0}" data-range="${inRange?1:0}">${d}${has?'<span class="dot"></span>':""}</div>`;
+    const susp=sess&&sess.suspendida;
+    const cls=["cell", inRange?"in":"", train?"train":"", has&&!susp?"has":"", ds===todayStr?"today":"", off?"off":"", susp?"susp":""].filter(Boolean).join(" ");
+    cells+=`<div class="${cls}" data-day="${ds}" data-train="${train?1:0}" data-range="${inRange?1:0}" data-susp="${susp?1:0}" title="${susp?esc("Suspendido: "+(sess.suspendida.motivo||"")):""}">${d}${has&&!susp?'<span class="dot"></span>':""}</div>`;
   }
 
   const next=c4=>{ const m=cm-1+c4, y=cy+Math.floor(m/12), mm=((m%12)+12)%12; return pad2(mm+1)?`${y}-${pad2(mm+1)}`:""; };
@@ -2782,6 +2806,7 @@ function renderCalendar(body){
         <span><i style="background:rgba(76,143,83,.16);border:1px solid var(--club)"></i>entreno</span>
         <span><i style="background:var(--club)"></i>preparado</span>
         <span><i style="background:transparent;outline:2px solid var(--brand)"></i>hoy</span>
+        <span><i style="background:color-mix(in srgb,var(--red) 30%,transparent)"></i>suspendido</span>
       </div>
     </div>
     <div class="pb-hint">Toca un día de entreno para preparar la sesión. Toca otro día para añadir un entreno extra.</div>
@@ -2797,6 +2822,7 @@ function renderCalendar(body){
   drawPrepBanner();
   body.querySelectorAll("[data-day]").forEach(c=>c.onclick=()=>{
     const ds=c.dataset.day; if(c.dataset.range!=="1") return;
+    if(c.dataset.susp==="1"){ const ss=sessionForDate(ds); if(ss){ openSessionId=ss.id; renderSessions(); } return; }
     if(c.dataset.train==="1"){ openSessionId=ensureSession(ds).id; renderSessions(); }
     else {
       if(confirm("¿Añadir un entreno extra este día?")){ S.calOverrides[ds]="on"; openSessionId=ensureSession(ds).id; save(); renderSessions(); }
@@ -3331,10 +3357,10 @@ function importPack(pack,opts){
     const clean=Object.assign({category:"Táctica of.",objective:"",desc:"",material:"",players:"",duration:"",variants:"",boardId:null},x);
     const i=S.exercises.findIndex(e=>e.id===x.id); if(i>=0) S.exercises[i]=Object.assign({},S.exercises[i],clean); else S.exercises.push(clean); });
   let added=0, skipped=0;
-  const hoy=ymd(new Date());
+  const hoy=ymd(new Date()); const susp=d=>S.sessions.some(x=>x.date===d&&x.suspendida);
   pack.sesiones.forEach(ns=>{
     if(!ns||!ns.date) return;
-    if(opts.auto && ns.date<hoy) return;
+    if(opts.auto && (ns.date<hoy || susp(ns.date))) return;
     const old=S.sessions.find(x=>x.date===ns.date);
     if(!opts.auto && old && sessionCount(old)>0 && old.fromClaude!==pack.semana && !confirm(`Ya hay una sesión con ejercicios el ${ns.date}. ¿Sustituirla por la preparada?`)){ skipped++; return; }
     if(old) S.sessions=S.sessions.filter(x=>!(x.date===ns.date && (x===old || (pack.semana && x.fromClaude===pack.semana))));
@@ -3478,7 +3504,10 @@ function renderSessionEditor(body){
   const hours = S.trainSchedule? `${S.trainSchedule.startTime}–${S.trainSchedule.endTime}` : "";
   const isPattern = s.date && S.trainSchedule && S.trainSchedule.weekdays.indexOf(parseYmd(s.date).getDay())>=0 && s.date>=S.trainSchedule.start && s.date<=S.trainSchedule.end;
 
+  const SU=s.suspendida;
   body.innerHTML=`
+    ${SU?`<div class="suspban"><b>Entreno suspendido</b> · ${esc(SU.motivo||"")}<div class="muted small" style="margin-top:4px">No cuenta para asistencia, carga ni estadísticas. La sesión preparada se conserva por si quieres pasarla a otro día (Duplicar → cambia la fecha).</div>
+      <button class="btn sm ghost" id="seUnsusp" style="margin-top:8px">Reactivar este entreno</button></div>`:""}
     <div class="row" style="margin-bottom:10px;flex-wrap:wrap;gap:6px">
       <button class="btn sm ghost" id="seBack">← Calendario</button>
       <div class="grow"></div>
@@ -3514,7 +3543,8 @@ function renderSessionEditor(body){
       <div class="rpegrid" id="rpeList"></div>
       <div class="muted small" style="margin-top:8px">El número que te pasa cada una al acabar. Solo aparecen las presentes.</div>
     </div>
-    ${isPattern?`<button class="btn ghost block danger" id="seCancelDay" style="margin-top:10px">No hay entreno este día</button>`:""}`;
+    ${!SU?`<button class="btn ghost block danger" id="seSusp" style="margin-top:10px">Suspender este entreno</button>`:""}
+    ${isPattern&&!SU?`<button class="btn ghost block" id="seCancelDay" style="margin-top:6px">No hay entreno este día (festivo, descanso…)</button>`:""}`;
 
   body.querySelector("#seBack").onclick=()=>{ sessionCtxCount=null; openSessionId=null; renderSessions(); };
   body.querySelector("#seDup").onclick=()=>duplicateSession(s.id);
@@ -3527,6 +3557,8 @@ function renderSessionEditor(body){
   const fo=body.querySelector("#seFocus"); fo.oninput=()=>{ s.focus=fo.value; save(); };
   const no=body.querySelector("#seNotes"); no.oninput=()=>{ s.notes=no.value; save(); };
   body.querySelector("#seAddBlock").onclick=()=>{ s.blocks.push({id:uid(),name:"Bloque",items:[]}); save(); renderSessionEditor(body); };
+  const sp=body.querySelector("#seSusp"); if(sp) sp.onclick=()=>suspendSheet(s, ()=>renderSessionEditor(body));
+  const us=body.querySelector("#seUnsusp"); if(us) us.onclick=()=>{ if(confirm("¿Reactivar este entreno? Volverá a contar en asistencia y carga.")){ delete s.suspendida; if(S.calOverrides[s.date]==="off") delete S.calOverrides[s.date]; save(); renderSessionEditor(body); } };
   const cd=body.querySelector("#seCancelDay"); if(cd) cd.onclick=()=>{
     if(confirm("Marcar este día como sin entreno (festivo, descanso…)")){
       S.calOverrides[s.date]="off";
