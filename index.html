@@ -1048,7 +1048,9 @@ function homePending(){
     const s=sessionForDate(today);
     if(!s || sessionCount(s)===0) list.push({text:"Preparar el entreno de hoy", action:()=>homeOpenSession(today)});
   }
-  const past=S.sessions.filter(s=>s.date && s.date<=today && sessionCount(s)>0).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  // solo entrenos ya terminados (hoy, a partir de la hora de fin) y que no estén suspendidos
+  const nowHM=new Date().toTimeString().slice(0,5), endHM=(S.trainSchedule&&S.trainSchedule.endTime)||"21:30";
+  const past=S.sessions.filter(s=>s.date && !s.suspendida && !s.sinDatos && (s.date<today || (s.date===today && nowHM>=endHM)) && sessionCount(s)>0).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
   const noRpe=past.find(s=>{ const present=S.roster.filter(r=>(s.absent||[]).indexOf(r.id)<0); return present.length>0 && (!s.rpe || Object.keys(s.rpe).length===0); });
   if(noRpe) list.push({text:`Registrar el RPE del entreno del ${new Date(noRpe.date+'T00:00').toLocaleDateString('es-ES',{day:'numeric',month:'short'})}`, action:()=>homeOpenSession(noRpe.date)});
   return list;
@@ -3119,7 +3121,7 @@ function lastPlayed(){ return playedMatches().slice().sort((a,b)=>matchWhen(b).l
 function sameRival(a,b){ const n=x=>String(x||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim(); return n(a) && n(a)===n(b); }
 function prevWeekClose(w){
   const a=parseYmd(w); a.setDate(a.getDate()-7); const from=ymd(a), to=ymd(new Date(parseYmd(w).getTime()-864e5));
-  const ss=S.sessions.filter(s=>s.date>=from && s.date<=to && sessionCount(s)>0);
+  const ss=S.sessions.filter(s=>s.date>=from && s.date<=to && sessionCount(s)>0 && !s.suspendida && !s.sinDatos);
   if(!ss.length) return null;
   const pres=ss.map(s=>presentCount(s)); const rp=[]; ss.forEach(s=>Object.values(s.rpe||{}).forEach(v=>{ if(+v) rp.push(+v); }));
   return {n:ss.length, asis:pres.reduce((x,y)=>x+y,0)/pres.length, rpe:rp.length?rp.reduce((x,y)=>x+y,0)/rp.length:null, focos:ss.map(s=>s.focus||s.title).filter(Boolean)};
@@ -3539,10 +3541,10 @@ function renderSessionEditor(body){
     <div id="blocks"></div>
     <button class="btn ghost block" id="seAddBlock">+ Añadir bloque</button>
     <div class="card" style="margin-top:12px"><label class="fld" style="margin-bottom:0"><span>¿Cómo salió? (notas)</span><textarea id="seNotes" placeholder="Apunta ajustes para la próxima…">${esc(s.notes||'')}</textarea></label></div>
-    <div class="card"><h2>RPE · esfuerzo 1-10</h2>
+${SU?"":`    <div class="card"><h2>RPE · esfuerzo 1-10</h2>
       <div class="rpegrid" id="rpeList"></div>
       <div class="muted small" style="margin-top:8px">El número que te pasa cada una al acabar. Solo aparecen las presentes.</div>
-    </div>
+    </div>`}
     ${!SU?`<button class="btn ghost block danger" id="seSusp" style="margin-top:10px">Suspender este entreno</button>`:""}
     ${isPattern&&!SU?`<button class="btn ghost block" id="seCancelDay" style="margin-top:6px">No hay entreno este día (festivo, descanso…)</button>`:""}`;
 
@@ -3585,13 +3587,14 @@ function renderSessionEditor(body){
   // RPE (solo presentes)
   const rl=body.querySelector("#rpeList");
   const presentList=S.roster.filter(r=>s.absent.indexOf(r.id)<0);
-  if(!presentList.length){ rl.innerHTML='<div class="muted small">Nadie marcado como presente.</div>'; }
+  if(!rl){ /* entreno suspendido: sin RPE */ }
+  else if(!presentList.length){ rl.innerHTML='<div class="muted small">Nadie marcado como presente.</div>'; }
   else presentList.forEach(r=>{
     const row=document.createElement("div"); row.className="rpe-row";
     row.innerHTML=`<span class="nm">#${esc(r.number)} ${esc(r.name)}</span><input type="number" min="1" max="10" inputmode="numeric" value="${esc(s.rpe[r.id]||'')}" data-rpe="${r.id}" placeholder="–">`;
     rl.appendChild(row);
   });
-  rl.querySelectorAll("[data-rpe]").forEach(inp=>inp.oninput=()=>{
+  if(rl) rl.querySelectorAll("[data-rpe]").forEach(inp=>inp.oninput=()=>{
     const v=parseInt(inp.value);
     if(isNaN(v)) delete s.rpe[inp.dataset.rpe]; else s.rpe[inp.dataset.rpe]=Math.max(1,Math.min(10,v));
     save();
