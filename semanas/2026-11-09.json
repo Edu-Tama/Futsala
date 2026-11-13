@@ -1,7 +1,7 @@
 {
  "semana": "2026-11-09",
- "generado": "2026-11-11T16:49:36Z",
- "briefGuardado": "2026-11-08T11:06:39.627Z",
+ "generado": "2026-11-13T06:53:52Z",
+ "briefGuardado": "2026-11-12T22:11:09.082Z",
  "ejercicios": [
   {
    "id": "cl-gk-pies-reflejos-v8",
@@ -2294,7 +2294,7 @@
    "title": "Atacar su media pista y defender a su pívot",
    "focus": "Ataque 4-0 contra zona (rombo → zona baja con pívot), defensa de la pívot por detrás contra su 3-1, finalización leyendo a la defensora clave y balón parado",
    "targetMin": "90",
-   "notes": "Rehecha tras suspenderse el miércoles 11 (huelga general): junta lo clave de los dos días para el sábado 14 en Collado Villalba. Previo al partido: pausas completas y sin cargas altas. Fuera la defensa del 5x4 (no prioritaria). Previsto: 10 de campo y 2 porteras; una ala/pívot con carga reducida. Hoy viene la sacadora. Camiseta rosa.",
+   "notes": "Rehecha tras suspenderse el miércoles 11 (huelga general): junta lo clave de los dos días para el domingo 15 a las 20:00 en Collado Villalba. Dos días antes del partido: pausas completas y sin cargas altas. Fuera la defensa del 5x4 (no prioritaria). Previsto: 9 de campo y 2 porteras; una ala/pívot con carga reducida. Hoy viene la sacadora. Camiseta rosa.",
    "blocks": [
     {
      "name": "Portería (Julia)",
@@ -2325,12 +2325,12 @@
         "porN": []
        },
        "minutes": 8,
-       "note": "En paralelo a portería · con 10, dos rondos 4 contra 1 en el área"
+       "note": "En paralelo a portería · con 9, 6 contra 3 a dos toques; las tres de dentro salen al robar"
       },
       {
        "exerciseId": "cl-posesion-5x5-zonas-v8",
        "minutes": 7,
-       "note": "En paralelo a portería",
+       "note": "En paralelo a portería · con 9: 4x4 + comodina",
        "equipos": {
         "n": 2,
         "porteras": false
@@ -2377,7 +2377,7 @@
       {
        "exerciseId": "cl-partido-plan-sabado-v8",
        "minutes": 15,
-       "note": "Su 3-1 y su zona · carga controlada: 3 x 4' · carga reducida: un tiempo sí y uno no",
+       "note": "Partido del plan para el domingo: su 3-1, su zona y su portera-jugadora · con 11, 5x5 con cambios volantes · 3 x 4' · carga reducida: un tiempo sí y uno no",
        "equipos": 2
       }
      ]
