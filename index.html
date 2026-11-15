@@ -738,10 +738,26 @@ function runCleanups(){
     S.calOverrides["2026-11-11"]="off";
     S.limpiezas.push("huelga-2026-11-11"); save();
   }
-  if(S.limpiezas.indexOf("villalba-reloj")<0){
+  if(S.limpiezas.indexOf("villalba-datos")<0){
+    // J6 Villalba: el reloj se paró. 1ª parte extrapolada a 20' (×1,96, como pidió Eduardo en el registro);
+    // 2ª parte sin minutos (se sabe quién jugó). Faltas y tarjetas según el registro post-partido.
     const v=S.matches.find(x=>x.id==="mtkc9fp6zctss");
-    if(v && v.finished){ v.datosIncompletos=true; v.notaDatos="El reloj se paró (10' en la 1ª parte y 0' en la 2ª): minutos y minuto de los goles no fiables. Resultado, goleadoras y faltas sí."; }
-    S.limpiezas.push("villalba-reloj"); save();
+    if(v && v.finished){
+      const len=Math.max(...v.stints.filter(st=>st.half===1).map(st=>st.outSec||0));
+      if(len>0 && len<REG_HALF_SEC*0.75){ const k=REG_HALF_SEC/len;
+        v.stints.forEach(st=>{ if(st.half===1){ st.inSec=Math.round(st.inSec*k*4)/4; st.outSec=st.outSec==null?null:Math.round(st.outSec*k*4)/4; } });
+        v.events.forEach(e=>{ if(e.half===1 && e.sec!=null) e.sec=Math.round(e.sec*k*4)/4; }); }
+      delete v.datosIncompletos; v.sinMinutos2=true;
+      v.notaDatos="El reloj se paró: 1ª parte extrapolada a 20' (×1,96) y 2ª parte sin minutos (sí se sabe quién jugó). Faltas y tarjetas de la 2ª, según el registro post-partido.";
+      v.fouls={1:5,2:6};
+      const add=(type,pid,nota)=>{ if(!v.events.some(e=>e.type===type&&e.pid===pid&&e.half===2&&e.nota===nota)) v.events.unshift({id:uid(),type,half:2,sec:null,pid,assist:null,nota}); };
+      const byName=n=>{ const p=S.roster.find(r=>rvNorm(r.name)===rvNorm(n)); return p?p.id:null; };
+      const sofi=byName("Sofi"), catri=byName("Catri"), raquel=byName("Raquel");
+      if(sofi){ add("yellow",sofi,"1ª amarilla"); add("yellow",sofi,"2ª amarilla"); add("red",sofi,"doble amarilla"); }
+      if(catri) add("yellow",catri,"amarilla");
+      if(raquel) add("yellow",raquel,"amarilla");
+    }
+    S.limpiezas.push("villalba-datos"); save();
   }
   if(S.limpiezas.indexOf("coro-viernes")<0){
     const c=S.roster.find(p=>/^coro$/i.test((p.name||"").trim()));
@@ -1675,6 +1691,7 @@ function matchSummarySheet(m){
   }).join("");
   modal(`<h3>Resumen · ${m.homeAway==="local"?"vs "+esc(m.opponent):"en "+esc(m.opponent)}</h3>
     <p class="muted small">Marcador ${m.score.us}–${m.score.them} · Faltas 1ª ${m.fouls[1]} / 2ª ${m.fouls[2]}</p>
+    ${m.sinMinutos2&&!m.datosIncompletos?`<div class="suspban" style="border-color:var(--foul);background:color-mix(in srgb,var(--foul) 14%,transparent)"><b>2ª parte sin minutos</b><div class="small">${esc(m.notaDatos||"")} Los minutos de abajo son solo de la 1ª parte.</div></div>`:""}
     ${m.datosIncompletos?`<div class="suspban" style="border-color:var(--foul);background:color-mix(in srgb,var(--foul) 14%,transparent)"><b>Minutos no fiables</b><div class="small">${esc(m.notaDatos||"El reloj no corrió durante todo el partido.")} No cuentan para minutos, +/- ni tramos; la carga se estima con su media.</div></div>`:""}
     <label class="row small" style="gap:8px;margin:6px 0 10px"><input type="checkbox" id="mInc" ${m.datosIncompletos?"checked":""} style="width:auto"> Minutos no fiables (el reloj no corrió bien)</label>
     <table><thead><tr><th>Jugadora</th><th class="n">Min</th><th class="n">G</th><th class="n">A</th></tr></thead><tbody>${rows}</tbody></table>
@@ -1935,7 +1952,7 @@ function renderSeason(){
       return `<div class="row" style="padding:8px 0;border-bottom:1px solid var(--line)">
         <span style="width:8px;height:34px;border-radius:3px;background:${rc};flex:none"></span>
         <div class="grow"><b>${m.homeAway==="local"?"vs":"@"} ${esc(m.opponent)}</b>
-          <div class="muted small">${new Date(m.date).toLocaleDateString("es-ES")}${seasonComp==="todo"?" · "+compLabel(m.comp):""}${m.datosIncompletos?' · <span style="color:var(--foul)">⚠ minutos no fiables</span>':""}</div></div>
+          <div class="muted small">${new Date(m.date).toLocaleDateString("es-ES")}${seasonComp==="todo"?" · "+compLabel(m.comp):""}${m.datosIncompletos?' · <span style="color:var(--foul)">⚠ minutos no fiables</span>':(m.sinMinutos2?' · <span style="color:var(--foul)">⚠ 2ª parte sin minutos</span>':"")}</div></div>
         <div class="num" style="font-size:20px;font-variant-numeric:tabular-nums">${m.score.us}–${m.score.them}</div>
         <button class="btn sm ghost" data-summ="${m.id}" style="margin-left:8px" title="Minutos del partido">⏱️</button>
         <button class="btn sm ghost" data-edit="${m.id}" style="margin-left:6px">Editar</button>
@@ -2218,6 +2235,11 @@ function loadStatus(pid){
 function semDot(st,big){ return `<span class="pl-dot" style="background:${SEM[st.nivel].c}${big?";width:14px;height:14px":""}" title="${SEM[st.nivel].t}"></span>`; }
 /* Para la carga: si un partido tiene los minutos incompletos, se estima con la media de minutos de esa jugadora en los demás partidos (si estuvo convocada y jugó) */
 function matchMinForLoad(m,pid){
+  if(m.sinMinutos2){ // 2ª parte sin minutos: se suma media parte estimada si jugó en la 2ª
+    const base=minutesFor(m,pid); if(!(m.stints||[]).some(s=>s.pid===pid&&s.half===2)) return base;
+    const otros=S.matches.filter(x=>x.finished&&!x.datosIncompletos&&!x.sinMinutos2&&x.comp===m.comp).map(x=>minutesFor(x,pid)).filter(v=>v>0);
+    return base + (otros.length? otros.reduce((a,b)=>a+b,0)/otros.length/2 : 8*60);
+  }
   if(!m.datosIncompletos) return minutesFor(m,pid);
   const jugo=(m.stints||[]).some(s=>s.pid===pid); if(!jugo) return 0;
   const otros=S.matches.filter(x=>x.finished&&!x.datosIncompletos&&x.comp===m.comp).map(x=>minutesFor(x,pid)).filter(v=>v>0);
