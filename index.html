@@ -720,7 +720,7 @@ async function syncNow(){
     setSync("ok");
   }catch(e){ setSync("error"); }
   syncBusy=false;
-  if(syncState==="ok"){ runCleanups(); maybeAutoImport(); }
+  if(syncState==="ok"){ const n0=(S.limpiezas||[]).length; runCleanups(); if((S.limpiezas||[]).length!==n0 && !document.querySelector(".sheet")) render(); maybeAutoImport(); }
 }
 /* Limpiezas puntuales de datos, acordadas con Eduardo. Cada una se aplica una sola vez. */
 function runCleanups(){
