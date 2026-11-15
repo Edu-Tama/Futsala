@@ -738,6 +738,15 @@ function runCleanups(){
     S.calOverrides["2026-11-11"]="off";
     S.limpiezas.push("huelga-2026-11-11"); save();
   }
+  // Correcciones de partidos que deja Claude en el buzón (correccion:<id del partido>) tras el registro post-partido
+  Object.keys(BZ).filter(k=>k.indexOf("correccion:")===0).forEach(k=>{ const C=(BZ[k]||{}).datos||{}; const tag="corr:"+k.slice(11)+":"+(C.version||1);
+    if(S.limpiezas.indexOf(tag)>=0) return; const v=S.matches.find(x=>x.id===k.slice(11)); if(!v||!v.finished) return;
+    if(C.fouls) v.fouls={1:+C.fouls["1"]||0,2:+C.fouls["2"]||0};
+    (C.eventos||[]).forEach(e=>{ if(!e||!e.type) return; if(v.events.some(x=>x.type===e.type&&x.pid===(e.pid||null)&&x.half===e.half&&x.nota===e.nota)) return;
+      v.events.unshift({id:uid(),type:e.type,half:e.half||2,sec:e.sec!=null?e.sec:null,pid:e.pid||null,assist:null,nota:e.nota||"según el registro"});
+      if(e.type==="goal") v.score.us++; if(e.type==="goal_rival") v.score.them++; });
+    if(C.nota) v.notaDatos=C.nota;
+    S.limpiezas.push(tag); save(); });
   if(S.limpiezas.indexOf("villalba-datos")<0){
     // J6 Villalba: el reloj se paró. 1ª parte extrapolada a 20' (×1,96, como pidió Eduardo en el registro);
     // 2ª parte sin minutos (se sabe quién jugó). Faltas y tarjetas según el registro post-partido.
