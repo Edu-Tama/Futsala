@@ -738,6 +738,11 @@ function runCleanups(){
     S.calOverrides["2026-11-11"]="off";
     S.limpiezas.push("huelga-2026-11-11"); save();
   }
+  if(S.limpiezas.indexOf("villalba-reloj")<0){
+    const v=S.matches.find(x=>x.id==="mtkc9fp6zctss");
+    if(v && v.finished){ v.datosIncompletos=true; v.notaDatos="El reloj se paró (10' en la 1ª parte y 0' en la 2ª): minutos y minuto de los goles no fiables. Resultado, goleadoras y faltas sí."; }
+    S.limpiezas.push("villalba-reloj"); save();
+  }
   if(S.limpiezas.indexOf("coro-viernes")<0){
     const c=S.roster.find(p=>/^coro$/i.test((p.name||"").trim()));
     if(c){ c.diasEntreno=[5]; }
@@ -910,22 +915,28 @@ function startMatch(opponent, homeAway, fiveIds, squad){
   S.live = m; save();
 }
 
+/* Reloj del partido: se calcula con la hora real (no con ticks), así no se para si se bloquea
+   la pantalla, la app pasa a segundo plano o se cambia de pestaña. */
+let wakeLock=null, _clockSave=0;
+async function keepAwake(on){
+  try{ if(on){ if(!wakeLock && navigator.wakeLock) { wakeLock=await navigator.wakeLock.request("screen"); wakeLock.addEventListener("release",()=>{ wakeLock=null; }); } }
+       else if(wakeLock){ await wakeLock.release(); wakeLock=null; } }catch(e){}
+}
+function clockNow(m){ return m.running && m.runStart ? Math.round(((m.runBase||0)+(Date.now()-m.runStart)/1000)*4)/4 : m.elapsed; }
+function clockTick(){ const m=S.live; if(!m||!m.running) return; m.elapsed=clockNow(m); paintClock(); if(Date.now()-_clockSave>10000){ _clockSave=Date.now(); try{ localStorage.setItem(STORE_KEY, JSON.stringify(S)); }catch(e){} } }
+function startClockTimer(){ if(clockTimer) clearInterval(clockTimer); clockTimer=setInterval(clockTick,250); keepAwake(true); }
 function toggleClock(){
   const m = S.live; if(!m || m.finished) return;
-  m.running = !m.running;
-  if(m.running){
-    clockTimer = setInterval(()=>{
-      m.elapsed += 0.25;
-      paintClock();
-    },250);
-  } else pauseClock();
+  if(!m.running){ m.running=true; m.runBase=m.elapsed; m.runStart=Date.now(); startClockTimer(); }
+  else pauseClock();
   save(); renderMatch();
 }
-function pauseClock(){ const m=S.live; if(m) m.running=false; if(clockTimer){clearInterval(clockTimer);clockTimer=null;} }
+function pauseClock(){ const m=S.live; if(m){ if(m.running) m.elapsed=clockNow(m); m.running=false; m.runStart=null; } if(clockTimer){clearInterval(clockTimer);clockTimer=null;} keepAwake(false); }
 
 function endHalf(){
   const m=S.live; if(!m) return;
   pauseClock();
+  if(m.half===1 && m.elapsed<REG_HALF_SEC*0.75 && !confirm(`El reloj marca ${fmt(m.elapsed)} en esta parte. ¿Seguro que ha terminado?`)) return;
   // cerrar stints abiertos de esta parte al tiempo actual
   m.stints.forEach(st=>{ if(st.half===m.half && st.outSec===null) st.outSec=m.elapsed; });
   if(m.half===1){
@@ -939,7 +950,8 @@ function endHalf(){
 
 function doSub(outId, inId){
   const m=S.live; if(!m) return;
-  const t = m.elapsed;
+  m.elapsed=clockNow(m); const t = m.elapsed;
+  if(!m.running) toast("Ojo: el reloj está parado");
   const st = m.stints.find(s=>s.pid===outId && s.half===m.half && s.outSec===null);
   if(st) st.outSec = t;
   m.stints.push({pid:inId, half:m.half, inSec:t, outSec:null});
@@ -950,6 +962,7 @@ function doSub(outId, inId){
 
 function addEvent(type, pid, assist){
   const m=S.live; if(!m) return;
+  m.elapsed=clockNow(m);
   m.events.unshift({id:uid(), type, half:m.half, sec:m.elapsed, pid:pid||null, assist:assist||null});
   if(type==="goal"){ m.score.us++; }
   if(type==="goal_rival"){ m.score.them++; }
@@ -969,6 +982,7 @@ function removeEvent(eid){
 function finishMatch(){
   const m=S.live; if(!m) return;
   pauseClock();
+  if(m.elapsed<REG_HALF_SEC*0.75 && !confirm(`El reloj de la ${m.half}ª parte marca ${fmt(m.elapsed)}. Si no corrió durante la parte, los minutos no serán fiables. ¿Finalizar igualmente?`)) return;
   m.stints.forEach(st=>{ if(st.outSec===null) st.outSec=m.elapsed; });
   m.finished=true; m.running=false;
   S.matches.unshift(m); S.live=null; matchView="home";
@@ -989,6 +1003,7 @@ function halfRealLen(m, h){
    como el reloj corre sin pararse en los saques, la parte dura en real más de
    20', así que escalamos proporcionalmente para que nadie pase de 40' de juego. */
 function minutesFor(m, pid){
+  if(m.finished && m.datosIncompletos) return 0;
   const done = m.finished;
   const factor = {};
   if(done){
@@ -1660,9 +1675,12 @@ function matchSummarySheet(m){
   }).join("");
   modal(`<h3>Resumen · ${m.homeAway==="local"?"vs "+esc(m.opponent):"en "+esc(m.opponent)}</h3>
     <p class="muted small">Marcador ${m.score.us}–${m.score.them} · Faltas 1ª ${m.fouls[1]} / 2ª ${m.fouls[2]}</p>
+    ${m.datosIncompletos?`<div class="suspban" style="border-color:var(--foul);background:color-mix(in srgb,var(--foul) 14%,transparent)"><b>Minutos no fiables</b><div class="small">${esc(m.notaDatos||"El reloj no corrió durante todo el partido.")} No cuentan para minutos, +/- ni tramos; la carga se estima con su media.</div></div>`:""}
+    <label class="row small" style="gap:8px;margin:6px 0 10px"><input type="checkbox" id="mInc" ${m.datosIncompletos?"checked":""} style="width:auto"> Minutos no fiables (el reloj no corrió bien)</label>
     <table><thead><tr><th>Jugadora</th><th class="n">Min</th><th class="n">G</th><th class="n">A</th></tr></thead><tbody>${rows}</tbody></table>
     <div class="foot"><button class="btn ghost grow" id="ok">Cerrar</button><button class="btn primary grow" id="mClaude">Copiar para Claude</button></div>`);
   document.getElementById("ok").onclick=closeModal;
+  const mi=document.getElementById("mInc"); if(mi) mi.onchange=()=>{ m.datosIncompletos=mi.checked; if(!mi.checked) delete m.notaDatos; save(); closeModal(); if(tab==="season") renderSeason(); toast(mi.checked?"Marcado: minutos no fiables":"Minutos de nuevo en las estadísticas"); };
   document.getElementById("mClaude").onclick=()=>copyForClaude(claudeMatchText(m),"Partido copiado","Pégalo en el registro post-partido del domingo.");
 }
 
@@ -1747,7 +1765,8 @@ function matchSegments(m){ // tramos con el mismo grupo en pista
     for(let i=0;i<P.length-1;i++){ const a=P[i], b=P[i+1]; if(b-a<=0) continue; out.push({h,a,b,ids:onCourtAt(m,h,(a+b)/2)}); } });
   return out;
 }
-function seasonAnalysis(ms){
+function seasonAnalysis(msAll){
+  const ms=msAll.filter(m=>!m.datosIncompletos);
   const tram={f:Array(8).fill(0),c:Array(8).fill(0)}; const pm={}; const q={};
   ms.forEach(m=>{
     (m.events||[]).forEach(e=>{ if(e.type!=="goal"&&e.type!=="goal_rival") return; if(e.sec==null||!e.half) return;
@@ -1916,7 +1935,7 @@ function renderSeason(){
       return `<div class="row" style="padding:8px 0;border-bottom:1px solid var(--line)">
         <span style="width:8px;height:34px;border-radius:3px;background:${rc};flex:none"></span>
         <div class="grow"><b>${m.homeAway==="local"?"vs":"@"} ${esc(m.opponent)}</b>
-          <div class="muted small">${new Date(m.date).toLocaleDateString("es-ES")}${seasonComp==="todo"?" · "+compLabel(m.comp):""}</div></div>
+          <div class="muted small">${new Date(m.date).toLocaleDateString("es-ES")}${seasonComp==="todo"?" · "+compLabel(m.comp):""}${m.datosIncompletos?' · <span style="color:var(--foul)">⚠ minutos no fiables</span>':""}</div></div>
         <div class="num" style="font-size:20px;font-variant-numeric:tabular-nums">${m.score.us}–${m.score.them}</div>
         <button class="btn sm ghost" data-summ="${m.id}" style="margin-left:8px" title="Minutos del partido">⏱️</button>
         <button class="btn sm ghost" data-edit="${m.id}" style="margin-left:6px">Editar</button>
@@ -2174,7 +2193,7 @@ function loadStatus(pid){
   // ventanas de 7 días: [0] = últimos 7 días, [1..3] = las tres anteriores
   const win=[0,0,0,0]; const idx=ds=>Math.floor((parseYmd(t0)-parseYmd(ds))/(7*864e5));
   S.sessions.forEach(s=>{ if(!s.date||s.date>t0||s.date<d28) return; const i=idx(s.date); if(i>=0&&i<4) win[i]+=sessionLoadFor(s,pid); });
-  S.matches.forEach(m=>{ if(!m.finished||!m.date||m.date>t0||m.date<d28) return; const i=idx(m.date); if(i>=0&&i<4) win[i]+=minutesFor(m,pid)/60*MATCH_RPE; });
+  S.matches.forEach(m=>{ if(!m.finished||!m.date||m.date>t0||m.date<d28) return; const i=idx(m.date); if(i>=0&&i<4) win[i]+=matchMinForLoad(m,pid)/60*MATCH_RPE; });
   const acute=win[0], chronic=(win[1]+win[2]+win[3])/3, peak=Math.max(win[1],win[2],win[3]);
   const ratio=chronic>0? acute/chronic : null;
   // solo es aviso si además supera su semana más alta reciente (evita falsas alarmas tras semanas sin entreno o sin partido)
@@ -2197,12 +2216,19 @@ function loadStatus(pid){
   return out;
 }
 function semDot(st,big){ return `<span class="pl-dot" style="background:${SEM[st.nivel].c}${big?";width:14px;height:14px":""}" title="${SEM[st.nivel].t}"></span>`; }
+/* Para la carga: si un partido tiene los minutos incompletos, se estima con la media de minutos de esa jugadora en los demás partidos (si estuvo convocada y jugó) */
+function matchMinForLoad(m,pid){
+  if(!m.datosIncompletos) return minutesFor(m,pid);
+  const jugo=(m.stints||[]).some(s=>s.pid===pid); if(!jugo) return 0;
+  const otros=S.matches.filter(x=>x.finished&&!x.datosIncompletos&&x.comp===m.comp).map(x=>minutesFor(x,pid)).filter(v=>v>0);
+  return otros.length? otros.reduce((a,b)=>a+b,0)/otros.length : 15*60;
+}
 const MATCH_RPE=8; // intensidad estimada de un partido (no se pide RPE en partido)
 function weekStart(dateStr){ const d=parseYmd(dateStr); const dow=(d.getDay()+6)%7; d.setDate(d.getDate()-dow); return ymd(d); }
 function loadByWeek(pid){
   const map={};
   S.sessions.forEach(s=>{ const c=sessionLoadFor(s,pid); if(c>0){ const w=weekStart(s.date); map[w]=(map[w]||0)+c; } });
-  S.matches.forEach(m=>{ if(m.date && m.finished){ const mins=minutesFor(m,pid); if(mins>0){ const w=weekStart(m.date); map[w]=(map[w]||0)+Math.round(mins/60*MATCH_RPE); } } });
+  S.matches.forEach(m=>{ if(m.date && m.finished){ const mins=matchMinForLoad(m,pid); if(mins>0){ const w=weekStart(m.date); map[w]=(map[w]||0)+Math.round(mins/60*MATCH_RPE); } } });
   return map;
 }
 function loadWeeks(pid,n){
@@ -4313,9 +4339,11 @@ function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;",
 
 /* ---------- init ---------- */
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{ pauseClockIfLeaving(b.dataset.tab); if(b.dataset.tab!=="board") pbStop(); tab=b.dataset.tab; renderTabs(); if(authToken) syncNow(); });
-function pauseClockIfLeaving(next){ if(next!=="match" && S.live && S.live.running) toggleClock(); }
+function pauseClockIfLeaving(next){ /* el reloj sigue corriendo aunque cambies de pestaña */ }
 document.getElementById("seasonLabel").textContent=S.season;
-if(S.live && S.live.running) S.live.running=false; // al recargar, el reloj arranca pausado
+if(S.live && S.live.running){ // al recargar, el reloj continúa con la hora real (si la app se cerró en mitad del partido)
+  if(S.live.runStart){ S.live.elapsed=clockNow(S.live); startClockTimer(); } else S.live.running=false; }
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible" && S.live && S.live.running){ S.live.elapsed=clockNow(S.live); paintClock(); keepAwake(true); } });
 render(); renderTabs();
 bindLogin();
 try{ document.getElementById("loginLogo").src=LOGO_SRC; }catch(e){}
