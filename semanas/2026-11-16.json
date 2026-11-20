@@ -1,7 +1,7 @@
 {
  "semana": "2026-11-16",
- "generado": "2026-11-16T09:16:13Z",
- "briefGuardado": "2026-11-15T22:56:13.386Z",
+ "generado": "2026-11-20T10:39:20Z",
+ "briefGuardado": "2026-11-20T10:38:29.766Z",
  "ejercicios": [
   {
    "id": "cl-posesion-4x4-puertas-v9",
@@ -2180,7 +2180,7 @@
    "title": "Finalizar contra su individual y balón parado",
    "focus": "Finalización con decisión (oleadas, segundo palo, puerta atrás y bloqueo), defensa de su 4-0, balón parado del lado derecho y partido del plan",
    "targetMin": "90",
-   "notes": "Víspera del partido (sábado 21, en casa, contra CD Futsi Atco Navalcarnero C): pausas completas, menos intensidad y sin cargas altas. Previsto: 8 de campo y 2 porteras; la cierre con carga reducida. Hoy viene la sacadora: balón parado del lado derecho. Camiseta rosa.",
+   "notes": "Víspera del partido (sábado 21, en casa, contra CD Futsi Atco Navalcarnero C): pausas completas, menos intensidad y sin cargas altas. Previsto: 7 de campo y 2 porteras (baja de última hora de una pívot); la cierre con carga reducida. Hoy viene la sacadora: balón parado del lado derecho. Camiseta rosa.",
    "blocks": [
     {
      "name": "Portería (Julia)",
@@ -2211,12 +2211,12 @@
         "porN": []
        },
        "minutes": 8,
-       "note": "En paralelo a portería · con 8, 5 contra 3 a dos toques; las tres de dentro salen al robar"
+       "note": "En paralelo a portería · con 7, 4 contra 3 a dos toques; las tres de dentro salen al robar"
       },
       {
        "exerciseId": "cl-posesion-4x4-carriles-v9",
        "minutes": 8,
-       "note": "En paralelo a portería (las porteras se incorporan al terminar) · carga reducida: comodina",
+       "note": "En paralelo a portería (las porteras se incorporan al terminar) · con 7: 3x3 + comodina · carga reducida: hace de comodina",
        "equipos": {
         "n": 2,
         "porteras": false
@@ -2230,17 +2230,17 @@
       {
        "exerciseId": "bt-decision-1-oleadas-2x1-2x2",
        "minutes": 10,
-       "note": "Progresión 1/3 · con 8 y 2 porteras: oleadas en las dos porterías con filas cortas · carga reducida: da el pase inicial"
+       "note": "Progresión 1/3 · con 7 y 2 porteras: oleadas en las dos porterías con filas cortas (2x1 → 2x2; la séptima entra en la siguiente oleada)"
       },
       {
        "exerciseId": "bt-decision-3-segundo-palo",
        "minutes": 10,
-       "note": "Progresión 2/3 · con 8: dos campos 2x1 → 2x2 (la ala pisa la línea de fondo, la otra ataca el segundo palo o llega atrás) · carga reducida: series alternas"
+       "note": "Progresión 2/3 · con 7: un campo 3x2 → 3x3 y la séptima rota cada serie (la ala pisa la línea de fondo, la segunda ataca el 2º palo)"
       },
       {
        "exerciseId": "cl-finalizacion-3-4x4-individual-v9",
        "minutes": 12,
-       "note": "Progresión 3/3: contra individual pura, corte por detrás y continuación del bloqueo · carga reducida: series alternas",
+       "note": "Progresión 3/3 · con 7 de campo: 4 contra 3 con porteras, rotando cada 2 ataques (la que sale entra defendiendo) · contra individual pura, corte por detrás y continuación del bloqueo",
        "equipos": 2
       }
      ]
@@ -2251,18 +2251,18 @@
       {
        "exerciseId": "cl-defensa-4-0-cambios-v9",
        "minutes": 10,
-       "note": "Su 4-0 con rotación: cambio cantado por la de atrás; sin cambio, el bloqueo por delante",
+       "note": "Con 7 de campo: su 4-0 con cuatro atacantes contra nuestras tres + portera, rotando cada 2 ataques · cambio cantado por la de atrás; sin cambio, el bloqueo por delante",
        "equipos": 2
       },
       {
        "exerciseId": "cl-abp-derecha-banda-v9",
        "minutes": 12,
-       "note": "Con la sacadora del viernes · cada jugada leyendo a la defensora clave"
+       "note": "Con la sacadora del viernes · con 7: sacadora + 3 contra 3 · cada jugada leyendo a la defensora clave"
       },
       {
        "exerciseId": "cl-partido-plan-sabado-v9",
        "minutes": 15,
-       "note": "Partido del plan para el sábado · carga reducida: un tiempo sí y uno no",
+       "note": "Partido del plan para el sábado · con 7 de campo: 3x3 con porteras y una comodina que ataca con quien tiene el balón (rota cada 4') · carga reducida: un tiempo sí y uno no",
        "equipos": 2
       }
      ]
